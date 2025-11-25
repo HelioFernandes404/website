@@ -1,0 +1,33 @@
+{
+  "name": "HelioFernandes404",
+  "role": "DevOps Developer",
+  "bio": "Linux · DevOps · Cloud & Data. I enjoy building systems that stay fast, stable and measurable.",
+  "image": "https://images.unsplash.com/photo-1752859951149-7d3fc700a7ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdCUyMHRlY2h8ZW58MXx8fHwxNzY0MDYyNzc4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+  "links": [
+    {
+      "id": 1,
+      "label": "Portfolio",
+      "url": "https://heliosuns404.com",
+      "iconName": "Globe",
+      "primary": true
+    },
+    {
+      "id": 2,
+      "label": "GitHub",
+      "url": "https://github.com/heliofernandes404",
+      "iconName": "Github"
+    },
+    {
+      "id": 3,
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/heliofernandes/",
+      "iconName": "Linkedin"
+    },
+    {
+      "id": 4,
+      "label": "Contact",
+      "url": "mailto:heliodevhub@gmail.com",
+      "iconName": "Mail"
+    }
+  ]
+}
