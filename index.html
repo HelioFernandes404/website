@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hélio Fernandes - DevOps Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Subtle Grid Pattern for Hero */
+        .hero-grid {
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        /* Diagonal lines pattern for footer/testimonials accents */
+        .diagonal-pattern {
+            background-image: repeating-linear-gradient(
+                45deg,
+                #f3f4f6,
+                #f3f4f6 10px,
+                #ffffff 10px,
+                #ffffff 20px
+            );
+        }
+
+        .custom-shadow {
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+        }
+
+        /* Utility to hide views */
+        .view-hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-900 antialiased selection:bg-gray-900 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="header">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" onclick="showView('home'); return false;" class="text-xl font-bold tracking-tight">Helio Fernandes</a>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                <a href="#sobre" onclick="showView('about')" class="hover:text-black transition-colors">Sobre</a>
+                <a href="#servicos" onclick="navigateToSection('servicos')" class="hover:text-black transition-colors">Serviços</a>
+                <a href="#projetos" onclick="navigateToSection('projetos')" class="hover:text-black transition-colors">Projetos</a>
+
+                <div class="relative group cursor-pointer">
+                    <span class="flex items-center gap-1 hover:text-black">
+                        PT-BR <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </span>
+                    <!-- Dropdown mock -->
+                    <div class="absolute top-full right-0 mt-2 w-24 bg-white border border-gray-100 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                        <div class="py-2">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-50 text-black">PT-BR</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-50">EN-US</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#contato" class="bg-black text-white px-5 py-2.5 rounded hover:bg-gray-800 transition-colors">
+                    Fale comigo
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 p-6 shadow-xl">
+            <nav class="flex flex-col space-y-4 font-medium text-gray-600">
+                <a href="#sobre" onclick="showView('about'); document.getElementById('mobile-menu').classList.add('hidden')" class="hover:text-black">Sobre</a>
+                <a href="#servicos" onclick="navigateToSection('servicos'); document.getElementById('mobile-menu').classList.add('hidden')" class="hover:text-black">Serviços</a>
+                <a href="#projetos" onclick="navigateToSection('projetos'); document.getElementById('mobile-menu').classList.add('hidden')" class="hover:text-black">Projetos</a>
+                <a href="#contato" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="bg-black text-white px-5 py-3 rounded text-center">Fale comigo</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow pt-20">
+
+        <!-- HOME VIEW -->
+        <div id="home-view">
+            <!-- Hero Section -->
+            <section class="relative pt-12 pb-20 lg:pt-28 lg:pb-32 overflow-hidden">
+                <div class="absolute top-0 right-0 w-1/2 h-full hero-grid pointer-events-none -z-10"></div>
+
+                <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="max-w-2xl">
+                        <h1 class="text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-6">
+                            Transformo código em produto com eficiência
+                        </h1>
+                        <p class="text-lg text-gray-600 leading-relaxed mb-8 max-w-xl">
+                            Sou um <span class="font-semibold text-black">DevOps Developer</span> com visão de produto.
+                            Arquitetura, automação e desenvolvimento sob medida para empresas que exigem performance e clareza.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#contato" class="inline-flex justify-center items-center bg-black text-white px-8 py-3.5 rounded font-medium hover:bg-gray-800 transition-colors">
+                                Vamos conversar
+                            </a>
+                            <a href="#projetos" class="inline-flex justify-center items-center px-8 py-3.5 rounded font-medium border border-gray-300 hover:border-black hover:bg-gray-50 transition-all">
+                                Conhecer portfólio
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="hidden lg:flex justify-center items-center relative">
+                    <div class="absolute bottom-10 right-10 animate-bounce">
+                        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Teaser Section -->
+            <section id="sobre-teaser" class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="grid lg:grid-cols-2 gap-16 items-center">
+                        <!-- Image Container -->
+                        <div class="relative group">
+                            <!-- Removed -z-10 and adjusted order to ensure visibility -->
+                            <div class="absolute inset-0 bg-gray-100 rounded-lg transform translate-x-4 translate-y-4 transition-transform group-hover:translate-x-2 group-hover:translate-y-2"></div>
+                            <div class="relative overflow-hidden rounded-lg bg-gray-200 aspect-[4/5] sm:aspect-square lg:aspect-[4/5]">
+                                <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2069&auto=format&fit=crop" alt="Helio Fernandes" class="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-500">
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div>
+                            <h2 class="text-3xl lg:text-4xl font-bold mb-8">Profissional em tecnologia com visão de entrega</h2>
+
+                            <div class="space-y-6 text-gray-600 leading-relaxed">
+                                <p>
+                                    Minha jornada na tecnologia começou com um presente inusitado: um amigo programador old school me entregou um livro e disse "Estuda aí". Na época, eu nem sabia o que era um terminal.
+                                </p>
+                                <p>
+                                    Hoje, atuo como <strong class="text-black">DevOps Developer</strong>, com um diferencial raro no mercado: transito facilmente entre o mundo da operação e do código, entregando soluções completas que resolvem problemas reais para times e clientes.
+                                </p>
+                                <p>
+                                    Sou apaixonado por <strong class="text-black">Linux, inovação e open source</strong>. Ao longo da minha trajetória, participei de dezenas de projetos de infraestrutura e aplicações web, sempre com olhar de produto e mentalidade estratégica.
+                                </p>
+                                <p class="font-medium text-black">
+                                    Quer saber como essa história de "estudar um livro" me levou até aqui?
+                                </p>
+                            </div>
+
+                            <div class="mt-8">
+                                <a href="#" onclick="showView('about'); return false;" class="inline-flex items-center bg-black text-white px-6 py-3 rounded font-medium hover:bg-gray-800 transition-colors">
+                                    Conhecer história completa
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="servicos" class="py-20 border-t border-gray-100">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="mb-16">
+                        <h2 class="text-3xl lg:text-4xl font-bold mb-4">Como posso ajudar</h2>
+                        <p class="text-gray-600">Consultoria, infraestrutura e desenvolvimento integrados a contextos de negócio.</p>
+                    </div>
+
+                    <div class="space-y-12">
+                        <!-- Service 1 -->
+                        <div class="grid md:grid-cols-[250px_1fr] gap-8 items-start pb-12 border-b border-gray-100 last:border-0">
+                            <div class="flex items-center gap-3 text-xl font-semibold">
+                                <i data-lucide="infinity" class="w-6 h-6"></i>
+                                Infra & DevOps
+                            </div>
+                            <div class="space-y-3 text-gray-600">
+                                <p>Arquitetura e automação (Ansible, Helm, Kubernetes)</p>
+                                <p>Pipelines CI/CD</p>
+                                <p>Monitoramento e observabilidade</p>
+                            </div>
+                        </div>
+
+                        <!-- Service 2 -->
+                        <div class="grid md:grid-cols-[250px_1fr] gap-8 items-start pb-12 border-b border-gray-100 last:border-0">
+                            <div class="flex items-center gap-3 text-xl font-semibold">
+                                <i data-lucide="code-2" class="w-6 h-6"></i>
+                                Desenvolvimento
+                            </div>
+                            <div class="space-y-3 text-gray-600">
+                                <p>Backend em Python</p>
+                                <p>Integrações com APIs e serviços</p>
+                                <p>Data science</p>
+                            </div>
+                        </div>
+
+                        <!-- Service 3 -->
+                        <div class="grid md:grid-cols-[250px_1fr] gap-8 items-start pb-12 border-b border-gray-100 last:border-0">
+                            <div class="flex items-center gap-3 text-xl font-semibold">
+                                <i data-lucide="search" class="w-6 h-6"></i>
+                                Consultoria técnica
+                            </div>
+                            <div class="space-y-3 text-gray-600">
+                                <p>Diagnóstico e melhoria de infraestrutura</p>
+                                <p>Desenvolvimento de software completo</p>
+                                <p>Treinamentos técnicos sob demanda</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projetos" class="py-24 bg-[#0a0a0a] text-white">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center mb-20">
+                        <h2 class="text-3xl lg:text-5xl font-bold mb-4">Projetos com entregas mensuráveis e escaláveis</h2>
+                    </div>
+
+                    <div class="space-y-32">
+                        <!-- Project 1: Dai Tec -->
+                        <div class="grid lg:grid-cols-2 gap-12 items-center group">
+                            <div class="order-2 lg:order-1">
+                                <h3 class="text-2xl font-bold mb-2">Dai Tec <span class="font-normal text-gray-400">— Assistente Inteligente</span></h3>
+
+                                <p class="text-gray-400 mb-6 leading-relaxed">
+                                    Implementei a estrutura completa do meio de pagamento via Stripe e atuei no desenvolvimento do core do produto baseado em IA, garantindo uma arquitetura robusta e escalável.
+                                </p>
+                                <p class="text-gray-400 mb-8 leading-relaxed">
+                                    Com uma infraestrutura DevOps na AWS, pipelines de CI/CD e monitoramento de dados, o resultado foi um aumento de 30% na conversão de transações.
+                                </p>
+
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Node.js</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">OpenAI API</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Stripe</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">AWS</span>
+                                </div>
+                            </div>
+                            <div class="order-1 lg:order-2 bg-gray-800 rounded-lg overflow-hidden p-8 flex items-center justify-center aspect-video group-hover:bg-gray-700 transition-colors">
+                                <!-- Mockup Placeholder -->
+                                <div class="relative w-full max-w-md">
+                                    <img src="https://images.unsplash.com/photo-1481487484168-9b930d5b7d9f?q=80&w=2070&auto=format&fit=crop" class="rounded shadow-2xl w-full h-auto opacity-90 transform group-hover:scale-105 transition-transform duration-500" alt="Dai Tec Interface">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 2: SystemFrame -->
+                        <div class="grid lg:grid-cols-2 gap-12 items-center group">
+                            <div class="order-2 lg:order-2">
+                                <h3 class="text-2xl font-bold mb-2">SystemFrame <span class="font-normal text-gray-400">— Data Science & DevOps</span></h3>
+
+                                <p class="text-gray-400 mb-6 leading-relaxed">
+                                    Estruturei todo o ambiente DevOps da empresa com Kubernetes, automação de deploys e ferramentas internas para coleta e monitoramento de dados.
+                                </p>
+                                <p class="text-gray-400 mb-8 leading-relaxed">
+                                    A reestruturação reduziu a taxa de erros em ambientes e melhorou a depuração de bugs em mais de 30%, aumentando a confiabilidade das operações.
+                                </p>
+
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">AWS</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Python</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Helm</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Kubernetes</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Terraform</span>
+                                </div>
+                            </div>
+                            <div class="order-1 lg:order-1 bg-gray-800 rounded-lg overflow-hidden p-8 flex items-center justify-center aspect-video group-hover:bg-gray-700 transition-colors">
+                                <div class="relative w-full max-w-md">
+                                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" class="rounded shadow-2xl w-full h-auto opacity-90 transform group-hover:scale-105 transition-transform duration-500" alt="SystemFrame">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 3: Cogcs -->
+                        <div class="grid lg:grid-cols-2 gap-12 items-center group">
+                            <div class="order-2 lg:order-1">
+                                <h3 class="text-2xl font-bold mb-2">Cogcs <span class="font-normal text-gray-400">— Mobile App</span></h3>
+
+                                <p class="text-gray-400 mb-6 leading-relaxed">
+                                    Atuo como líder técnico e de produto no desenvolvimento do Cogcs, um app mobile, tendo participado desde a concepção até a produção, com foco total em performance e escalabilidade.
+                                </p>
+                                <p class="text-gray-400 mb-8 leading-relaxed">
+                                    Defini a stack, a arquitetura modular baseada em microsserviços com K3s e pipelines automatizadas.
+                                </p>
+
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">AWS</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Cloudflare</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Ansible</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Helm</span>
+                                </div>
+                            </div>
+                            <div class="order-1 lg:order-2 bg-gray-800 rounded-lg overflow-hidden p-8 flex items-center justify-center aspect-video relative group-hover:bg-gray-700 transition-colors">
+                                <span class="absolute top-4 right-4 bg-[#ccff00] text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider z-10">Em Breve</span>
+                                <div class="relative w-full max-w-[200px]">
+                                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2070&auto=format&fit=crop" class="rounded-3xl shadow-2xl w-full h-auto opacity-90 transform group-hover:scale-105 transition-transform duration-500" alt="Cogcs Mobile">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 4: Crop2U -->
+                        <div class="grid lg:grid-cols-2 gap-12 items-center group">
+                            <div class="order-2 lg:order-2">
+                                <h3 class="text-2xl font-bold mb-2">Crop2U <span class="font-normal text-gray-400">— Plataforma de Negociação Agrícola</span></h3>
+
+                                <p class="text-gray-400 mb-6 leading-relaxed">
+                                    Desenvolvi uma solução empresarial completa para negociações agrícolas com arquitetura full-stack, IA integrada, autenticação robusta e sistemas de mensageria em tempo real.
+                                </p>
+                                <p class="text-gray-400 mb-8 leading-relaxed">
+                                    Toda a infraestrutura foi automatizada via GitHub Actions e implantada na AWS, entregando escalabilidade e segurança.
+                                </p>
+
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Docker</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">AWS (ECR, S3)</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Nginx</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Socket.io</span>
+                                </div>
+                            </div>
+                            <div class="order-1 lg:order-1 bg-gray-800 rounded-lg overflow-hidden p-8 flex items-center justify-center aspect-video group-hover:bg-gray-700 transition-colors">
+                                <div class="relative w-full max-w-md">
+                                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" class="rounded shadow-2xl w-full h-auto opacity-90 transform group-hover:scale-105 transition-transform duration-500" alt="Crop2U">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section class="py-24 bg-white">
+                <div class="max-w-4xl mx-auto px-6 text-center">
+                    <i data-lucide="quote" class="w-12 h-12 mx-auto mb-8 text-black fill-current opacity-20"></i>
+
+                    <div id="testimonial-container" class="min-h-[200px] flex items-center justify-center">
+                        <blockquote class="text-xl md:text-3xl font-medium leading-normal mb-10 transition-opacity duration-300" id="testimonial-text">
+                            "Tive o prazer de trabalhar com o Hélio e o que mais se destaca nele é sua visão estratégica. [...] É o tipo de profissional que eleva a maturidade e o pensamento crítico de toda a equipe."
+                        </blockquote>
+                    </div>
+
+                    <div class="mt-8">
+                        <p class="font-bold text-lg" id="testimonial-author">Acacio Fernandes</p>
+                        <p class="text-gray-500" id="testimonial-role">Head de Tecnologia</p>
+                    </div>
+
+                    <!-- Custom Tabs -->
+                    <div class="flex justify-center mt-16 border-t border-gray-100">
+                        <button onclick="setTestimonial(0)" class="testimonial-btn px-8 py-6 border-t-2 border-black font-medium text-black bg-gray-50 flex-1 md:flex-none w-full md:w-auto transition-colors">
+                            Acacio Fernandes
+                            <span class="block text-xs text-gray-500 font-normal mt-1">Head de Tecnologia</span>
+                        </button>
+                        <button onclick="setTestimonial(1)" class="testimonial-btn px-8 py-6 border-t-2 border-transparent text-gray-400 hover:text-black flex-1 md:flex-none w-full md:w-auto transition-colors">
+                            Juliana Herane
+                            <span class="block text-xs text-gray-500 font-normal mt-1">Product Owner</span>
+                        </button>
+                        <button onclick="setTestimonial(2)" class="testimonial-btn px-8 py-6 border-t-2 border-transparent text-gray-400 hover:text-black flex-1 md:flex-none w-full md:w-auto transition-colors">
+                            André Dini
+                            <span class="block text-xs text-gray-500 font-normal mt-1">Tech Lead</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABOUT VIEW -->
+        <div id="about-view" class="view-hidden">
+            <!-- About Hero -->
+            <section class="relative pt-12 pb-16 lg:pt-28 lg:pb-20 overflow-hidden">
+                <div class="absolute top-0 right-0 w-1/2 h-full hero-grid pointer-events-none -z-10"></div>
+
+                <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="max-w-2xl">
+                        <h1 class="text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
+                            Da curiosidade ao código: minha jornada em tecnologia
+                        </h1>
+                        <p class="text-lg text-gray-600 leading-relaxed mb-8 max-w-xl">
+                            Sou <span class="font-semibold text-black">Hélio Fernandes</span>, <span class="font-semibold text-black">DevOps Developer</span> que conecta operação e desenvolvimento para entregar soluções completas, estratégicas e escaláveis.
+                        </p>
+                    </div>
+
+                     <div class="hidden lg:flex justify-center items-center relative">
+                       <div class="absolute bottom-10 right-10 animate-bounce">
+                           <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+                       </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wide Image Section -->
+            <section class="px-6 pb-20">
+                <div class="max-w-7xl mx-auto">
+                    <div class="rounded-xl overflow-hidden shadow-2xl h-[400px] lg:h-[600px] relative">
+                         <!-- Placeholder for the setup image in sobre.png -->
+                        <img src="https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?q=80&w=2067&auto=format&fit=crop" class="w-full h-full object-cover object-center" alt="Setup de Trabalho">
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="py-12 bg-white">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="grid md:grid-cols-[1fr_2fr] gap-12">
+                        <div>
+                            <h2 class="text-3xl lg:text-4xl font-bold sticky top-32">Minha história completa</h2>
+                        </div>
+                        <div class="space-y-8 text-gray-600 leading-relaxed text-lg">
+                            <p>
+                                Minha jornada na tecnologia começou por influência de um amigo das antigas, um programador raiz, o famoso <em class="italic">old school</em>. Naquela época, não havia tanto conteúdo acessível como hoje.
+                            </p>
+                            <p>
+                                Um dia, ele me presenteou com um livro de programação e disse: "Estuda aí". Eu nem sabia o que era um terminal, mas mergulhei no desafio, e foi assim que que me encontrei no universo da programação e da resolução de problemas por meio da tecnologia.
+                            </p>
+                            <p>
+                                <strong class="text-black block mb-2">Hoje atuo como DevOps Developer, com experiência tanto na manutenção de infraestrutura quanto no desenvolvimento de aplicações web e soluções de TI.</strong>
+                                Esse equilíbrio me dá um diferencial importante no mercado: consigo transitar entre operação e código com naturalidade, entregando soluções completas e integradas.
+                            </p>
+                            <p>
+                                Gosto de me posicionar de forma estratégica nos projetos, sempre buscando entregar valor real ao time e ao cliente. Tenho um olhar voltado para produto e acredito que tecnologia bem aplicada resolve problemas de verdade.
+                            </p>
+                            <p>
+                                Alguns dos valores que levo comigo no dia a dia são <strong class="text-black">comprometimento, responsabilidade e inovação</strong>. A inovação é uma das minhas maiores motivações, pois me impulsiona a criar, testar, melhorar e manter um ambiente de trabalho leve e flexível, de qualquer lugar.
+                            </p>
+                            <p>
+                                Sou apaixonado por tecnologia, especialmente por <strong class="text-black">Linux, open source e bike</strong> (mas isso é assunto para outra página 😄). Curto muito ver as coisas funcionando. Faço projetos pessoais e colaborativos com amigos, tanto para me manter atualizado quanto para manter minha rede viva e conectada.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Contact Section (Shared) -->
+    <section id="contato" class="py-24 bg-white relative border-t border-gray-100">
+        <!-- Decoration side -->
+        <div class="hidden lg:block absolute left-0 top-0 w-12 h-full diagonal-pattern"></div>
+        <div class="hidden lg:block absolute right-0 top-0 w-12 h-full diagonal-pattern"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16">
+            <div>
+                <h2 class="text-4xl font-bold mb-6">Vamos criar algo relevante</h2>
+                <p class="text-gray-600 mb-12 text-lg">
+                    Está montando um time? Quer acelerar seu produto? Ou busca um parceiro técnico de confiança? <strong class="text-black">Entre em contato.</strong>
+                </p>
+
+                <div class="mt-auto">
+                    <p class="text-sm font-semibold mb-4 text-gray-900">Ou me encontre nas redes sociais</p>
+                    <div class="flex gap-6 text-gray-500">
+                        <a href="#" class="hover:text-black transition-colors">LinkedIn</a>
+                        <span class="text-gray-300">|</span>
+                        <a href="#" class="hover:text-black transition-colors">GitHub</a>
+                        <span class="text-gray-300">|</span>
+                        <a href="#" class="hover:text-black transition-colors">Medium</a>
+                        <span class="text-gray-300">|</span>
+                        <a href="#" class="hover:text-black transition-colors">Instagram</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white">
+                <form class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Seu nome</label>
+                        <input type="text" placeholder="Digite seu nome" class="w-full px-4 py-3 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Seu email</label>
+                        <input type="email" placeholder="Digite seu email" class="w-full px-4 py-3 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Número de WhatsApp</label>
+                        <input type="tel" placeholder="(00) 00000-0000" class="w-full px-4 py-3 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Assunto</label>
+                        <textarea rows="4" placeholder="Sobre o que deseja conversar?" class="w-full px-4 py-3 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-black text-white font-medium py-4 rounded-md hover:bg-gray-800 transition-colors">
+                        Enviar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Bottom -->
+    <footer class="bg-black text-white py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-sm text-gray-400">
+                <p class="font-bold text-white mb-1">Hélio Fernandes</p>
+                <p>DevOps Developer</p>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="text-xs text-gray-500 text-right">
+                    <p>CNPJ 11.111.111/0001-11</p>
+                    <p>Todos os direitos reservados.</p>
+                </div>
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-gray-800 p-2 rounded hover:bg-gray-700 transition-colors">
+                    <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // --- NAVIGATION LOGIC ---
+        function showView(viewName) {
+            const homeView = document.getElementById('home-view');
+            const aboutView = document.getElementById('about-view');
+
+            // Hide all first
+            homeView.classList.add('view-hidden');
+            aboutView.classList.add('view-hidden');
+
+            // Show selected
+            if (viewName === 'home') {
+                homeView.classList.remove('view-hidden');
+            } else if (viewName === 'about') {
+                aboutView.classList.remove('view-hidden');
+            }
+
+            // Scroll to top when switching views
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function navigateToSection(sectionId) {
+            // Ensure we are on home view first
+            showView('home');
+
+            // Small timeout to allow view to render before scrolling
+            setTimeout(() => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 50);
+        }
+
+        // --- TESTIMONIAL LOGIC ---
+        const testimonials = [
+            {
+                text: '"Tive o prazer de trabalhar com o Hélio e o que mais se destaca nele é sua visão estratégica. [...] É o tipo de profissional que eleva a maturidade e o pensamento crítico de toda a equipe."',
+                author: "Acacio Fernandes",
+                role: "Head de Tecnologia"
+            },
+            {
+                text: '"Um profissional que une técnica apurada com uma capacidade incrível de entender o negócio. Transformou nossos processos de deploy e trouxe uma cultura de qualidade indispensável."',
+                author: "Juliana Herane",
+                role: "Product Owner"
+            },
+            {
+                text: '"A facilidade com que o Hélio navega entre infraestrutura e código é impressionante. Resolveu gargalos de performance que tínhamos há meses em questão de dias."',
+                author: "André Dini",
+                role: "Tech Lead"
+            }
+        ];
+
+        function setTestimonial(index) {
+            const textEl = document.getElementById('testimonial-text');
+            const authorEl = document.getElementById('testimonial-author');
+            const roleEl = document.getElementById('testimonial-role');
+            const buttons = document.querySelectorAll('.testimonial-btn');
+
+            // Fade out
+            textEl.style.opacity = '0';
+
+            setTimeout(() => {
+                // Update content
+                textEl.innerText = testimonials[index].text;
+                authorEl.innerText = testimonials[index].author;
+                roleEl.innerText = testimonials[index].role;
+
+                // Update buttons
+                buttons.forEach((btn, i) => {
+                    if (i === index) {
+                        btn.classList.add('border-black', 'text-black', 'bg-gray-50');
+                        btn.classList.remove('border-transparent', 'text-gray-400');
+                    } else {
+                        btn.classList.remove('border-black', 'text-black', 'bg-gray-50');
+                        btn.classList.add('border-transparent', 'text-gray-400');
+                    }
+                });
+
+                // Fade in
+                textEl.style.opacity = '1';
+            }, 300);
+        }
+
+        // Header Scroll Effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-sm');
+            } else {
+                header.classList.remove('shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>
