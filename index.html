@@ -3,333 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hélio Fernandes - DevOps Developer</title>
+    <title>Hélio Fernandes - DevOps Architect</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#0a0a0a',
+                            dark: '#121212',
+                            gray: '#888888',
+                            lime: '#ccff00', // Strong accent color
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        /* Global Reset & Texture */
         body {
-            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #0a0a0a;
+            overflow-x: hidden;
+            cursor: none; /* Hiding default cursor for custom one */
         }
 
-        /* Subtle Grid Pattern for Hero */
-        .hero-grid {
-            background-size: 40px 40px;
-            background-image:
-                linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        /* Noise Overlay for texture */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
         }
 
-        /* Diagonal lines pattern for footer/testimonials accents */
-        .diagonal-pattern {
-            background-image: repeating-linear-gradient(
-                45deg,
-                #f3f4f6,
-                #f3f4f6 10px,
-                #ffffff 10px,
-                #ffffff 20px
-            );
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #0a0a0a;
+        }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(10, 10, 10, 0.2);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
         }
 
-        .custom-shadow {
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+        /* Hover States for Cursor */
+        body.hovering .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(204, 255, 0, 0.2);
+            border-color: transparent;
+            backdrop-filter: blur(2px);
         }
 
-        /* Utility to hide views */
-        .view-hidden {
+        /* Utility classes */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Grid Pattern */
+        .tech-grid {
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        }
+
+        /* View Transitions */
+        .view-section {
             display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .view-section.active {
+            display: block;
+        }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e5e5e5;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ccff00;
+        }
+
+        /* Project Card Effects */
+        .scanlines {
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.3));
+            background-size: 100% 4px;
+        }
+        .stats-overlay {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(4px);
         }
     </style>
 </head>
-<body class="text-gray-900 antialiased selection:bg-gray-900 selection:text-white flex flex-col min-h-screen">
+<body class="selection:bg-brand-lime selection:text-black">
+
+    <!-- Texture Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Custom Cursor Elements -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
 
     <!-- Header -->
-    <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="header">
+    <header class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100/50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" onclick="showView('home'); return false;" class="text-xl font-bold tracking-tight">Helio Fernandes</a>
-
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-                <a href="#sobre" onclick="showView('about')" class="hover:text-black transition-colors">Sobre</a>
-                <a href="#servicos" onclick="navigateToSection('servicos')" class="hover:text-black transition-colors">Serviços</a>
-                <a href="#projetos" onclick="navigateToSection('projetos')" class="hover:text-black transition-colors">Projetos</a>
-
-                <div class="relative group cursor-pointer">
-                    <span class="flex items-center gap-1 hover:text-black">
-                        PT-BR <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                    </span>
-                    <!-- Dropdown mock -->
-                    <div class="absolute top-full right-0 mt-2 w-24 bg-white border border-gray-100 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                        <div class="py-2">
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-50 text-black">PT-BR</a>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-50">EN-US</a>
-                        </div>
-                    </div>
+            <a href="#" onclick="switchView('home'); return false;" class="group flex items-center gap-2 hover-trigger">
+                <div class="w-8 h-8 bg-black text-white flex items-center justify-center font-bold font-display rounded-lg group-hover:bg-brand-lime group-hover:text-black transition-colors">
+                    H
                 </div>
+                <span class="font-display font-bold text-lg tracking-tight">Helio.dev</span>
+            </a>
 
-                <a href="#contato" class="bg-black text-white px-5 py-2.5 rounded hover:bg-gray-800 transition-colors">
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center space-x-10 text-sm font-medium text-gray-500 font-mono">
+                <a href="#sobre" onclick="switchView('about');" class="hover:text-black hover:decoration-brand-lime underline-offset-4 decoration-2 hover:underline transition-all hover-trigger">/sobre</a>
+                <a href="#servicos" onclick="switchView('home', 'servicos');" class="hover:text-black hover:decoration-brand-lime underline-offset-4 decoration-2 hover:underline transition-all hover-trigger">/serviços</a>
+                <a href="#projetos" onclick="switchView('home', 'projetos');" class="hover:text-black hover:decoration-brand-lime underline-offset-4 decoration-2 hover:underline transition-all hover-trigger">/projetos</a>
+
+                <div class="w-px h-4 bg-gray-200"></div>
+
+                <a href="#contato" class="bg-black text-white px-5 py-2.5 rounded-lg hover:bg-brand-lime hover:text-black transition-all duration-300 font-sans font-semibold hover-trigger hover:shadow-[0_0_20px_rgba(204,255,0,0.4)]">
                     Fale comigo
                 </a>
             </nav>
 
             <!-- Mobile Menu Button -->
-            <button class="md:hidden p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+            <button class="md:hidden p-2 hover-trigger" onclick="toggleMobileMenu()">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 p-6 shadow-xl">
-            <nav class="flex flex-col space-y-4 font-medium text-gray-600">
-                <a href="#sobre" onclick="showView('about'); document.getElementById('mobile-menu').classList.add('hidden')" class="hover:text-black">Sobre</a>
-                <a href="#servicos" onclick="navigateToSection('servicos'); document.getElementById('mobile-menu').classList.add('hidden')" class="hover:text-black">Serviços</a>
-                <a href="#projetos" onclick="navigateToSection('projetos'); document.getElementById('mobile-menu').classList.add('hidden')" class="hover:text-black">Projetos</a>
-                <a href="#contato" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="bg-black text-white px-5 py-3 rounded text-center">Fale comigo</a>
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-gray-100 p-6 shadow-2xl origin-top animate-fade-in">
+            <nav class="flex flex-col space-y-4 font-display text-2xl font-bold">
+                <a href="#" onclick="switchView('about'); toggleMobileMenu()" class="hover:text-brand-lime">Sobre</a>
+                <a href="#servicos" onclick="switchView('home', 'servicos'); toggleMobileMenu()" class="hover:text-brand-lime">Serviços</a>
+                <a href="#projetos" onclick="switchView('home', 'projetos'); toggleMobileMenu()" class="hover:text-brand-lime">Projetos</a>
+                <a href="#contato" onclick="toggleMobileMenu()" class="text-base font-mono bg-black text-white p-4 text-center rounded-lg mt-4">Iniciar Projeto_</a>
             </nav>
         </div>
     </header>
 
-    <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-grow pt-20">
+    <main class="flex-grow pt-20 min-h-screen">
 
         <!-- HOME VIEW -->
-        <div id="home-view">
+        <div id="home-view" class="view-section active">
+
             <!-- Hero Section -->
-            <section class="relative pt-12 pb-20 lg:pt-28 lg:pb-32 overflow-hidden">
-                <div class="absolute top-0 right-0 w-1/2 h-full hero-grid pointer-events-none -z-10"></div>
+            <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden tech-grid">
+                <!-- Abstract Glow -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-lime/10 rounded-full blur-[100px] -z-10 animate-pulse-slow"></div>
 
-                <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="max-w-2xl">
-                        <h1 class="text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-6">
-                            Transformo código em produto com eficiência
+                <div class="max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-8 space-y-8 z-10">
+                        <!-- Badge -->
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 border border-gray-200 text-xs font-mono font-medium text-gray-600 animate-slide-up" style="animation-delay: 0.1s;">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            Available for new projects
+                        </div>
+
+                        <h1 class="text-5xl lg:text-7xl font-display font-bold leading-[0.95] tracking-tight animate-slide-up" style="animation-delay: 0.2s;">
+                            Código eficiente.<br>
+                            Infraestrutura <span class="relative inline-block">
+                                <span class="relative z-10">escalável</span>
+                                <span class="absolute bottom-1 left-0 w-full h-3 bg-brand-lime/80 -z-0"></span>
+                            </span>.
                         </h1>
-                        <p class="text-lg text-gray-600 leading-relaxed mb-8 max-w-xl">
-                            Sou um <span class="font-semibold text-black">DevOps Developer</span> com visão de produto.
-                            Arquitetura, automação e desenvolvimento sob medida para empresas que exigem performance e clareza.
+
+                        <p class="text-xl text-gray-500 max-w-xl leading-relaxed animate-slide-up" style="animation-delay: 0.3s;">
+                            Sou Hélio Fernandes. Transformo arquiteturas complexas em produtos digitais robustos. Especialista em <strong class="text-black">DevOps</strong> e desenvolvimento de alta performance.
                         </p>
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="#contato" class="inline-flex justify-center items-center bg-black text-white px-8 py-3.5 rounded font-medium hover:bg-gray-800 transition-colors">
-                                Vamos conversar
+
+                        <div class="flex flex-wrap gap-4 pt-4 animate-slide-up" style="animation-delay: 0.4s;">
+                            <a href="#contato" class="group relative px-8 py-4 bg-black text-white rounded-lg font-medium overflow-hidden hover-trigger">
+                                <div class="absolute inset-0 w-full h-full bg-brand-lime transition-all duration-300 translate-y-full group-hover:translate-y-0"></div>
+                                <span class="relative group-hover:text-black transition-colors">Vamos conversar</span>
                             </a>
-                            <a href="#projetos" class="inline-flex justify-center items-center px-8 py-3.5 rounded font-medium border border-gray-300 hover:border-black hover:bg-gray-50 transition-all">
-                                Conhecer portfólio
+                            <a href="#projetos" class="px-8 py-4 rounded-lg border border-gray-200 font-medium hover:bg-gray-50 transition-colors hover-trigger">
+                                Ver Portfolio
                             </a>
                         </div>
                     </div>
 
-                    <div class="hidden lg:flex justify-center items-center relative">
-                    <div class="absolute bottom-10 right-10 animate-bounce">
-                        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
-                    </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- About Teaser Section -->
-            <section id="sobre-teaser" class="py-20 bg-white">
-                <div class="max-w-7xl mx-auto px-6">
-                    <div class="grid lg:grid-cols-2 gap-16 items-center">
-                        <!-- Image Container -->
-                        <div class="relative group">
-                            <!-- Removed -z-10 and adjusted order to ensure visibility -->
-                            <div class="absolute inset-0 bg-gray-100 rounded-lg transform translate-x-4 translate-y-4 transition-transform group-hover:translate-x-2 group-hover:translate-y-2"></div>
-                            <div class="relative overflow-hidden rounded-lg bg-gray-200 aspect-[4/5] sm:aspect-square lg:aspect-[4/5]">
-                                <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2069&auto=format&fit=crop" alt="Helio Fernandes" class="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-500">
+                    <!-- Right visual: Code/Abstract -->
+                    <div class="lg:col-span-4 hidden lg:block relative animate-slide-up" style="animation-delay: 0.5s;">
+                        <div class="relative bg-black rounded-xl p-6 shadow-2xl rotate-3 hover:rotate-0 transition-all duration-500 border border-gray-800 group hover-trigger">
+                            <div class="flex gap-2 mb-4">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
                             </div>
-                        </div>
-
-                        <!-- Content -->
-                        <div>
-                            <h2 class="text-3xl lg:text-4xl font-bold mb-8">Profissional em tecnologia com visão de entrega</h2>
-
-                            <div class="space-y-6 text-gray-600 leading-relaxed">
-                                <p>
-                                    Minha jornada na tecnologia começou com um presente inusitado: um amigo programador old school me entregou um livro e disse "Estuda aí". Na época, eu nem sabia o que era um terminal.
-                                </p>
-                                <p>
-                                    Hoje, atuo como <strong class="text-black">DevOps Developer</strong>, com um diferencial raro no mercado: transito facilmente entre o mundo da operação e do código, entregando soluções completas que resolvem problemas reais para times e clientes.
-                                </p>
-                                <p>
-                                    Sou apaixonado por <strong class="text-black">Linux, inovação e open source</strong>. Ao longo da minha trajetória, participei de dezenas de projetos de infraestrutura e aplicações web, sempre com olhar de produto e mentalidade estratégica.
-                                </p>
-                                <p class="font-medium text-black">
-                                    Quer saber como essa história de "estudar um livro" me levou até aqui?
-                                </p>
+                            <div class="font-mono text-sm space-y-2">
+                                <div class="text-gray-400"># Deploying infrastructure...</div>
+                                <div class="text-brand-lime">$ helm upgrade --install app ./charts</div>
+                                <div class="text-white">> Release "production" has been upgraded.</div>
+                                <div class="text-gray-400 py-2">...</div>
+                                <div class="text-brand-lime">$ kubectl get pods</div>
+                                <div class="grid grid-cols-2 text-xs text-gray-300 gap-x-4">
+                                    <span>NAME</span><span>STATUS</span>
+                                    <span>api-gateway-x92</span><span class="text-green-400">Running</span>
+                                    <span>worker-node-k8s</span><span class="text-green-400">Running</span>
+                                </div>
                             </div>
-
-                            <div class="mt-8">
-                                <a href="#" onclick="showView('about'); return false;" class="inline-flex items-center bg-black text-white px-6 py-3 rounded font-medium hover:bg-gray-800 transition-colors">
-                                    Conhecer história completa
-                                </a>
-                            </div>
+                            <!-- Accent decoration -->
+                            <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-gray-100 -z-10 rounded-xl"></div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Scroll Indicator -->
+                <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+                    <i data-lucide="arrow-down" class="w-6 h-6 text-gray-300"></i>
+                </div>
             </section>
 
-            <!-- Services Section -->
-            <section id="servicos" class="py-20 border-t border-gray-100">
+            <!-- Services Section (Bento Grid) -->
+            <section id="servicos" class="py-24 bg-gray-50 relative">
                 <div class="max-w-7xl mx-auto px-6">
-                    <div class="mb-16">
-                        <h2 class="text-3xl lg:text-4xl font-bold mb-4">Como posso ajudar</h2>
-                        <p class="text-gray-600">Consultoria, infraestrutura e desenvolvimento integrados a contextos de negócio.</p>
+                    <div class="mb-16 reveal-on-scroll">
+                        <span class="font-mono text-brand-gray text-sm tracking-wider uppercase">Minha Expertise</span>
+                        <h2 class="text-3xl lg:text-4xl font-display font-bold mt-2">Soluções end-to-end</h2>
                     </div>
 
-                    <div class="space-y-12">
-                        <!-- Service 1 -->
-                        <div class="grid md:grid-cols-[250px_1fr] gap-8 items-start pb-12 border-b border-gray-100 last:border-0">
-                            <div class="flex items-center gap-3 text-xl font-semibold">
-                                <i data-lucide="infinity" class="w-6 h-6"></i>
-                                Infra & DevOps
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <!-- Card 1 -->
+                        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-brand-lime transition-all duration-300 group reveal-on-scroll hover-trigger">
+                            <div class="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-lime transition-colors">
+                                <i data-lucide="infinity" class="w-6 h-6 group-hover:text-black"></i>
                             </div>
-                            <div class="space-y-3 text-gray-600">
-                                <p>Arquitetura e automação (Ansible, Helm, Kubernetes)</p>
-                                <p>Pipelines CI/CD</p>
-                                <p>Monitoramento e observabilidade</p>
-                            </div>
+                            <h3 class="text-xl font-bold font-display mb-3">DevOps Engineering</h3>
+                            <p class="text-gray-500 text-sm leading-relaxed">
+                                Arquitetura resiliente e automação completa. Especialista em Kubernetes, Helm e CI/CD Pipelines para deploys seguros.
+                            </p>
+                            <ul class="mt-6 space-y-2 font-mono text-xs text-gray-400">
+                                <li class="flex items-center gap-2"><div class="w-1 h-1 bg-brand-lime rounded-full"></div>AWS / Azure</li>
+                                <li class="flex items-center gap-2"><div class="w-1 h-1 bg-brand-lime rounded-full"></div>Terraform</li>
+                            </ul>
                         </div>
 
-                        <!-- Service 2 -->
-                        <div class="grid md:grid-cols-[250px_1fr] gap-8 items-start pb-12 border-b border-gray-100 last:border-0">
-                            <div class="flex items-center gap-3 text-xl font-semibold">
+                        <!-- Card 2 -->
+                        <div class="bg-black text-white p-8 rounded-2xl border border-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group reveal-on-scroll hover-trigger">
+                            <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-lime group-hover:text-black transition-colors">
                                 <i data-lucide="code-2" class="w-6 h-6"></i>
-                                Desenvolvimento
                             </div>
-                            <div class="space-y-3 text-gray-600">
-                                <p>Backend em Python</p>
-                                <p>Integrações com APIs e serviços</p>
-                                <p>Data science</p>
-                            </div>
+                            <h3 class="text-xl font-bold font-display mb-3">Backend & Data</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Desenvolvimento de APIs robustas e processamento de dados. Foco em performance e escalabilidade do código.
+                            </p>
+                            <ul class="mt-6 space-y-2 font-mono text-xs text-gray-500">
+                                <li class="flex items-center gap-2"><div class="w-1 h-1 bg-brand-lime rounded-full"></div>Python / Node.js</li>
+                                <li class="flex items-center gap-2"><div class="w-1 h-1 bg-brand-lime rounded-full"></div>Data Engineering</li>
+                            </ul>
                         </div>
 
-                        <!-- Service 3 -->
-                        <div class="grid md:grid-cols-[250px_1fr] gap-8 items-start pb-12 border-b border-gray-100 last:border-0">
-                            <div class="flex items-center gap-3 text-xl font-semibold">
-                                <i data-lucide="search" class="w-6 h-6"></i>
-                                Consultoria técnica
+                        <!-- Card 3 -->
+                        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-brand-lime transition-all duration-300 group reveal-on-scroll hover-trigger">
+                            <div class="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-lime transition-colors">
+                                <i data-lucide="search" class="w-6 h-6 group-hover:text-black"></i>
                             </div>
-                            <div class="space-y-3 text-gray-600">
-                                <p>Diagnóstico e melhoria de infraestrutura</p>
-                                <p>Desenvolvimento de software completo</p>
-                                <p>Treinamentos técnicos sob demanda</p>
-                            </div>
+                            <h3 class="text-xl font-bold font-display mb-3">Consultoria Técnica</h3>
+                            <p class="text-gray-500 text-sm leading-relaxed">
+                                Diagnóstico de infraestrutura, redução de custos em cloud e treinamento técnico para times de desenvolvimento.
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Projects Section -->
-            <section id="projetos" class="py-24 bg-[#0a0a0a] text-white">
+            <section id="projetos" class="py-24 bg-brand-black text-white relative overflow-hidden">
+                <!-- Background decorative element -->
+                <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-gray-900 to-transparent opacity-50 pointer-events-none"></div>
+
                 <div class="max-w-7xl mx-auto px-6">
-                    <div class="text-center mb-20">
-                        <h2 class="text-3xl lg:text-5xl font-bold mb-4">Projetos com entregas mensuráveis e escaláveis</h2>
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-6 reveal-on-scroll">
+                        <div>
+                            <span class="font-mono text-brand-lime text-sm tracking-wider uppercase">Selected Works</span>
+                            <h2 class="text-4xl lg:text-6xl font-display font-bold mt-2">Cases Reais</h2>
+                        </div>
+                        <p class="text-gray-400 max-w-sm text-right md:text-left">
+                            Projetos onde a tecnologia encontrou o negócio para gerar resultados mensuráveis.
+                        </p>
                     </div>
 
                     <div class="space-y-32">
                         <!-- Project 1: Dai Tec -->
-                        <div class="grid lg:grid-cols-2 gap-12 items-center group">
+                        <div class="group relative grid lg:grid-cols-2 gap-12 items-center reveal-on-scroll">
                             <div class="order-2 lg:order-1">
-                                <h3 class="text-2xl font-bold mb-2">Dai Tec <span class="font-normal text-gray-400">— Assistente Inteligente</span></h3>
-
+                                <div class="text-brand-lime font-mono mb-4">01. Fintech</div>
+                                <h3 class="text-3xl font-bold mb-4 font-display">Dai Tec AI</h3>
                                 <p class="text-gray-400 mb-6 leading-relaxed">
-                                    Implementei a estrutura completa do meio de pagamento via Stripe e atuei no desenvolvimento do core do produto baseado em IA, garantindo uma arquitetura robusta e escalável.
+                                    Implementação de infraestrutura financeira segura. Atuei no core do produto integrando Stripe e OpenAI, resultando em 30% mais conversão.
                                 </p>
-                                <p class="text-gray-400 mb-8 leading-relaxed">
-                                    Com uma infraestrutura DevOps na AWS, pipelines de CI/CD e monitoramento de dados, o resultado foi um aumento de 30% na conversão de transações.
-                                </p>
-
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Node.js</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">OpenAI API</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Stripe</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">AWS</span>
+                                <div class="flex flex-wrap gap-2 font-mono text-xs">
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">Stripe</span>
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">AWS</span>
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">Node.js</span>
                                 </div>
                             </div>
-                            <div class="order-1 lg:order-2 bg-gray-800 rounded-lg overflow-hidden p-8 flex items-center justify-center aspect-video group-hover:bg-gray-700 transition-colors">
-                                <!-- Mockup Placeholder -->
-                                <div class="relative w-full max-w-md">
-                                    <img src="https://images.unsplash.com/photo-1481487484168-9b930d5b7d9f?q=80&w=2070&auto=format&fit=crop" class="rounded shadow-2xl w-full h-auto opacity-90 transform group-hover:scale-105 transition-transform duration-500" alt="Dai Tec Interface">
+
+                            <!-- Enhanced Image Container -->
+                            <div class="order-1 lg:order-2 relative hover-trigger">
+                                <div class="absolute -inset-2 bg-gradient-to-r from-brand-lime to-transparent opacity-20 rounded-xl blur-lg group-hover:opacity-40 transition-opacity"></div>
+                                <div class="relative rounded-xl overflow-hidden bg-gray-900 border border-gray-700 aspect-video group-hover:scale-[1.02] transition-transform duration-500 shadow-2xl">
+                                    <!-- Scanline Overlay -->
+                                    <div class="absolute inset-0 scanlines opacity-50 pointer-events-none z-10"></div>
+
+                                    <!-- Image -->
+                                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" alt="Dai Tec">
+
+                                    <!-- Data HUD Overlay -->
+                                    <div class="absolute inset-0 stats-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
+                                        <div class="text-center transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                                            <div class="font-mono text-brand-lime text-xs tracking-widest mb-2 border-b border-brand-lime/30 pb-2 inline-block">IMPACT FACTOR</div>
+                                            <div class="font-display text-4xl font-bold text-white mb-1">+30%</div>
+                                            <div class="font-mono text-xs text-gray-400">CONVERSION RATE</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Project 2: SystemFrame -->
-                        <div class="grid lg:grid-cols-2 gap-12 items-center group">
+                        <div class="group relative grid lg:grid-cols-2 gap-12 items-center reveal-on-scroll">
                             <div class="order-2 lg:order-2">
-                                <h3 class="text-2xl font-bold mb-2">SystemFrame <span class="font-normal text-gray-400">— Data Science & DevOps</span></h3>
-
+                                <div class="text-brand-lime font-mono mb-4">02. Data Ops</div>
+                                <h3 class="text-3xl font-bold mb-4 font-display">SystemFrame</h3>
                                 <p class="text-gray-400 mb-6 leading-relaxed">
-                                    Estruturei todo o ambiente DevOps da empresa com Kubernetes, automação de deploys e ferramentas internas para coleta e monitoramento de dados.
+                                    Reestruturação completa de DevOps com Kubernetes. A automação reduziu a taxa de erros em 30% e acelerou o time-to-market.
                                 </p>
-                                <p class="text-gray-400 mb-8 leading-relaxed">
-                                    A reestruturação reduziu a taxa de erros em ambientes e melhorou a depuração de bugs em mais de 30%, aumentando a confiabilidade das operações.
-                                </p>
-
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">AWS</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Python</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Helm</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Kubernetes</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Terraform</span>
+                                <div class="flex flex-wrap gap-2 font-mono text-xs">
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">K8s</span>
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">Helm</span>
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">Python</span>
                                 </div>
                             </div>
-                            <div class="order-1 lg:order-1 bg-gray-800 rounded-lg overflow-hidden p-8 flex items-center justify-center aspect-video group-hover:bg-gray-700 transition-colors">
-                                <div class="relative w-full max-w-md">
-                                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" class="rounded shadow-2xl w-full h-auto opacity-90 transform group-hover:scale-105 transition-transform duration-500" alt="SystemFrame">
+
+                            <!-- Enhanced Image Container -->
+                            <div class="order-1 lg:order-1 relative hover-trigger">
+                                <div class="absolute -inset-2 bg-gradient-to-l from-brand-lime to-transparent opacity-20 rounded-xl blur-lg group-hover:opacity-40 transition-opacity"></div>
+                                <div class="relative rounded-xl overflow-hidden bg-gray-900 border border-gray-700 aspect-video group-hover:scale-[1.02] transition-transform duration-500 shadow-2xl">
+                                    <div class="absolute inset-0 scanlines opacity-50 pointer-events-none z-10"></div>
+
+                                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" alt="SystemFrame">
+
+                                     <!-- Data HUD Overlay -->
+                                     <div class="absolute inset-0 stats-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
+                                        <div class="text-center transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                                            <div class="font-mono text-brand-lime text-xs tracking-widest mb-2 border-b border-brand-lime/30 pb-2 inline-block">PERFORMANCE</div>
+                                            <div class="font-display text-4xl font-bold text-white mb-1">-30%</div>
+                                            <div class="font-mono text-xs text-gray-400">ERROR RATE</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Project 3: Cogcs -->
-                        <div class="grid lg:grid-cols-2 gap-12 items-center group">
+                         <!-- Project 3: Cogcs -->
+                         <div class="group relative grid lg:grid-cols-2 gap-12 items-center reveal-on-scroll">
                             <div class="order-2 lg:order-1">
-                                <h3 class="text-2xl font-bold mb-2">Cogcs <span class="font-normal text-gray-400">— Mobile App</span></h3>
-
+                                <div class="text-brand-lime font-mono mb-4">03. Mobile Architecture</div>
+                                <h3 class="text-3xl font-bold mb-4 font-display">Cogcs</h3>
                                 <p class="text-gray-400 mb-6 leading-relaxed">
-                                    Atuo como líder técnico e de produto no desenvolvimento do Cogcs, um app mobile, tendo participado desde a concepção até a produção, com foco total em performance e escalabilidade.
+                                    Liderança técnica na concepção de app mobile. Arquitetura modular baseada em microsserviços com K3s. Foco em performance.
                                 </p>
-                                <p class="text-gray-400 mb-8 leading-relaxed">
-                                    Defini a stack, a arquitetura modular baseada em microsserviços com K3s e pipelines automatizadas.
-                                </p>
-
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">AWS</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Cloudflare</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Ansible</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Helm</span>
+                                <div class="flex flex-wrap gap-2 font-mono text-xs">
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">K3s</span>
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">Ansible</span>
+                                    <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full">Cloudflare</span>
                                 </div>
                             </div>
-                            <div class="order-1 lg:order-2 bg-gray-800 rounded-lg overflow-hidden p-8 flex items-center justify-center aspect-video relative group-hover:bg-gray-700 transition-colors">
-                                <span class="absolute top-4 right-4 bg-[#ccff00] text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider z-10">Em Breve</span>
-                                <div class="relative w-full max-w-[200px]">
-                                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2070&auto=format&fit=crop" class="rounded-3xl shadow-2xl w-full h-auto opacity-90 transform group-hover:scale-105 transition-transform duration-500" alt="Cogcs Mobile">
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Project 4: Crop2U -->
-                        <div class="grid lg:grid-cols-2 gap-12 items-center group">
-                            <div class="order-2 lg:order-2">
-                                <h3 class="text-2xl font-bold mb-2">Crop2U <span class="font-normal text-gray-400">— Plataforma de Negociação Agrícola</span></h3>
+                            <!-- Enhanced Image Container -->
+                            <div class="order-1 lg:order-2 relative hover-trigger">
+                                <div class="absolute -top-4 -right-4 bg-brand-lime text-black font-bold text-xs px-3 py-1 rounded z-20 font-mono shadow-[0_0_15px_rgba(204,255,0,0.6)]">Coming Soon</div>
+                                <div class="relative rounded-xl overflow-hidden bg-gray-900 border border-gray-700 aspect-video group-hover:scale-[1.02] transition-transform duration-500 shadow-2xl">
+                                    <div class="absolute inset-0 scanlines opacity-50 pointer-events-none z-10"></div>
 
-                                <p class="text-gray-400 mb-6 leading-relaxed">
-                                    Desenvolvi uma solução empresarial completa para negociações agrícolas com arquitetura full-stack, IA integrada, autenticação robusta e sistemas de mensageria em tempo real.
-                                </p>
-                                <p class="text-gray-400 mb-8 leading-relaxed">
-                                    Toda a infraestrutura foi automatizada via GitHub Actions e implantada na AWS, entregando escalabilidade e segurança.
-                                </p>
+                                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1974&auto=format&fit=crop" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" alt="Cogcs">
 
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Docker</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">AWS (ECR, S3)</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Nginx</span>
-                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">Socket.io</span>
-                                </div>
-                            </div>
-                            <div class="order-1 lg:order-1 bg-gray-800 rounded-lg overflow-hidden p-8 flex items-center justify-center aspect-video group-hover:bg-gray-700 transition-colors">
-                                <div class="relative w-full max-w-md">
-                                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" class="rounded shadow-2xl w-full h-auto opacity-90 transform group-hover:scale-105 transition-transform duration-500" alt="Crop2U">
+                                     <!-- Data HUD Overlay -->
+                                     <div class="absolute inset-0 stats-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
+                                        <div class="text-center transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                                            <div class="font-mono text-brand-lime text-xs tracking-widest mb-2 border-b border-brand-lime/30 pb-2 inline-block">STACK</div>
+                                            <div class="font-display text-4xl font-bold text-white mb-1">Microservices</div>
+                                            <div class="font-mono text-xs text-gray-400">ARCHITECTURE</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -337,237 +462,189 @@
                 </div>
             </section>
 
-            <!-- Testimonials Section -->
-            <section class="py-24 bg-white">
-                <div class="max-w-4xl mx-auto px-6 text-center">
-                    <i data-lucide="quote" class="w-12 h-12 mx-auto mb-8 text-black fill-current opacity-20"></i>
-
-                    <div id="testimonial-container" class="min-h-[200px] flex items-center justify-center">
-                        <blockquote class="text-xl md:text-3xl font-medium leading-normal mb-10 transition-opacity duration-300" id="testimonial-text">
-                            "Tive o prazer de trabalhar com o Hélio e o que mais se destaca nele é sua visão estratégica. [...] É o tipo de profissional que eleva a maturidade e o pensamento crítico de toda a equipe."
-                        </blockquote>
+            <!-- Testimonials -->
+            <section class="py-24 bg-white relative">
+                <div class="max-w-5xl mx-auto px-6">
+                    <div class="text-center mb-16">
+                        <i data-lucide="quote" class="w-12 h-12 mx-auto text-brand-lime mb-6 fill-current opacity-50"></i>
                     </div>
 
-                    <div class="mt-8">
-                        <p class="font-bold text-lg" id="testimonial-author">Acacio Fernandes</p>
-                        <p class="text-gray-500" id="testimonial-role">Head de Tecnologia</p>
+                    <div class="relative bg-gray-50 rounded-3xl p-8 md:p-16 border border-gray-100 shadow-sm reveal-on-scroll">
+                        <div id="testimonial-container" class="min-h-[180px] flex flex-col justify-center items-center text-center">
+                            <p id="testimonial-text" class="text-xl md:text-2xl font-medium text-gray-800 leading-normal mb-8 font-display transition-all duration-500">
+                                "Tive o prazer de trabalhar com o Hélio e o que mais se destaca nele é sua visão estratégica. É o tipo de profissional que eleva a maturidade e o pensamento crítico de toda a equipe."
+                            </p>
+                            <div>
+                                <h4 id="testimonial-author" class="font-bold text-lg">Acacio Fernandes</h4>
+                                <span id="testimonial-role" class="text-gray-500 font-mono text-sm">Head de Tecnologia</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Custom Tabs -->
-                    <div class="flex justify-center mt-16 border-t border-gray-100">
-                        <button onclick="setTestimonial(0)" class="testimonial-btn px-8 py-6 border-t-2 border-black font-medium text-black bg-gray-50 flex-1 md:flex-none w-full md:w-auto transition-colors">
-                            Acacio Fernandes
-                            <span class="block text-xs text-gray-500 font-normal mt-1">Head de Tecnologia</span>
-                        </button>
-                        <button onclick="setTestimonial(1)" class="testimonial-btn px-8 py-6 border-t-2 border-transparent text-gray-400 hover:text-black flex-1 md:flex-none w-full md:w-auto transition-colors">
-                            Juliana Herane
-                            <span class="block text-xs text-gray-500 font-normal mt-1">Product Owner</span>
-                        </button>
-                        <button onclick="setTestimonial(2)" class="testimonial-btn px-8 py-6 border-t-2 border-transparent text-gray-400 hover:text-black flex-1 md:flex-none w-full md:w-auto transition-colors">
-                            André Dini
-                            <span class="block text-xs text-gray-500 font-normal mt-1">Tech Lead</span>
-                        </button>
+                    <!-- Custom Tab Triggers -->
+                    <div class="flex justify-center gap-4 mt-8">
+                        <button onclick="setTestimonial(0)" class="w-3 h-3 rounded-full bg-brand-lime transition-all hover:scale-125 testimonial-dot"></button>
+                        <button onclick="setTestimonial(1)" class="w-3 h-3 rounded-full bg-gray-200 hover:bg-brand-lime transition-all hover:scale-125 testimonial-dot"></button>
+                        <button onclick="setTestimonial(2)" class="w-3 h-3 rounded-full bg-gray-200 hover:bg-brand-lime transition-all hover:scale-125 testimonial-dot"></button>
                     </div>
                 </div>
             </section>
         </div>
 
         <!-- ABOUT VIEW -->
-        <div id="about-view" class="view-hidden">
-            <!-- About Hero -->
-            <section class="relative pt-12 pb-16 lg:pt-28 lg:pb-20 overflow-hidden">
-                <div class="absolute top-0 right-0 w-1/2 h-full hero-grid pointer-events-none -z-10"></div>
-
-                <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="max-w-2xl">
-                        <h1 class="text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
-                            Da curiosidade ao código: minha jornada em tecnologia
-                        </h1>
-                        <p class="text-lg text-gray-600 leading-relaxed mb-8 max-w-xl">
-                            Sou <span class="font-semibold text-black">Hélio Fernandes</span>, <span class="font-semibold text-black">DevOps Developer</span> que conecta operação e desenvolvimento para entregar soluções completas, estratégicas e escaláveis.
-                        </p>
-                    </div>
-
-                     <div class="hidden lg:flex justify-center items-center relative">
-                       <div class="absolute bottom-10 right-10 animate-bounce">
-                           <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
-                       </div>
-                    </div>
+        <div id="about-view" class="view-section pt-10">
+            <div class="max-w-4xl mx-auto px-6 pb-24">
+                <div class="mb-12">
+                    <button onclick="switchView('home')" class="flex items-center gap-2 text-sm font-mono text-gray-500 hover:text-black mb-8 hover-trigger">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+                    </button>
+                    <h1 class="text-5xl font-display font-bold mb-6">Da curiosidade ao <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-lime to-green-600">código.</span></h1>
                 </div>
-            </section>
 
-            <!-- Wide Image Section -->
-            <section class="px-6 pb-20">
-                <div class="max-w-7xl mx-auto">
-                    <div class="rounded-xl overflow-hidden shadow-2xl h-[400px] lg:h-[600px] relative">
-                         <!-- Placeholder for the setup image in sobre.png -->
-                        <img src="https://images.unsplash.com/photo-1544725121-be3bf52e2dc8?q=80&w=2067&auto=format&fit=crop" class="w-full h-full object-cover object-center" alt="Setup de Trabalho">
-                    </div>
-                </div>
-            </section>
-
-            <!-- History Section -->
-            <section class="py-12 bg-white">
-                <div class="max-w-7xl mx-auto px-6">
-                    <div class="grid md:grid-cols-[1fr_2fr] gap-12">
-                        <div>
-                            <h2 class="text-3xl lg:text-4xl font-bold sticky top-32">Minha história completa</h2>
-                        </div>
-                        <div class="space-y-8 text-gray-600 leading-relaxed text-lg">
-                            <p>
-                                Minha jornada na tecnologia começou por influência de um amigo das antigas, um programador raiz, o famoso <em class="italic">old school</em>. Naquela época, não havia tanto conteúdo acessível como hoje.
-                            </p>
-                            <p>
-                                Um dia, ele me presenteou com um livro de programação e disse: "Estuda aí". Eu nem sabia o que era um terminal, mas mergulhei no desafio, e foi assim que que me encontrei no universo da programação e da resolução de problemas por meio da tecnologia.
-                            </p>
-                            <p>
-                                <strong class="text-black block mb-2">Hoje atuo como DevOps Developer, com experiência tanto na manutenção de infraestrutura quanto no desenvolvimento de aplicações web e soluções de TI.</strong>
-                                Esse equilíbrio me dá um diferencial importante no mercado: consigo transitar entre operação e código com naturalidade, entregando soluções completas e integradas.
-                            </p>
-                            <p>
-                                Gosto de me posicionar de forma estratégica nos projetos, sempre buscando entregar valor real ao time e ao cliente. Tenho um olhar voltado para produto e acredito que tecnologia bem aplicada resolve problemas de verdade.
-                            </p>
-                            <p>
-                                Alguns dos valores que levo comigo no dia a dia são <strong class="text-black">comprometimento, responsabilidade e inovação</strong>. A inovação é uma das minhas maiores motivações, pois me impulsiona a criar, testar, melhorar e manter um ambiente de trabalho leve e flexível, de qualquer lugar.
-                            </p>
-                            <p>
-                                Sou apaixonado por tecnologia, especialmente por <strong class="text-black">Linux, open source e bike</strong> (mas isso é assunto para outra página 😄). Curto muito ver as coisas funcionando. Faço projetos pessoais e colaborativos com amigos, tanto para me manter atualizado quanto para manter minha rede viva e conectada.
-                            </p>
+                <div class="prose prose-lg prose-gray max-w-none">
+                    <div class="float-right ml-8 mb-8 w-64 md:w-80 relative group hover-trigger">
+                        <div class="absolute inset-0 bg-brand-lime rounded-lg translate-x-2 translate-y-2 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"></div>
+                        <div class="relative rounded-lg overflow-hidden border-2 border-black">
+                            <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2069&auto=format&fit=crop" class="w-full grayscale hover:grayscale-0 transition-all duration-500" alt="Hélio">
                         </div>
                     </div>
+
+                    <p class="lead text-xl text-black font-medium">
+                        Minha jornada começou com um livro e um desafio: "Estuda aí".
+                    </p>
+                    <p>
+                        Foi um amigo programador <em>old school</em> que me entregou esse livro. Na época, eu não sabia o que era um terminal. Hoje, o terminal é minha segunda casa.
+                    </p>
+                    <p>
+                        Atualmente atuo como <strong>DevOps Developer</strong>. Meu diferencial é a hibridez: transito entre a infraestrutura pura (Linux, Redes, Cloud) e o desenvolvimento de software (Código, Lógica, Produto). Isso me permite desenhar soluções que não apenas funcionam, mas escalam e fazem sentido para o negócio.
+                    </p>
+
+                    <h3 class="font-display font-bold text-2xl mt-12 mb-4">Filosofia</h3>
+                    <p>
+                        Acredito que tecnologia sem propósito é apenas custo. Meus valores são <strong>Comprometimento</strong>, <strong>Responsabilidade</strong> e <strong>Inovação</strong>. Gosto de criar ambientes onde as coisas funcionam "como mágica", mas documentadas como engenharia.
+                    </p>
+
+                    <h3 class="font-display font-bold text-2xl mt-12 mb-4">Além do teclado</h3>
+                    <p>
+                        Sou apaixonado por <strong class="bg-brand-lime/30 px-1">Open Source</strong> e <strong class="bg-brand-lime/30 px-1">Bike</strong>. Acredito que o movimento físico ajuda a destravar a lógica mental. Mantenho projetos colaborativos com amigos para garantir que minha rede esteja sempre ativa e aprendendo.
+                    </p>
                 </div>
-            </section>
+            </div>
         </div>
 
     </main>
 
-    <!-- Contact Section (Shared) -->
-    <section id="contato" class="py-24 bg-white relative border-t border-gray-100">
-        <!-- Decoration side -->
-        <div class="hidden lg:block absolute left-0 top-0 w-12 h-full diagonal-pattern"></div>
-        <div class="hidden lg:block absolute right-0 top-0 w-12 h-full diagonal-pattern"></div>
-
-        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16">
-            <div>
-                <h2 class="text-4xl font-bold mb-6">Vamos criar algo relevante</h2>
-                <p class="text-gray-600 mb-12 text-lg">
-                    Está montando um time? Quer acelerar seu produto? Ou busca um parceiro técnico de confiança? <strong class="text-black">Entre em contato.</strong>
-                </p>
-
-                <div class="mt-auto">
-                    <p class="text-sm font-semibold mb-4 text-gray-900">Ou me encontre nas redes sociais</p>
-                    <div class="flex gap-6 text-gray-500">
-                        <a href="#" class="hover:text-black transition-colors">LinkedIn</a>
-                        <span class="text-gray-300">|</span>
-                        <a href="#" class="hover:text-black transition-colors">GitHub</a>
-                        <span class="text-gray-300">|</span>
-                        <a href="#" class="hover:text-black transition-colors">Medium</a>
-                        <span class="text-gray-300">|</span>
-                        <a href="#" class="hover:text-black transition-colors">Instagram</a>
-                    </div>
-                </div>
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-16">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <span class="font-display font-bold text-2xl tracking-tight">Helio.dev</span>
+                <p class="text-gray-500 text-sm mt-2">© 2024 Hélio Fernandes. Built with logic & creativity.</p>
             </div>
 
-            <div class="bg-white">
-                <form class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Seu nome</label>
-                        <input type="text" placeholder="Digite seu nome" class="w-full px-4 py-3 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Seu email</label>
-                        <input type="email" placeholder="Digite seu email" class="w-full px-4 py-3 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Número de WhatsApp</label>
-                        <input type="tel" placeholder="(00) 00000-0000" class="w-full px-4 py-3 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Assunto</label>
-                        <textarea rows="4" placeholder="Sobre o que deseja conversar?" class="w-full px-4 py-3 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors resize-none"></textarea>
-                    </div>
-
-                    <button type="submit" class="w-full bg-black text-white font-medium py-4 rounded-md hover:bg-gray-800 transition-colors">
-                        Enviar
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer Bottom -->
-    <footer class="bg-black text-white py-8 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="text-sm text-gray-400">
-                <p class="font-bold text-white mb-1">Hélio Fernandes</p>
-                <p>DevOps Developer</p>
-            </div>
-
-            <div class="flex items-center gap-6">
-                <div class="text-xs text-gray-500 text-right">
-                    <p>CNPJ 11.111.111/0001-11</p>
-                    <p>Todos os direitos reservados.</p>
-                </div>
-                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-gray-800 p-2 rounded hover:bg-gray-700 transition-colors">
-                    <i data-lucide="arrow-up" class="w-4 h-4"></i>
-                </button>
+            <div class="flex gap-8">
+                <a href="#" class="text-gray-400 hover:text-brand-lime transition-colors hover-trigger"><i data-lucide="linkedin"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-lime transition-colors hover-trigger"><i data-lucide="github"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-lime transition-colors hover-trigger"><i data-lucide="instagram"></i></a>
             </div>
         </div>
     </footer>
 
+    <!-- JS Logic -->
     <script>
-        // Initialize Icons
+        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // --- NAVIGATION LOGIC ---
-        function showView(viewName) {
-            const homeView = document.getElementById('home-view');
-            const aboutView = document.getElementById('about-view');
+        // 1. Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
 
-            // Hide all first
-            homeView.classList.add('view-hidden');
-            aboutView.classList.add('view-hidden');
+        // Only activate custom cursor on non-touch devices
+        if (window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
 
-            // Show selected
-            if (viewName === 'home') {
-                homeView.classList.remove('view-hidden');
-            } else if (viewName === 'about') {
-                aboutView.classList.remove('view-hidden');
-            }
+                // Simple follow
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
 
-            // Scroll to top when switching views
-            window.scrollTo({top: 0, behavior: 'smooth'});
+                // Lag effect for outline
+                cursorOutline.animate({
+                    left: `${posX}px`,
+                    top: `${posY}px`
+                }, { duration: 500, fill: "forwards" });
+            });
+
+            // Add hover state for interactive elements
+            const interactiveElements = document.querySelectorAll('a, button, .hover-trigger');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
         }
 
-        function navigateToSection(sectionId) {
-            // Ensure we are on home view first
-            showView('home');
+        // 2. View Switching Logic
+        function switchView(viewName, sectionId = null) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
 
-            // Small timeout to allow view to render before scrolling
-            setTimeout(() => {
-                const element = document.getElementById(sectionId);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
+            // Show target view
+            const targetView = document.getElementById(`${viewName}-view`);
+            if(targetView) {
+                targetView.classList.add('active');
+
+                // Refresh Scroll Trigger logic
+                setTimeout(handleScrollAnimation, 100);
+
+                // Handle anchor scroll if provided
+                if (sectionId) {
+                    setTimeout(() => {
+                        const element = document.getElementById(sectionId);
+                        if(element) element.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                } else {
+                    window.scrollTo(0, 0);
                 }
-            }, 50);
+            }
         }
 
-        // --- TESTIMONIAL LOGIC ---
+        // 3. Scroll Animation (Intersection Observer)
+        function handleScrollAnimation() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal-on-scroll').forEach((element) => {
+                observer.observe(element);
+            });
+        }
+
+        // Init scroll observer on load
+        handleScrollAnimation();
+
+        // 4. Testimonials Logic
         const testimonials = [
             {
                 text: '"Tive o prazer de trabalhar com o Hélio e o que mais se destaca nele é sua visão estratégica. [...] É o tipo de profissional que eleva a maturidade e o pensamento crítico de toda a equipe."',
-                author: "Acacio Fernandes",
-                role: "Head de Tecnologia"
+                author: 'Acacio Fernandes',
+                role: 'Head de Tecnologia'
             },
             {
-                text: '"Um profissional que une técnica apurada com uma capacidade incrível de entender o negócio. Transformou nossos processos de deploy e trouxe uma cultura de qualidade indispensável."',
-                author: "Juliana Herane",
-                role: "Product Owner"
+                text: '"O Hélio trouxe uma clareza técnica impressionante para o nosso projeto. A infraestrutura que ele montou não só resolveu nossos problemas atuais como nos preparou para escalar."',
+                author: 'Juliana Herane',
+                role: 'Product Owner'
             },
             {
-                text: '"A facilidade com que o Hélio navega entre infraestrutura e código é impressionante. Resolveu gargalos de performance que tínhamos há meses em questão de dias."',
-                author: "André Dini",
-                role: "Tech Lead"
+                text: '"Trabalhar com o Hélio é garantia de qualidade. Ele não entrega apenas código, entrega soluções pensadas ponta a ponta."',
+                author: 'André Dini',
+                role: 'Tech Lead'
             }
         ];
 
@@ -575,7 +652,7 @@
             const textEl = document.getElementById('testimonial-text');
             const authorEl = document.getElementById('testimonial-author');
             const roleEl = document.getElementById('testimonial-role');
-            const buttons = document.querySelectorAll('.testimonial-btn');
+            const dots = document.querySelectorAll('.testimonial-dot');
 
             // Fade out
             textEl.style.opacity = '0';
@@ -586,14 +663,14 @@
                 authorEl.innerText = testimonials[index].author;
                 roleEl.innerText = testimonials[index].role;
 
-                // Update buttons
-                buttons.forEach((btn, i) => {
-                    if (i === index) {
-                        btn.classList.add('border-black', 'text-black', 'bg-gray-50');
-                        btn.classList.remove('border-transparent', 'text-gray-400');
+                // Update dots
+                dots.forEach((dot, i) => {
+                    if(i === index) {
+                        dot.classList.remove('bg-gray-200');
+                        dot.classList.add('bg-brand-lime');
                     } else {
-                        btn.classList.remove('border-black', 'text-black', 'bg-gray-50');
-                        btn.classList.add('border-transparent', 'text-gray-400');
+                        dot.classList.add('bg-gray-200');
+                        dot.classList.remove('bg-brand-lime');
                     }
                 });
 
@@ -602,15 +679,12 @@
             }, 300);
         }
 
-        // Header Scroll Effect
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('shadow-sm');
-            } else {
-                header.classList.remove('shadow-sm');
-            }
-        });
+        // 5. Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
     </script>
 </body>
 </html>
