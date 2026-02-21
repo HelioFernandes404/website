@@ -1,0 +1,26 @@
+---
+import type { Category } from '@/types/catalog';
+
+interface Props {
+  categories: Category[];
+}
+
+const { categories } = Astro.props;
+---
+
+<nav aria-label="Category navigation" class="mt-10">
+  <ul class="flex flex-wrap gap-3">
+    {
+      categories.map((category, index) => (
+        <li>
+          <a
+            href={`#${category.slug}`}
+            class="inline-flex items-center rounded-full border border-neutral-200 bg-white px-4 py-2 font-mono text-xs uppercase tracking-widest text-neutral-700 transition hover:-translate-y-0.5 hover:border-accent-primary hover:bg-[var(--color-accent-primary-a10)] hover:text-neutral-950 focus-visible:outline-none"
+          >
+            {String(index + 1).padStart(2, '0')} {category.name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

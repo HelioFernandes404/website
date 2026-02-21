@@ -1,0 +1,22 @@
+---
+import CategorySection from '@/components/category-section.astro';
+import CategoryTabs from '@/components/category-tabs.astro';
+import Hero from '@/components/hero.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getOrderedCategories, getToolsByCategory } from '@/lib/catalog';
+
+const categories = getOrderedCategories();
+---
+
+<BaseLayout>
+  <div class="mx-auto w-full max-w-7xl px-6 pb-24">
+    <Hero />
+    <CategoryTabs categories={categories} />
+
+    {
+      categories.map((category) => (
+        <CategorySection category={category} tools={getToolsByCategory(category.id)} />
+      ))
+    }
+  </div>
+</BaseLayout>
