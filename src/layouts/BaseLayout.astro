@@ -1,0 +1,29 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Dev Toolbox',
+  description = 'Curated developer tools by category for shipping products faster.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="min-h-screen bg-neutral-0 text-neutral-950 antialiased">
+    <div class="noise-film" aria-hidden="true"></div>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
