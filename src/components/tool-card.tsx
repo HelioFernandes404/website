@@ -25,7 +25,7 @@ function getFaviconUrl(url: string) {
 }
 
 export function ToolCard({ tool }: ToolCardProps) {
-  const faviconUrl = getFaviconUrl(tool.url);
+  const iconUrl = tool.iconUrl ?? getFaviconUrl(tool.url);
 
   return (
     <article className="group relative overflow-hidden rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-lg">
@@ -42,10 +42,10 @@ export function ToolCard({ tool }: ToolCardProps) {
       <div className="relative z-0 flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <div className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-neutral-50">
-            {faviconUrl ? (
+            {iconUrl ? (
               <Image
-                src={faviconUrl}
-                alt={`${tool.name} favicon`}
+                src={iconUrl}
+                alt={`${tool.name} icon`}
                 width={20}
                 height={20}
                 className="h-5 w-5 rounded-sm"

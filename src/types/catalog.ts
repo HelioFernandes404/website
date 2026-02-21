@@ -10,6 +10,7 @@ export type Tool = {
   name: string;
   description: string;
   url: string;
+  iconUrl?: string;
   tags: string[];
   categoryId: string;
   order: number;
