@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   output: 'static',
   integrations: [react(), sitemap()],
+
   vite: {
     plugins: [tailwindcss()],
     resolve: {
