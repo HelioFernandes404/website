@@ -1,25 +1,26 @@
 # Dev Toolbox
 
-Curated developer tools directory built with Next.js + TypeScript.
+Curated developer tools directory built with Astro + TypeScript.
 
 ## Quick start
 
 ```bash
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 Open `http://localhost:3000`.
 
 ## Scripts
 
-- `pnpm dev` - run local dev server
-- `pnpm build` - production build
-- `pnpm start` - run production server
-- `pnpm lint` - run ESLint
-- `pnpm format` - format repository with Prettier
-- `pnpm test` - run Vitest unit tests
-- `pnpm test:e2e` - run Playwright end-to-end tests
+- `npm run dev` - run local dev server
+- `npm run build` - production build
+- `npm run start` - run preview server
+- `npm run check` - run Astro type/content checks
+- `npm run lint` - run ESLint
+- `npm run format` - format repository with Prettier
+- `npm run test` - run Vitest unit tests
+- `npm run test:e2e` - run Playwright end-to-end tests
 
 ## Docs
 

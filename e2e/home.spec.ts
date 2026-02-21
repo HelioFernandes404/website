@@ -10,11 +10,11 @@ test('home renders hero and navigation', async ({ page }) => {
 test('category tabs target sections', async ({ page }) => {
   await page.goto('/');
 
-  const tab = page.getByRole('link', { name: '01 Vibe Coding' });
-  await expect(tab).toHaveAttribute('href', '#vibe-coding');
+  const tab = page.getByRole('link', { name: '01 AI Assistants' });
+  await expect(tab).toHaveAttribute('href', '#ai-assistants');
   await tab.click();
 
-  await expect(page.locator('#vibe-coding')).toBeVisible();
+  await expect(page.locator('#ai-assistants')).toBeVisible();
 });
 
 test('view all navigates to category placeholder', async ({ page }) => {

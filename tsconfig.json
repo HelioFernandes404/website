@@ -12,13 +12,20 @@
   },
   "include": [
     ".astro/types.d.ts",
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.astro"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.astro",
+    "e2e/**/*.ts",
+    "astro.config.mjs",
+    "playwright.config.ts",
+    "vitest.config.ts",
+    "vitest.setup.ts",
+    "next-env.d.ts"
   ],
   "exclude": [
+    ".next",
     "dist",
+    "node_modules.pnpm-backup",
     "node_modules"
   ]
 }
