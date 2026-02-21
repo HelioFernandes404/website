@@ -1,11 +1,21 @@
 
-  # Personal Link Hub Design
+# Personal Link Hub (Astro)
 
-  This is a code bundle for Personal Link Hub Design. The original project is available at https://www.figma.com/design/JMu22IyvVUKNy4KVWPa52p/Personal-Link-Hub-Design.
+This project was migrated from React/Vite to Astro with an SEO-first setup.
 
-  ## Running the code
+## Setup
 
-  Run `npm i` to install the dependencies.
+1. `npm install`
+2. `npm run dev`
 
-  Run `npm run dev` to start the development server.
+## Build
+
+1. `npm run build`
+2. `npm run preview`
+
+## SEO notes
+
+- Canonical URL and Open Graph are configured in `src/layouts/BaseLayout.astro`.
+- Structured data (`Person` JSON-LD) is generated in `src/pages/index.astro`.
+- `robots.txt` and `sitemap.xml` are available in `public/`.
   
