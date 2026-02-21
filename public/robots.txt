@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://heliosuns404.com/sitemap.xml

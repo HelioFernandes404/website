@@ -7,7 +7,13 @@ interface Props {
   canonicalPath?: string;
   currentPath?: string;
   image?: string;
-  jsonLd?: Record<string, unknown>;
+  imageAlt?: string;
+  lang?: string;
+  ogType?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 const {
@@ -16,12 +22,23 @@ const {
   canonicalPath = "/",
   currentPath = "/",
   image = "/helio_v2.png",
+  imageAlt = title,
+  lang = "en",
+  ogType = "website",
+  publishedTime,
+  modifiedTime,
+  noindex = false,
   jsonLd,
 } = Astro.props;
 
-const site = Astro.site ?? new URL("https://heliosuns404.com");
+const site = Astro.site ?? new URL("https://hub.heliosuns404.com");
 const canonicalUrl = new URL(canonicalPath, site).toString();
 const socialImage = new URL(image, site).toString();
+const robotsContent = noindex
+  ? "noindex,nofollow,max-image-preview:large"
+  : "index,follow,max-image-preview:large";
+const ogLocale = lang.includes("-") ? lang.replace("-", "_") : lang;
+const jsonLdEntries = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
 const navItems = [
   { label: "Index", href: "/" },
@@ -36,22 +53,30 @@ const isActive = (href: string) => {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="robots" content={robotsContent} />
     <meta name="author" content="Helio Fernandes" />
     <link rel="canonical" href={canonicalUrl} />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:site_name" content="Helio Fernandes" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {ogType === "article" && publishedTime && (
+      <meta property="article:published_time" content={publishedTime} />
+    )}
+    {ogType === "article" && modifiedTime && (
+      <meta property="article:modified_time" content={modifiedTime} />
+    )}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -60,13 +85,11 @@ const isActive = (href: string) => {
 
     <meta name="theme-color" content="#FFFFFF" />
 
-    {jsonLd && (
-      <script
-        is:inline
-        type="application/ld+json"
-        set:html={JSON.stringify(jsonLd)}
-      />
-    )}
+    {
+      jsonLdEntries.map((entry) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(entry)} />
+      ))
+    }
   </head>
   <body>
     <div class="site-frame">

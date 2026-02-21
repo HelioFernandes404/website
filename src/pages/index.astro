@@ -5,6 +5,9 @@ import profile from "../data/profile.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const description = profile.bio.replace(/\n/g, " ").trim();
+const site = Astro.site ?? new URL("https://hub.heliosuns404.com");
+const homeUrl = new URL("/", site).toString();
+const imageUrl = new URL(profile.image, site).toString();
 const bioParagraphs = profile.bio
   .split("\n")
   .map((paragraph) => paragraph.trim())
@@ -14,22 +17,22 @@ if (bioParagraphs.length < 2) {
   bioParagraphs.push("I build practical systems with strong operations and measurable outcomes.");
 }
 
-const primaryLink = profile.links.find((link) => link.primary) ?? profile.links[0];
-const primaryUrl = primaryLink?.url ?? "https://heliosuns404.com";
 const mailUrl = profile.links.find((link) => link.url.startsWith("mailto:"))?.url;
 const sameAs = profile.links
   .map((link) => link.url)
   .filter((url) => /^https?:\/\//.test(url));
 
-const jsonLd = {
+const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": `${homeUrl}#person`,
   name: profile.name,
   jobTitle: profile.role,
   description,
-  image: profile.image,
-  url: primaryUrl,
+  image: imageUrl,
+  url: homeUrl,
   sameAs,
+  mainEntityOfPage: homeUrl,
   ...(mailUrl
     ? {
         contactPoint: [
@@ -42,6 +45,19 @@ const jsonLd = {
       }
     : {}),
 };
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${homeUrl}#website`,
+  name: profile.name,
+  url: homeUrl,
+  description,
+  inLanguage: "en",
+  publisher: { "@id": `${homeUrl}#person` },
+};
+
+const jsonLd = [websiteJsonLd, personJsonLd];
 
 type ProfileLink = (typeof profile.links)[number];
 
@@ -96,9 +112,10 @@ const featuredPost = [...posts].sort((a, b) => b.date.localeCompare(a.date))[0];
 ---
 
 <BaseLayout
-  title={`${profile.name} | ${profile.role}`}
+  title={`${profile.name} | Software Engineer, DevOps and AI in Production`}
   description={description}
   image={profile.image}
+  imageAlt={`${profile.name} profile photo`}
   canonicalPath="/"
   currentPath="/"
   jsonLd={jsonLd}
@@ -195,7 +212,9 @@ const featuredPost = [...posts].sort((a, b) => b.date.localeCompare(a.date))[0];
           <span class="entry-tag">{featuredPost.category}</span>
         </span>
         <span class="entry-description">{featuredPost.description}</span>
-        <span class="entry-meta">{featuredPost.date} • {featuredPost.category}</span>
+        <span class="entry-meta">
+          <time datetime={featuredPost.date}>{featuredPost.date}</time> • {featuredPost.category}
+        </span>
       </a>
 
       <a class="text-link" href="/blog">View all posts → Blog</a>
