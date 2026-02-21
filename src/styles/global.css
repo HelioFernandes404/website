@@ -178,6 +178,44 @@ h3 {
   gap: 0.85rem;
 }
 
+.island-panel {
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-xl);
+  background: var(--color-neutral-50);
+  padding: 0.85rem 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.island-text {
+  margin: 0;
+  color: var(--color-neutral-700);
+  font-size: 0.92rem;
+}
+
+.island-button {
+  appearance: none;
+  border: 1px solid var(--color-neutral-300);
+  background: var(--color-neutral-0);
+  color: var(--color-neutral-950);
+  border-radius: var(--radius-md);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  transition:
+    border-color 250ms var(--motion-standard),
+    transform 250ms var(--motion-standard);
+}
+
+.island-button:hover {
+  border-color: var(--color-neutral-500);
+  transform: translateY(-1px);
+}
+
 .entry-list {
   margin: 0;
   padding: 0;
