@@ -1,28 +1,23 @@
-import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { ToolCard } from '@/components/tool-card';
+import { getFaviconUrl, getToolHostname } from '@/lib/tool-card-utils';
 
 describe('ToolCard', () => {
-  it('renders external link with safe attributes', () => {
-    render(
-      <ToolCard
-        tool={{
-          id: 'tool',
-          name: 'Tool Name',
-          description: 'Short description',
-          url: 'https://example.com',
-          tags: ['a', 'b'],
-          categoryId: 'cat',
-          order: 1,
-        }}
-      />,
+  it('extracts hostname from valid urls', () => {
+    expect(getToolHostname('https://example.com/path')).toBe('example.com');
+  });
+
+  it('returns an empty hostname for invalid urls', () => {
+    expect(getToolHostname('invalid-url')).toBe('');
+  });
+
+  it('builds the favicon url when hostname exists', () => {
+    expect(getFaviconUrl('https://example.com/path')).toBe(
+      'https://www.google.com/s2/favicons?sz=64&domain_url=example.com',
     );
+  });
 
-    const link = screen.getByLabelText('Open Tool Name official site');
-
-    expect(link).toHaveAttribute('href', 'https://example.com');
-    expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  it('returns null favicon url when hostname cannot be resolved', () => {
+    expect(getFaviconUrl('invalid-url')).toBeNull();
   });
 });

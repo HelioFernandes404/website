@@ -4,7 +4,8 @@ export const tools: Tool[] = [
   {
     id: 'claude-code',
     name: 'Claude Code',
-    description: 'Agentic coding workflow focused on code edits, architecture and terminal execution.',
+    description:
+      'Agentic coding workflow focused on code edits, architecture and terminal execution.',
     url: 'https://www.anthropic.com/claude-code',
     tags: ['ai', 'coding', 'agent'],
     categoryId: 'ai-assistants',
@@ -50,7 +51,8 @@ export const tools: Tool[] = [
   {
     id: 'lazyvim',
     name: 'LazyVim',
-    description: 'Neovim distribution tuned for fast coding with curated plugins and sane defaults.',
+    description:
+      'Neovim distribution tuned for fast coding with curated plugins and sane defaults.',
     url: 'https://www.lazyvim.org/',
     tags: ['editor', 'neovim', 'terminal'],
     categoryId: 'editors-workspace',
@@ -185,7 +187,8 @@ export const tools: Tool[] = [
   {
     id: 'cloudflare-dns',
     name: 'Cloudflare DNS',
-    description: 'DNS management and traffic routing with global performance and security features.',
+    description:
+      'DNS management and traffic routing with global performance and security features.',
     url: 'https://www.cloudflare.com/dns/',
     tags: ['dns', 'network', 'security'],
     categoryId: 'platform-cloud',

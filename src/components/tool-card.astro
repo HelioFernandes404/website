@@ -1,7 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-
 import TagChip from '@/components/tag-chip.astro';
+import { getFaviconUrl } from '@/lib/tool-card-utils';
 import type { Tool } from '@/types/catalog';
 
 interface Props {
@@ -9,24 +8,6 @@ interface Props {
 }
 
 const { tool } = Astro.props;
-
-function getToolHostname(url: string) {
-  try {
-    return new URL(url).hostname;
-  } catch {
-    return '';
-  }
-}
-
-function getFaviconUrl(url: string) {
-  const hostname = getToolHostname(url);
-
-  if (!hostname) {
-    return null;
-  }
-
-  return `https://www.google.com/s2/favicons?sz=64&domain_url=${hostname}`;
-}
 
 const iconUrl = tool.iconUrl ?? getFaviconUrl(tool.url);
 ---
@@ -47,12 +28,14 @@ const iconUrl = tool.iconUrl ?? getFaviconUrl(tool.url);
       <div class="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-neutral-50">
         {
           iconUrl ? (
-            <Image
+            <img
               src={iconUrl}
               alt={`${tool.name} icon`}
               width={20}
               height={20}
               class="h-5 w-5 rounded-sm"
+              loading="lazy"
+              decoding="async"
             />
           ) : (
             <span class="font-mono text-xs font-semibold uppercase text-neutral-600">

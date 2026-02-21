@@ -5,9 +5,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -19,13 +17,7 @@
     "astro.config.mjs",
     "playwright.config.ts",
     "vitest.config.ts",
-    "vitest.setup.ts",
-    "next-env.d.ts"
+    "vitest.setup.ts"
   ],
-  "exclude": [
-    ".next",
-    "dist",
-    "node_modules.pnpm-backup",
-    "node_modules"
-  ]
+  "exclude": ["dist", "node_modules", "**/*.tsbuildinfo"]
 }

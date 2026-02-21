@@ -8,10 +8,6 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   output: 'static',
   integrations: [react(), sitemap()],
-  image: {
-    domains: ['www.google.com', 'notebooklm.google.com'],
-  },
-
   vite: {
     plugins: [tailwindcss()],
     resolve: {

@@ -9,19 +9,19 @@
 
 ### T0.1 — Inicializar projeto
 
-**Saída:** projeto Next.js + TS, scripts padrão, commit inicial  
+**Saída:** projeto Astro + TS, scripts padrão, commit inicial  
 **Aceite:**
 
-- `pnpm dev` sobe app
-- `pnpm lint` roda sem erro (ou com baseline definido)
+- `npm run dev` sobe app
+- `npm run check` roda sem erro
 
 ### T0.2 — Configurar lint/format
 
-**Saída:** ESLint + Prettier (ou Biome) com regras mínimas  
+**Saída:** Prettier (ou Biome) com regras mínimas  
 **Aceite:**
 
-- `pnpm lint` e `pnpm format` funcionam
-- Não há regras conflitantes com Tailwind/Next
+- `npm run format` funciona
+- Não há regras conflitantes com Tailwind/Astro
 
 ### T0.3 — Adicionar docs no repo
 
@@ -68,9 +68,9 @@
 
 ## Fase 3 — Layout e componentes
 
-### T3.1 — Layout base (App Router)
+### T3.1 — Layout base (Astro)
 
-**Saída:** `src/app/layout.tsx` com `Header`, `Footer`, `main`  
+**Saída:** `src/layouts/BaseLayout.astro` com `Header`, `Footer`, `main`  
 **Aceite:** rotas renderizando com semântica e foco visível
 
 ### T3.2 — Componentes de UI
@@ -111,13 +111,13 @@
 
 ### T5.1 — Testes unitários (mínimo)
 
-**Saída:** Vitest + Testing Library com smoke tests  
-**Aceite:** `pnpm test` passa
+**Saída:** Vitest com smoke tests  
+**Aceite:** `npm run test` passa
 
 ### T5.2 — E2E (mínimo)
 
 **Saída:** Playwright com 3 cenários principais  
-**Aceite:** `pnpm test:e2e` passa
+**Aceite:** `npm run test:e2e` passa
 
 ### T5.3 — A11y checklist
 
@@ -135,5 +135,5 @@
 
 ### T6.2 — CI (opcional)
 
-**Saída:** GitHub Actions (lint/test/build)  
+**Saída:** GitHub Actions (format/check/test/build)  
 **Aceite:** pipeline verde no PR
