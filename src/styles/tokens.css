@@ -41,8 +41,8 @@
   --color-overlay-white-a10: rgba(255, 255, 255, 0.1);
   --color-overlay-white-a80: rgba(255, 255, 255, 0.8);
 
-  --font-family-sans: 'Inter', sans-serif;
-  --font-family-display: 'Space Grotesk', sans-serif;
+  --font-family-sans: var(--font-space-grotesk), sans-serif;
+  --font-family-display: var(--font-space-grotesk), sans-serif;
   --font-family-mono: 'JetBrains Mono', monospace;
 
   --font-weight-light: 300;
