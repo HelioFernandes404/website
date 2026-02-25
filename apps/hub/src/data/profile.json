@@ -1,0 +1,33 @@
+{
+  "name": "HelioFernandes404",
+  "role": "Software Engineer",
+  "bio": "I build reliable software end to end and share practical insights on DevOps, AI in production, and modern development.",
+  "image": "/helio_v2.png",
+  "links": [
+    {
+      "id": 1,
+      "label": "Portfolio",
+      "url": "https://heliosuns404.com",
+      "iconName": "Globe",
+      "primary": true
+    },
+    {
+      "id": 2,
+      "label": "GitHub",
+      "url": "https://github.com/heliofernandes404",
+      "iconName": "Github"
+    },
+    {
+      "id": 3,
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/heliofernandes/",
+      "iconName": "Linkedin"
+    },
+    {
+      "id": 4,
+      "label": "Contact",
+      "url": "mailto:heliodevhub@gmail.com",
+      "iconName": "Mail"
+    }
+  ]
+}

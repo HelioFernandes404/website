@@ -1,0 +1,70 @@
+---
+import { posts } from "../../data/posts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const sortedPosts = [...posts].sort((a, b) => b.date.localeCompare(a.date));
+const description = "Artigos técnicos sobre DevOps, observabilidade, backend e IA aplicada em produção.";
+const site = Astro.site ?? new URL("https://hub.heliosuns404.com");
+const blogUrl = new URL("/blog", site).toString();
+const itemListElement = sortedPosts.map((post, index) => ({
+  "@type": "ListItem",
+  position: index + 1,
+  name: post.title,
+  url: new URL(`/blog/${post.slug}`, site).toString(),
+}));
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": `${blogUrl}#collection`,
+  name: "Writing",
+  url: blogUrl,
+  description,
+  inLanguage: "pt-BR",
+  mainEntity: {
+    "@type": "ItemList",
+    itemListOrder: "https://schema.org/ItemListOrderDescending",
+    numberOfItems: sortedPosts.length,
+    itemListElement,
+  },
+};
+---
+
+<BaseLayout
+  title="Writing | Helio Fernandes"
+  description={description}
+  canonicalPath="/blog"
+  currentPath="/blog"
+  lang="pt-BR"
+  jsonLd={jsonLd}
+>
+  <section class="intro-block">
+    <h1>Writing</h1>
+    <p class="intro-subtitle">DevOps, observabilidade, backend e IA aplicada em produção.</p>
+  </section>
+
+  <section class="content-block">
+    <ul class="entry-list">
+      {
+        sortedPosts.map((post) => (
+          <li>
+            <article>
+              <a class="entry-link" href={`/blog/${post.slug}`}>
+                <span class="entry-top">
+                  <span class="entry-title-wrap">
+                    <span class="entry-title">{post.title}</span>
+                  </span>
+                  <span class="entry-tag">{post.category}</span>
+                </span>
+                <span class="entry-description">{post.description}</span>
+                <span class="entry-meta">
+                  <time datetime={post.date}>{post.date}</time> • {post.category}
+                </span>
+              </a>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

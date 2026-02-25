@@ -1,0 +1,69 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Craft | Helio Fernandes";
+const description = "COGCS: flashcards com repetição espaçada e recursos inteligentes para acelerar aprendizado.";
+const site = Astro.site ?? new URL("https://hub.heliosuns404.com");
+const craftUrl = new URL("/craft", site).toString();
+const cogcsUrl = "https://cogcs.com/";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${craftUrl}#webpage`,
+  name: title,
+  url: craftUrl,
+  description,
+  inLanguage: "pt-BR",
+  mainEntity: {
+    "@type": "SoftwareApplication",
+    name: "COGCS",
+    applicationCategory: "EducationalApplication",
+    operatingSystem: "Web",
+    url: cogcsUrl,
+    description:
+      "Flashcards app with spaced repetition and smart learning features to help users learn faster.",
+  },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath="/craft"
+  currentPath="/craft"
+  lang="pt-BR"
+  jsonLd={jsonLd}
+>
+  <section class="intro-block">
+    <h1>Craft</h1>
+    <p class="intro-subtitle">Apps e experimentos em construção.</p>
+  </section>
+
+  <section class="content-block">
+    <h2>COGCS</h2>
+
+    <a
+      class="entry-link"
+      href="https://cogcs.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Open COGCS website"
+    >
+      <span class="entry-top">
+        <span class="entry-title-wrap">
+          <span class="entry-title">cogcs.com</span>
+        </span>
+        <span class="entry-tag">App</span>
+      </span>
+      <span class="entry-description">Learn more in less time with flashcards.</span>
+      <span class="entry-meta">Flashcards • Spaced Repetition • Smart Features</span>
+    </a>
+
+    <p class="intro-paragraph">
+      An app for flashcards with spaced repetition and smart features to help you master any
+      subject at your own pace.
+    </p>
+    <p class="intro-paragraph">Join the waitlist for early access.</p>
+  </section>
+</BaseLayout>
