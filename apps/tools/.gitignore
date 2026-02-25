@@ -1,0 +1,9 @@
+node_modules
+.astro
+dist
+coverage
+playwright-report
+test-results
+.vscode
+.DS_Store
+*.tsbuildinfo

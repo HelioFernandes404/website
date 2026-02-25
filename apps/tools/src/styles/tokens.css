@@ -1,0 +1,107 @@
+:root {
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+  --color-neutral-925: #111111;
+  --color-neutral-950: #0a0a0a;
+  --color-neutral-975: #121212;
+  --color-neutral-black: #000000;
+  --color-neutral-brand-gray: #888888;
+
+  --color-accent-primary: #ccff00;
+  --color-accent-primary-a10: rgba(204, 255, 0, 0.1);
+  --color-accent-primary-a15: rgba(204, 255, 0, 0.15);
+  --color-accent-primary-a20: rgba(204, 255, 0, 0.2);
+  --color-accent-primary-a30: rgba(204, 255, 0, 0.3);
+  --color-accent-primary-a80: rgba(204, 255, 0, 0.8);
+
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-700: #15803d;
+
+  --color-terminal-bg: #1e1e1e;
+  --color-terminal-red: #ff5f56;
+  --color-terminal-yellow: #ffbd2e;
+  --color-terminal-green: #27c93f;
+
+  --color-overlay-black-a05: rgba(0, 0, 0, 0.05);
+  --color-overlay-black-a20: rgba(10, 10, 10, 0.2);
+  --color-overlay-black-a30: rgba(0, 0, 0, 0.3);
+  --color-overlay-black-a60: rgba(0, 0, 0, 0.6);
+  --color-overlay-white-a00: rgba(255, 255, 255, 0);
+  --color-overlay-white-a05: rgba(255, 255, 255, 0.05);
+  --color-overlay-white-a10: rgba(255, 255, 255, 0.1);
+  --color-overlay-white-a80: rgba(255, 255, 255, 0.8);
+
+  --font-family-sans: var(--font-space-grotesk), sans-serif;
+  --font-family-display: var(--font-space-grotesk), sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
+
+  --font-weight-light: 300;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --font-size-7xl: 4.5rem;
+
+  --line-height-tight-display: 0.95;
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-accent-glow: 0 0 15px rgba(204, 255, 0, 0.6);
+
+  --blur-lg: 16px;
+  --blur-2xl: 40px;
+  --blur-accent-halo: 100px;
+  --backdrop-sm: 4px;
+  --backdrop-md: 12px;
+}

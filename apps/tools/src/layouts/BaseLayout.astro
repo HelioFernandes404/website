@@ -1,0 +1,42 @@
+---
+import '../styles/global.css';
+import Footer from '@/components/footer.astro';
+import Header from '@/components/header.client';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Dev Toolbox',
+  description = 'Curated developer tools by category for shipping products faster.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="min-h-screen bg-neutral-0 text-neutral-950 antialiased">
+    <div class="noise-film" aria-hidden="true"></div>
+    <Header client:load />
+    <main>
+      <slot />
+    </main>
+    <a
+      href="https://hub.heliosuns404.com"
+      style="position: fixed; right: 1rem; bottom: 1rem; z-index: 40; border-radius: 9999px; border: 1px solid #000; background-color: #000; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; color: #fff; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transition: transform 0.2s, background-color 0.2s;"
+      onmouseover="this.style.transform='translateY(-2px)'; this.style.backgroundColor='#333';"
+      onmouseout="this.style.transform='translateY(0)'; this.style.backgroundColor='#000';"
+      aria-label="Go to Hub page"
+    >
+      Next: Hub
+    </a>
+    <Footer />
+  </body>
+</html>
