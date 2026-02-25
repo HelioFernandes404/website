@@ -1,6 +1,0 @@
-# robots.txt for heliosuns404.com
-User-agent: *
-Allow: /
-
-# Sitemap location
-Sitemap: https://heliosuns404.com/sitemap.xml
