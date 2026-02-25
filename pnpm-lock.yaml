@@ -36,6 +36,9 @@ importers:
         specifier: ^5.17.1
         version: 5.17.3(@types/node@22.19.11)(jiti@1.21.7)(lightningcss@1.31.1)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2)
     devDependencies:
+      '@astrojs/check':
+        specifier: ^0.9.6
+        version: 0.9.6(prettier@3.8.1)(typescript@5.9.3)
       autoprefixer:
         specifier: ^10.4.24
         version: 10.4.24(postcss@8.5.6)
@@ -45,6 +48,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.17
         version: 3.4.19(yaml@2.8.2)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
 
   apps/tools:
     dependencies:

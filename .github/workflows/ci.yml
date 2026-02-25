@@ -14,31 +14,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  quality:
+  qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Format check
-        run: npm run format:check
-
-      - name: Astro check
-        run: npm run check
-
-      - name: Unit tests
-        run: npm run test
-
-      - name: Build
-        run: npm run build
+      - name: Run QA
+        run: pnpm run qa

@@ -6,6 +6,7 @@
     "dev": "astro dev --host 127.0.0.1 --port 3000",
     "build": "astro build",
     "start": "astro preview --host 127.0.0.1 --port 3000",
+    "lint": "prettier --check . && astro check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",

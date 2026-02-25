@@ -8,6 +8,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "lint": "astro check",
     "check": "astro check"
   },
   "dependencies": {
