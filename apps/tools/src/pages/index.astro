@@ -6,9 +6,55 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getOrderedCategories, getToolsByCategory } from '@/lib/catalog';
 
 const categories = getOrderedCategories();
+const site = Astro.site ?? new URL('https://tools.heliosuns404.com');
+const homeUrl = new URL('/', site).toString();
+const description = 'Curated developer tools by category for shipping products faster.';
+
+const categoryListItems = categories.map((category, index) => ({
+  '@type': 'ListItem',
+  position: index + 1,
+  name: category.name,
+  url: new URL(`/category/${category.slug}`, site).toString(),
+}));
+
+const totalTools = categories.reduce((total, category) => total + getToolsByCategory(category.id).length, 0);
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${homeUrl}#website`,
+    name: 'Dev Toolbox',
+    url: homeUrl,
+    inLanguage: 'en',
+    description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${homeUrl}#catalog`,
+    name: 'Dev Toolbox Categories',
+    url: homeUrl,
+    description: `${description} ${totalTools} tools grouped in ${categories.length} categories.`,
+    inLanguage: 'en',
+    isPartOf: { '@id': `${homeUrl}#website` },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      numberOfItems: categories.length,
+      itemListElement: categoryListItems,
+    },
+  },
+];
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Dev Toolbox | Curated Developer Tools"
+  description={description}
+  canonicalPath="/"
+  currentPath="/"
+  jsonLd={jsonLd}
+>
   <div class="mx-auto w-full max-w-7xl px-6 pb-24">
     <Hero />
     <CategoryTabs categories={categories} />

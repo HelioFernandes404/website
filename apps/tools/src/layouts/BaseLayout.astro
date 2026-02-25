@@ -6,21 +6,65 @@ import Header from '@/components/header.client';
 interface Props {
   title?: string;
   description?: string;
+  canonicalPath?: string;
+  currentPath?: string;
+  image?: string;
+  imageAlt?: string;
+  lang?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 const {
-  title = 'Dev Toolbox',
+  title = 'Dev Toolbox | Helio Fernandes',
   description = 'Curated developer tools by category for shipping products faster.',
+  canonicalPath,
+  currentPath,
+  image = 'https://heliosuns404.com/og-image.webp',
+  imageAlt = 'Dev Toolbox catalog',
+  lang = 'en',
+  ogType = 'website',
+  noindex = false,
+  jsonLd,
 } = Astro.props;
+
+const site = Astro.site ?? new URL('https://tools.heliosuns404.com');
+const resolvedCurrentPath = currentPath ?? Astro.url.pathname;
+const canonicalUrl = new URL(canonicalPath ?? resolvedCurrentPath, site).toString();
+const socialImage = new URL(image, site).toString();
+const robotsContent = noindex
+  ? 'noindex,nofollow,max-image-preview:large'
+  : 'index,follow,max-image-preview:large';
+const jsonLdEntries = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={robotsContent} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Dev Toolbox" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="theme-color" content="#7AF7A0" />
+    <link rel="canonical" href={canonicalUrl} />
+    {
+      jsonLdEntries.map((entry) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(entry)} />
+      ))
+    }
   </head>
   <body class="min-h-screen bg-neutral-0 text-neutral-950 antialiased">
     <div class="noise-film" aria-hidden="true"></div>

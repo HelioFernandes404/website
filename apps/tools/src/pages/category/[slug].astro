@@ -12,9 +12,18 @@ export function getStaticPaths() {
 const { slug } = Astro.params;
 const category = getCategoryBySlug(categories, slug ?? '');
 const title = `${category?.name ?? slug ?? 'Category'} | Dev Toolbox`;
+const categoryPath = category ? `/category/${category.slug}` : `/category/${slug ?? ''}`;
+const description = category
+  ? `${category.name} tools and references in Dev Toolbox.`
+  : 'Category page placeholder (coming soon).';
 ---
 
-<BaseLayout title={title} description="Category page placeholder (coming soon).">
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath={categoryPath}
+  currentPath={categoryPath}
+>
   <div class="mx-auto flex w-full max-w-3xl px-6 py-24">
     <section class="terminal-panel w-full p-8 sm:p-10">
       <p class="font-mono text-xs uppercase tracking-widest text-neutral-500">Category</p>
