@@ -1,0 +1,15 @@
+{
+  "name": "heliosuns404-monorepo",
+  "private": true,
+  "packageManager": "pnpm@10.28.2",
+  "scripts": {
+    "dev:site": "pnpm -C apps/site dev",
+    "dev:hub": "pnpm -C apps/hub dev",
+    "dev:tools": "pnpm -C apps/tools dev",
+    "build:site": "pnpm -C apps/site build",
+    "build:hub": "pnpm -C apps/hub build",
+    "build:tools": "pnpm -C apps/tools build",
+    "lint": "pnpm -r --if-present lint",
+    "format": "pnpm -r --if-present format"
+  }
+}

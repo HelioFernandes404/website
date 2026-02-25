@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
+  site: 'https://tools.heliosuns404.com',
   integrations: [react(), sitemap()],
 
   vite: {
