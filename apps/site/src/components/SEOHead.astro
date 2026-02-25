@@ -1,0 +1,110 @@
+---
+interface Props {
+    title: string;
+    description: string;
+    ogImage?: string;
+    canonicalUrl?: string;
+}
+
+const {
+    title,
+    description,
+    ogImage = "/og-image.webp",
+    canonicalUrl,
+}: Props = Astro.props;
+
+const canonicalHref = canonicalUrl
+    ? new URL(canonicalUrl, Astro.url).href
+    : Astro.url.href;
+const ogImageHref = new URL(ogImage, Astro.url).href;
+
+const normalizedPathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isHomeRoute = normalizedPathname === "/";
+const isBlogRoute =
+    normalizedPathname === "/blog" || normalizedPathname.startsWith("/blog/");
+const isProjectRoute =
+    normalizedPathname === "/projetos" ||
+    normalizedPathname.startsWith("/projetos/");
+
+const ogType = isBlogRoute ? "article" : "website";
+
+let schema: Record<string, unknown> | null = null;
+
+if (isHomeRoute) {
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Hélio Fernandes",
+        url: "https://heliosuns404.com",
+        image: ogImageHref,
+        jobTitle: "DevOps Architect",
+        description,
+        sameAs: [
+            "https://www.linkedin.com/in/heliofernandes/",
+            "https://github.com/HelioFernandes404",
+            "https://www.instagram.com/heliosuns404/",
+        ],
+        knowsAbout: [
+            "DevOps",
+            "Kubernetes",
+            "AWS",
+            "Azure",
+            "Terraform",
+            "CI/CD",
+            "Python",
+            "Node.js",
+            "Infrastructure as Code",
+        ],
+        worksFor: {
+            "@type": "Organization",
+            name: "Freelance",
+        },
+    };
+} else if (isBlogRoute) {
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: title,
+        description,
+        image: ogImageHref,
+        mainEntityOfPage: canonicalHref,
+        author: {
+            "@type": "Person",
+            name: "Hélio Fernandes",
+        },
+        publisher: {
+            "@type": "Organization",
+            name: "Hélio Fernandes",
+        },
+    };
+} else if (isProjectRoute) {
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: title,
+        description,
+        url: canonicalHref,
+        image: ogImageHref,
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: "Web",
+        creator: {
+            "@type": "Person",
+            name: "Hélio Fernandes",
+        },
+    };
+}
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalHref} />
+<meta property="og:image" content={ogImageHref} />
+<link rel="canonical" href={canonicalHref} />
+{
+    schema && (
+        <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    )
+}

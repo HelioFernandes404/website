@@ -1,0 +1,131 @@
+/*
+ * Extracted from index.html by DESIGN_EXTRACT.
+ * Scope: token definitions only (no component or page styles).
+ */
+
+:root {
+  /* Core brand colors */
+  --color-brand-black: #0a0a0a;
+  --color-brand-dark: #121212;
+  --color-brand-gray: #888888;
+  --color-brand-lime: #ccff00;
+
+  /* Neutral palette (Tailwind utilities used in index.html) */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-neutral-800: #262626;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #111111;
+
+  /* Supporting accents */
+  --color-terminal-bg: #1e1e1e;
+  --color-terminal-red: #ff5f56;
+  --color-terminal-yellow: #ffbd2e;
+  --color-terminal-green: #27c93f;
+  --color-status-online: #22c55e;
+
+  /* Alpha/overlay colors */
+  --color-overlay-black-05: rgba(0, 0, 0, 0.05);
+  --color-overlay-black-30: rgba(0, 0, 0, 0.3);
+  --color-overlay-brand-15: rgba(204, 255, 0, 0.15);
+  --color-overlay-brand-60: rgba(204, 255, 0, 0.6);
+  --color-overlay-ink-20: rgba(10, 10, 10, 0.2);
+  --color-overlay-white-00: rgba(255, 255, 255, 0);
+
+  /* Typography families */
+  --font-family-sans: "Inter", sans-serif;
+  --font-family-display: "Space Grotesk", sans-serif;
+  --font-family-mono: "JetBrains Mono", monospace;
+
+  /* Spacing scale (repeated values) */
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Layout semantics */
+  --container-max-width: 80rem;
+  --section-padding-y: var(--space-24);
+  --page-top-offset: 5rem;
+
+  /* Radius scale */
+  --radius-sm: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadow scale */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-glow-lime: 0 0 15px rgba(204, 255, 0, 0.6);
+
+  /* Motion durations */
+  --motion-duration-100: 100ms;
+  --motion-duration-200: 200ms;
+  --motion-duration-300: 300ms;
+  --motion-duration-400: 400ms;
+  --motion-duration-500: 500ms;
+  --motion-duration-700: 700ms;
+  --motion-duration-800: 800ms;
+  --motion-duration-1000: 1s;
+  --motion-duration-2000: 2s;
+  --motion-duration-float: 6s;
+  --motion-duration-pulse-slow: 4s;
+  --motion-duration-typing: 0.5s;
+
+  /* Motion easing functions */
+  --motion-ease-standard: ease;
+  --motion-ease-in-out: ease-in-out;
+  --motion-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-pulse: cubic-bezier(0.4, 0, 0.6, 1);
+  --motion-ease-steps-typing: steps(40);
+
+  /* Semantic motion tokens */
+  --motion-reveal: all var(--motion-duration-1000) var(--motion-ease-emphasized);
+  --motion-view-transition:
+    opacity var(--motion-duration-400) var(--motion-ease-standard),
+    transform var(--motion-duration-400) var(--motion-ease-standard);
+  --motion-cursor-resize:
+    width var(--motion-duration-200) var(--motion-ease-standard),
+    height var(--motion-duration-200) var(--motion-ease-standard);
+  --motion-cursor-outline:
+    width var(--motion-duration-200) var(--motion-ease-standard),
+    height var(--motion-duration-200) var(--motion-ease-standard),
+    background-color var(--motion-duration-200) var(--motion-ease-standard),
+    transform 0.1s var(--motion-ease-standard);
+  --motion-fade-in-up:
+    fadeInUp var(--motion-duration-800) var(--motion-ease-emphasized) forwards;
+  --motion-float:
+    float var(--motion-duration-float) var(--motion-ease-in-out) infinite;
+  --motion-pulse-slow:
+    pulse var(--motion-duration-pulse-slow) var(--motion-ease-pulse) infinite;
+  --motion-typing-line:
+    typeLine var(--motion-duration-typing) var(--motion-ease-steps-typing) forwards;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "astro-tmp",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && cp dist/sitemap-0.xml dist/sitemap.xml",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
+    "astro": "^5.17.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  }
+}
