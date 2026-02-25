@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 * Root `pnpm` workspace files: `package.json`, `pnpm-workspace.yaml`, and unified `pnpm-lock.yaml`.
 * ADR documenting the monorepo migration decision at `docs/adrs/0001-adopt-pnpm-monorepo-for-three-astro-sites.md`.
 * ADR documenting QA and CI pipeline standardization at `docs/adrs/0002-standardize-monorepo-qa-and-root-ci-pipeline.md`.
+* ADR documenting Git artifact ignore policy at `docs/adrs/0003-ignore-build-and-dependency-artifacts-in-git.md`.
 
 ### Changed
 
@@ -31,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 * Moved CI workflow to repository root (`.github/workflows/ci.yml`) so GitHub Actions executes pipeline checks in monorepo layout.
 * Fixed formatting in `apps/tools/wrangler.jsonc` to satisfy QA formatting checks.
 * Updated `apps/site/src/components/SEOHead.astro` with explicit `is:inline` in JSON-LD script to remove Astro diagnostics hints during QA.
+* Added `dist` to root `.gitignore` and verified no tracked files under `**/node_modules/**` or `**/dist/**`.
 
 ### Removed
 
