@@ -583,11 +583,16 @@
                                     class="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-gray-100 transform transition-transform duration-500 hover:rotate-1 hover:scale-105"
                                 >
                                     <img
-                                        src="sobre.svg"
+                                        src="sobre-640.webp"
+                                        srcset="sobre-640.webp 640w, sobre-960.webp 960w"
+                                        sizes="(min-width: 1024px) 42vw, 0px"
                                         alt="Hélio Fernandes - DevOps Architect especializado em Kubernetes e infraestrutura cloud"
                                         class="w-full h-auto object-cover"
-                                        width="600"
-                                        height="600"
+                                        width="960"
+                                        height="1228"
+                                        loading="eager"
+                                        decoding="async"
+                                        fetchpriority="high"
                                     />
                                 </div>
 
@@ -886,6 +891,8 @@
                                             class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
                                             alt="Projeto Dai Tec AI - Dashboard de análise financeira com integração Stripe e OpenAI"
                                             loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
                                             width="800"
                                             height="450"
                                         />
@@ -978,6 +985,8 @@
                                             class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
                                             alt="Projeto SystemFrame - Infraestrutura DevOps com Kubernetes e pipelines CI/CD automatizados"
                                             loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
                                             width="800"
                                             height="450"
                                         />
@@ -1071,6 +1080,8 @@
                                             class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
                                             alt="Projeto Cogcs - Arquitetura mobile com microsserviços K3s e Ansible"
                                             loading="lazy"
+                                            decoding="async"
+                                            fetchpriority="low"
                                             width="800"
                                             height="450"
                                         />
@@ -1217,12 +1228,16 @@
                             class="absolute inset-0 bg-brand-lime/10 opacity-0 group-hover:opacity-20 transition-opacity z-10 pointer-events-none duration-700"
                         ></div>
                         <img
-                            src="eu.svg"
+                            src="eu-1200.webp"
+                            srcset="eu-1200.webp 1200w, eu-1800.webp 1800w"
+                            sizes="(min-width: 1024px) 1120px, 100vw"
                             class="w-full h-auto object-cover object-center transform group-hover:scale-105 transition-transform duration-[2s]"
                             alt="Hélio Fernandes - DevOps Developer e arquiteto de infraestrutura cloud"
                             loading="lazy"
-                            width="1200"
-                            height="800"
+                            decoding="async"
+                            fetchpriority="low"
+                            width="1800"
+                            height="1013"
                         />
 
                         <!-- Decorative HUD corners -->
