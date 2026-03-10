@@ -1,7 +1,7 @@
 ---
 import LinkIcon from "../components/LinkIcon.astro";
-import { posts } from "../data/posts";
 import profile from "../data/profile.json";
+import { getWebsiteBlogUrl } from "../lib/blog-links";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const description = profile.bio.replace(/\n/g, " ").trim();
@@ -108,7 +108,7 @@ const projects = projectLinks.length > 0 ? projectLinks : profile.links.slice(0,
 const projectIds = new Set(projects.map((link) => link.id));
 const resources = profile.links.filter((link) => !projectIds.has(link.id));
 
-const featuredPost = [...posts].sort((a, b) => b.date.localeCompare(a.date))[0];
+const websiteBlogUrl = getWebsiteBlogUrl();
 ---
 
 <BaseLayout
@@ -200,24 +200,23 @@ const featuredPost = [...posts].sort((a, b) => b.date.localeCompare(a.date))[0];
     </section>
   )}
 
-  {featuredPost && (
-    <section class="content-block">
-      <h2>Writing</h2>
+  <section class="content-block">
+    <h2>Writing</h2>
 
-      <a class="entry-link" href={`/blog/${featuredPost.slug}`}>
-        <span class="entry-top">
-          <span class="entry-title-wrap">
-            <span class="entry-title">{featuredPost.title}</span>
-          </span>
-          <span class="entry-tag">{featuredPost.category}</span>
+    <a class="entry-link" href={websiteBlogUrl}>
+      <span class="entry-top">
+        <span class="entry-title-wrap">
+          <span class="entry-title">Blog on heliosuns404.com</span>
         </span>
-        <span class="entry-description">{featuredPost.description}</span>
-        <span class="entry-meta">
-          <time datetime={featuredPost.date}>{featuredPost.date}</time> • {featuredPost.category}
-        </span>
-      </a>
+        <span class="entry-tag">Website</span>
+      </span>
+      <span class="entry-description">
+        Technical articles now live on the main website, with canonical URLs on
+        heliosuns404.com/blog.
+      </span>
+      <span class="entry-meta">Read the full archive on the website</span>
+    </a>
 
-      <a class="text-link" href="/blog">View all posts → Blog</a>
-    </section>
-  )}
+    <a class="text-link" href={websiteBlogUrl}>View all posts → Blog</a>
+  </section>
 </BaseLayout>

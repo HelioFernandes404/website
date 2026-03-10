@@ -1,0 +1,3 @@
+/blog https://heliosuns404.com/blog/ 301
+/blog/ https://heliosuns404.com/blog/ 301
+/blog/* https://heliosuns404.com/blog/:splat/ 301

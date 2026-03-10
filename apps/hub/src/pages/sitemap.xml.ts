@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { posts } from "../data/posts";
 
 const fallbackSite = new URL("https://hub.heliosuns404.com");
 
@@ -20,37 +19,20 @@ const xmlEscape = (value: string) =>
 
 export const GET: APIRoute = ({ site }) => {
   const base = site ?? fallbackSite;
-  const latestPostDate = posts.reduce((latest, post) => (post.date > latest ? post.date : latest), "");
 
   const staticEntries: UrlEntry[] = [
     {
       loc: new URL("/", base).toString(),
       changefreq: "weekly",
       priority: "1.0",
-      ...(latestPostDate ? { lastmod: latestPostDate } : {}),
     },
     {
       loc: new URL("/craft", base).toString(),
       changefreq: "weekly",
       priority: "0.8",
     },
-    {
-      loc: new URL("/blog", base).toString(),
-      changefreq: "daily",
-      priority: "0.9",
-      ...(latestPostDate ? { lastmod: latestPostDate } : {}),
-    },
   ];
-
-  const postEntries: UrlEntry[] = posts.map((post) => ({
-    loc: new URL(`/blog/${post.slug}`, base).toString(),
-    changefreq: "monthly",
-    priority: "0.7",
-    lastmod: post.date,
-  }));
-
-  const urls = [...staticEntries, ...postEntries];
-  const urlNodes = urls
+  const urlNodes = staticEntries
     .map((entry) =>
       [
         "  <url>",

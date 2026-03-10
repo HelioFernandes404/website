@@ -55,11 +55,14 @@ const canonicalUrl = "https://heliosuns404.com/blog/";
                         {posts.map((post) => (
                             <li>
                                 <article class="group rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-lime hover:shadow-xl">
-                                    <p class="font-mono text-xs uppercase tracking-wide text-gray-500">
+                                    <div class="flex flex-wrap items-center gap-3 font-mono text-xs uppercase tracking-wide text-gray-500">
                                         <time datetime={post.data.pubDate.toISOString()}>
                                             {dateFormatter.format(post.data.pubDate)}
                                         </time>
-                                    </p>
+                                        <span class="rounded-full border border-gray-200 px-2 py-1 text-[11px] text-gray-600">
+                                            {post.data.category}
+                                        </span>
+                                    </div>
                                     <h2 class="mt-3 text-2xl font-semibold tracking-tight">
                                         <a
                                             class="hover-trigger transition-colors group-hover:text-black"
@@ -68,7 +71,25 @@ const canonicalUrl = "https://heliosuns404.com/blog/";
                                             {post.data.title}
                                         </a>
                                     </h2>
+                                    {
+                                        post.data.lead && (
+                                            <p class="mt-3 text-base font-medium text-gray-800">
+                                                {post.data.lead}
+                                            </p>
+                                        )
+                                    }
                                     <p class="mt-3 text-gray-600">{post.data.description}</p>
+                                    {
+                                        post.data.tags.length > 0 && (
+                                            <ul class="mt-4 flex flex-wrap gap-2">
+                                                {post.data.tags.slice(0, 4).map((tag) => (
+                                                    <li class="rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600">
+                                                        {tag}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )
+                                    }
                                     <a
                                         class="hover-trigger mt-6 inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-all duration-300 hover:border-brand-lime hover:bg-gray-50"
                                         href={`/blog/${post.slug}/`}

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { getWebsiteBlogUrl } from "../lib/blog-links";
 
 interface Props {
   title: string;
@@ -43,10 +44,11 @@ const jsonLdEntries = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const navItems = [
   { label: "Index", href: "/" },
   { label: "Craft", href: "/craft" },
-  { label: "Writing", href: "/blog" },
+  { label: "Writing", href: getWebsiteBlogUrl() },
 ];
 
 const isActive = (href: string) => {
+  if (/^https?:\/\//.test(href)) return false;
   if (href === "/") return currentPath === "/";
   return currentPath.startsWith(href);
 };
