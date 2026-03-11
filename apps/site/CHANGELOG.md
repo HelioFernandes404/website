@@ -5,6 +5,10 @@ All notable changes in this project are documented in this file.
 ## [Unreleased]
 
 ### Added
+- Added a blog reading toolbar on article pages with `light`, `dark`, and `system` preferences.
+- Added article sharing with progressive enhancement: native share, clipboard copy, and prompt fallback.
+- Added tested blog reading utilities in `src/utils/blog-reading.js` and `tests/blog-reading-utils.test.mjs`.
+- Added ADR for the blog reading mode and share decision in [docs/adrs/0005-adopt-post-scoped-reading-mode-and-share-actions-for-blog-articles.md](/home/helio/Work/github/HelioFernandes404/heliosuns404_monorepo/apps/site/docs/adrs/0005-adopt-post-scoped-reading-mode-and-share-actions-for-blog-articles.md).
 - Migrated the project from a single `index.html` to an Astro static site structure.
 - Added Astro content collections for `blog`, `projects`, and `case-studies` in [src/content/config.ts](/home/helio/Work/HelioFernandes404/heliosuns404/website/src/content/config.ts).
 - Added collection content files for projects:
@@ -30,6 +34,9 @@ All notable changes in this project are documented in this file.
   - [postcss.config.js](/home/helio/Work/HelioFernandes404/heliosuns404/website/postcss.config.js)
 
 ### Changed
+- Updated [src/layouts/Layout.astro](/home/helio/Work/github/HelioFernandes404/heliosuns404_monorepo/apps/site/src/layouts/Layout.astro) to apply blog reading theme state before paint and sync the browser `theme-color` meta tag on article routes.
+- Updated [src/pages/blog/[slug].astro](/home/helio/Work/github/HelioFernandes404/heliosuns404_monorepo/apps/site/src/pages/blog/[slug].astro) to render reading-mode controls and share actions in the article shell.
+- Updated [src/styles/global.css](/home/helio/Work/github/HelioFernandes404/heliosuns404_monorepo/apps/site/src/styles/global.css) with dark reading-mode styles scoped to blog detail pages.
 - Replaced inline CSS extraction with global style pipeline in [src/styles/global.css](/home/helio/Work/HelioFernandes404/heliosuns404/website/src/styles/global.css), now importing design tokens.
 - Updated [src/layouts/Layout.astro](/home/helio/Work/HelioFernandes404/heliosuns404/website/src/layouts/Layout.astro) to:
   - Use local Tailwind theme configuration

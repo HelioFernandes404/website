@@ -34,20 +34,23 @@ const canonicalUrl = `https://heliosuns404.com/blog/${post.slug}/`;
     description={description}
     ogImage={ogImage}
     canonicalUrl={canonicalUrl}
+    readingModeEnabled={true}
 >
-    <main class="min-h-screen">
-        <section class="border-b border-gray-100 bg-gray-50/70">
+    <main class="blog-post-page min-h-screen">
+        <section class="blog-post-hero border-b border-gray-100 bg-gray-50/70">
             <div class="mx-auto max-w-3xl px-6 py-16 md:py-20">
                 <div class="flex flex-wrap items-center gap-3 font-mono text-sm uppercase tracking-wider text-brand-gray">
                     <span>Artigo</span>
-                    <span class="rounded-full border border-gray-200 px-2 py-1 text-[11px] text-gray-600">
+                    <span class="blog-post-chip rounded-full border border-gray-200 px-2 py-1 text-[11px] text-gray-600">
                         {post.data.category}
                     </span>
                 </div>
                 <h1 class="mt-3 text-4xl font-display font-bold tracking-tight lg:text-5xl">
                     {post.data.title}
                 </h1>
-                <p class="mt-4 text-lg text-gray-600">{post.data.lead ?? post.data.description}</p>
+                <p class="blog-post-summary mt-4 text-lg text-gray-600">
+                    {post.data.lead ?? post.data.description}
+                </p>
                 <p class="mt-6 font-mono text-xs uppercase tracking-wide text-gray-500">
                     <time datetime={post.data.pubDate.toISOString()}>
                         {dateFormatter.format(post.data.pubDate)}
@@ -57,7 +60,7 @@ const canonicalUrl = `https://heliosuns404.com/blog/${post.slug}/`;
                     post.data.tags.length > 0 && (
                         <ul class="mt-6 flex flex-wrap gap-2">
                             {post.data.tags.map((tag) => (
-                                <li class="rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600">
+                                <li class="blog-post-tag rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600">
                                     {tag}
                                 </li>
                             ))}
@@ -68,13 +71,68 @@ const canonicalUrl = `https://heliosuns404.com/blog/${post.slug}/`;
         </section>
 
         <section class="mx-auto max-w-3xl px-6 py-16 md:py-20">
-            <article class="article-content rounded-2xl border border-gray-100 bg-white p-8 shadow-sm md:p-10">
+            <div
+                class="blog-post-toolbar sticky top-24 z-20 mb-8 flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white/90 p-4 shadow-sm backdrop-blur md:flex-row md:items-center md:justify-between"
+                data-reading-controls
+                data-share-url={canonicalUrl}
+                data-share-title={post.data.title}
+            >
+                <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
+                    <p class="font-mono text-xs uppercase tracking-[0.3em] text-gray-500">
+                        Modo de leitura
+                    </p>
+                    <div class="flex flex-wrap gap-2" role="group" aria-label="Modo de leitura">
+                        <button
+                            type="button"
+                            class="blog-post-toolbar-button rounded-full border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-colors"
+                            data-theme-option="light"
+                            aria-pressed="false"
+                        >
+                            Light
+                        </button>
+                        <button
+                            type="button"
+                            class="blog-post-toolbar-button rounded-full border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-colors"
+                            data-theme-option="dark"
+                            aria-pressed="false"
+                        >
+                            Dark
+                        </button>
+                        <button
+                            type="button"
+                            class="blog-post-toolbar-button rounded-full border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-colors"
+                            data-theme-option="system"
+                            aria-pressed="false"
+                        >
+                            System
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-start gap-3 md:items-end">
+                    <button
+                        type="button"
+                        class="blog-post-toolbar-button rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors"
+                        data-share-button
+                    >
+                        Compartilhar link
+                    </button>
+                    <p
+                        class="blog-post-share-status min-h-5 text-sm text-gray-500"
+                        data-share-status
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+                </div>
+            </div>
+
+            <article class="article-content blog-post-article rounded-2xl border border-gray-100 bg-white p-8 shadow-sm md:p-10">
                 <Content />
             </article>
 
             <a
                 href="/blog/"
-                class="hover-trigger mt-8 inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-all duration-300 hover:border-brand-lime hover:bg-gray-50"
+                class="blog-post-back-link hover-trigger mt-8 inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-all duration-300 hover:border-brand-lime hover:bg-gray-50"
             >
                 Voltar para blog
                 <span aria-hidden="true">&lt;-</span>
@@ -82,3 +140,157 @@ const canonicalUrl = `https://heliosuns404.com/blog/${post.slug}/`;
         </section>
     </main>
 </Layout>
+
+<script>
+    import {
+        READING_THEME_STORAGE_KEY,
+        getShareUrl,
+        normalizeReadingThemePreference,
+        resolveReadingTheme,
+    } from "../../utils/blog-reading.js";
+
+    const readingControls = document.querySelector("[data-reading-controls]");
+
+    if (readingControls instanceof HTMLElement) {
+        const root = document.documentElement;
+        const themeColorMeta = document.getElementById("theme-color-meta");
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const themeButtons = Array.from(
+            readingControls.querySelectorAll("[data-theme-option]"),
+        );
+        const shareButton = readingControls.querySelector("[data-share-button]");
+        const shareStatus = readingControls.querySelector("[data-share-status]");
+
+        const updateThemeState = (
+            nextPreference: string | null | undefined,
+        ) => {
+            const normalizedPreference =
+                normalizeReadingThemePreference(nextPreference);
+            const activeTheme = resolveReadingTheme(
+                normalizedPreference,
+                mediaQuery.matches,
+            );
+
+            root.dataset.readingThemePreference = normalizedPreference;
+            root.dataset.readingThemeActive = activeTheme;
+
+            if (themeColorMeta instanceof HTMLMetaElement) {
+                themeColorMeta.content =
+                    activeTheme === "dark" ? "#121212" : "#ccff00";
+            }
+
+            themeButtons.forEach((button) => {
+                if (button instanceof HTMLButtonElement) {
+                    button.setAttribute(
+                        "aria-pressed",
+                        String(
+                            button.dataset.themeOption === normalizedPreference,
+                        ),
+                    );
+                }
+            });
+        };
+
+        const readStoredPreference = () => {
+            try {
+                return normalizeReadingThemePreference(
+                    window.localStorage.getItem(READING_THEME_STORAGE_KEY),
+                );
+            } catch {
+                return "system";
+            }
+        };
+
+        const persistPreference = (
+            nextPreference: string | null | undefined,
+        ) => {
+            const normalizedPreference =
+                normalizeReadingThemePreference(nextPreference);
+
+            try {
+                window.localStorage.setItem(
+                    READING_THEME_STORAGE_KEY,
+                    normalizedPreference,
+                );
+            } catch {
+                return updateThemeState(normalizedPreference);
+            }
+
+            updateThemeState(normalizedPreference);
+        };
+
+        const updateShareStatus = (message: string) => {
+            if (shareStatus instanceof HTMLElement) {
+                shareStatus.textContent = message;
+            }
+        };
+
+        updateThemeState(readStoredPreference());
+
+        themeButtons.forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) {
+                return;
+            }
+
+            button.addEventListener("click", () => {
+                persistPreference(button.dataset.themeOption);
+            });
+        });
+
+        const handleSystemThemeChange = () => {
+            if (readStoredPreference() === "system") {
+                updateThemeState("system");
+            }
+        };
+
+        if (typeof mediaQuery.addEventListener === "function") {
+            mediaQuery.addEventListener("change", handleSystemThemeChange);
+        } else {
+            mediaQuery.onchange = handleSystemThemeChange;
+        }
+
+        if (shareButton instanceof HTMLButtonElement) {
+            shareButton.addEventListener("click", async () => {
+                const shareUrl = getShareUrl(
+                    readingControls.dataset.shareUrl,
+                    window.location.href,
+                );
+                const shareTitle =
+                    readingControls.dataset.shareTitle ?? document.title;
+
+                if (typeof navigator.share === "function") {
+                    try {
+                        await navigator.share({
+                            title: shareTitle,
+                            text: shareTitle,
+                            url: shareUrl,
+                        });
+                        updateShareStatus("Link compartilhado.");
+                        return;
+                    } catch (error) {
+                        if (
+                            error instanceof DOMException &&
+                            error.name === "AbortError"
+                        ) {
+                            updateShareStatus("Compartilhamento cancelado.");
+                            return;
+                        }
+                    }
+                }
+
+                if (navigator.clipboard?.writeText) {
+                    try {
+                        await navigator.clipboard.writeText(shareUrl);
+                        updateShareStatus("Link copiado.");
+                        return;
+                    } catch {
+                        updateShareStatus("Clipboard indisponivel, abrindo prompt.");
+                    }
+                }
+
+                window.prompt("Copie o link do artigo:", shareUrl);
+                updateShareStatus("Link pronto para copiar.");
+            });
+        }
+    }
+</script>

@@ -1,6 +1,7 @@
 ---
 import SEOHead from "../components/SEOHead.astro";
 import "../styles/global.css";
+import { READING_THEME_STORAGE_KEY } from "../utils/blog-reading.js";
 
 interface Props {
   title: string;
@@ -8,6 +9,7 @@ interface Props {
   ogImage?: string;
   canonicalUrl?: string;
   lang?: string;
+  readingModeEnabled?: boolean;
 }
 
 const {
@@ -16,6 +18,7 @@ const {
   ogImage,
   canonicalUrl,
   lang = "pt-BR",
+  readingModeEnabled = false,
 }: Props = Astro.props;
 
 const pathname = Astro.url.pathname;
@@ -37,11 +40,72 @@ const isActiveLink = (href: string) => {
 ---
 
 <!doctype html>
-<html lang={lang} class="scroll-smooth">
+<html
+  lang={lang}
+  class="scroll-smooth"
+  data-reading-mode-enabled={readingModeEnabled ? "true" : undefined}
+  data-reading-theme-preference={readingModeEnabled ? "system" : undefined}
+  data-reading-theme-active={readingModeEnabled ? "light" : undefined}
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ccff00" />
+    <meta id="theme-color-meta" name="theme-color" content="#ccff00" />
+    {
+      readingModeEnabled && (
+        <script
+          is:inline
+          define:vars={{
+            readingThemeStorageKey: READING_THEME_STORAGE_KEY,
+            readingThemeColorDark: "#121212",
+            readingThemeColorLight: "#ccff00",
+          }}
+        >
+          const normalizeReadingThemePreference = (value) => {
+            if (value === "light" || value === "dark" || value === "system") {
+              return value;
+            }
+
+            return "system";
+          };
+
+          const resolveReadingTheme = (preference, systemPrefersDark) => {
+            const normalizedPreference = normalizeReadingThemePreference(preference);
+
+            if (normalizedPreference === "system") {
+              return systemPrefersDark ? "dark" : "light";
+            }
+
+            return normalizedPreference;
+          };
+
+          const root = document.documentElement;
+          const themeColorMeta = document.getElementById("theme-color-meta");
+          const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+          let storedPreference = "system";
+
+          try {
+            storedPreference = normalizeReadingThemePreference(
+              window.localStorage.getItem(readingThemeStorageKey),
+            );
+          } catch {
+            storedPreference = "system";
+          }
+
+          const activeTheme = resolveReadingTheme(storedPreference, mediaQuery.matches);
+
+          root.dataset.readingThemePreference = storedPreference;
+          root.dataset.readingThemeActive = activeTheme;
+
+          if (themeColorMeta instanceof HTMLMetaElement) {
+            themeColorMeta.content =
+              activeTheme === "dark"
+                ? readingThemeColorDark
+                : readingThemeColorLight;
+          }
+        </script>
+      )
+    }
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -66,24 +130,24 @@ const isActiveLink = (href: string) => {
     <div class="relative flex min-h-screen flex-col">
       <header
         id="main-header"
-        class="fixed top-0 z-50 w-full border-b border-transparent bg-white/80 backdrop-blur-md transition-all duration-300"
+        class="site-header fixed top-0 z-50 w-full border-b border-transparent bg-white/80 backdrop-blur-md transition-all duration-300"
       >
         <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-          <a href="/" class="group flex items-center gap-2 hover-trigger">
+          <a href="/" class="site-brand-link group flex items-center gap-2 hover-trigger">
             <div
-              class="flex h-8 w-8 items-center justify-center rounded-lg bg-black font-display text-sm font-bold text-white transition-colors duration-300 group-hover:bg-brand-lime group-hover:text-black"
+              class="site-brand-mark flex h-8 w-8 items-center justify-center rounded-lg bg-black font-display text-sm font-bold text-white transition-colors duration-300 group-hover:bg-brand-lime group-hover:text-black"
             >
               H
             </div>
             <span
-              class="font-display text-lg font-bold tracking-tight transition-all duration-300 group-hover:tracking-wide"
+              class="site-brand-wordmark font-display text-lg font-bold tracking-tight transition-all duration-300 group-hover:tracking-wide"
             >
               Helio.dev
             </span>
           </a>
 
           <nav
-            class="hidden items-center space-x-10 font-mono text-sm font-medium text-gray-500 md:flex"
+            class="site-nav hidden items-center space-x-10 font-mono text-sm font-medium text-gray-500 md:flex"
           >
             {
               navLinks.map((link) => {
@@ -136,7 +200,7 @@ const isActiveLink = (href: string) => {
 
         <div
           id="mobile-menu"
-          class="absolute left-0 top-full hidden w-full origin-top border-b border-gray-100 bg-white p-6 shadow-2xl animate-fade-in-up md:hidden"
+          class="site-mobile-menu absolute left-0 top-full hidden w-full origin-top border-b border-gray-100 bg-white p-6 shadow-2xl animate-fade-in-up md:hidden"
         >
           <nav class="flex flex-col space-y-4 font-display text-2xl font-bold">
             {
@@ -165,7 +229,7 @@ const isActiveLink = (href: string) => {
         <slot />
       </div>
 
-      <footer class="border-t border-gray-200 bg-gray-50 py-12">
+      <footer class="site-footer border-t border-gray-200 bg-gray-50 py-12">
         <div
           class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 px-6 md:flex-row"
         >
@@ -179,7 +243,7 @@ const isActiveLink = (href: string) => {
           <button
             id="back-to-top"
             type="button"
-            class="hover-trigger flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-black hover:bg-black hover:text-brand-lime"
+            class="site-back-to-top hover-trigger flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-black hover:bg-black hover:text-brand-lime"
             aria-label="Voltar ao topo"
           >
             <svg
