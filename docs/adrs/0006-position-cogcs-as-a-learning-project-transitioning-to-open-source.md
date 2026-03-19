@@ -34,9 +34,8 @@ Chosen option: "Position `COGCS` as a learning project transitioning to open sou
 ### Consequences
 
 * Good, because `apps/site` and `apps/hub` now describe the project with one consistent narrative centered on problem, scope, impact, and learnings.
-* Good, because the website now exposes two explicit CTAs for the project: GitHub opening and case study context.
+* Good, because the website now exposes two explicit CTAs for the project: GitHub repository and case study context.
 * Good, because `apps/tools` no longer misclassifies `COGCS` as a product/platform entry.
-* Bad, because the GitHub CTA currently uses a search fallback until a final public repository URL exists.
 * Bad, because future copy must be updated again once the repository opens publicly and the transition phase ends.
 * Neutral, because `apps/site` project content now supports optional primary and secondary CTA labels for future portfolio entries as well.
 

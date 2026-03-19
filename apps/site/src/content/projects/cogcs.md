@@ -5,8 +5,8 @@ tech:
   - "K3s"
   - "Ansible"
   - "Cloudflare"
-url: "https://github.com/search?q=user%3AHelioFernandes404+cogcs&type=repositories"
-urlLabel: "Acompanhar abertura no GitHub"
+url: "https://github.com/HelioFernandes404/cogcs"
+urlLabel: "Ver repositorio no GitHub"
 secondaryUrl: "https://heliosuns404.com/case-studies/cogcs-open-source-learning-project/"
 secondaryUrlLabel: "Ler case study"
 ---

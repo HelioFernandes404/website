@@ -44,6 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 * Repositioned `COGCS` across `apps/site` and `apps/hub` as a learning project transitioning to open source, replacing product and waitlist framing with problem, scope, impact, and documentation language.
 * Updated `apps/site/src/pages/projetos/[slug].astro` to render primary and secondary project CTAs from content metadata.
 * Broadened `apps/site/src/pages/case-studies/index.astro` copy to describe technical impact, not only business impact.
+* Published `https://github.com/HelioFernandes404/cogcs` and replaced `COGCS` GitHub search placeholders with the live repository URL.
 
 ### Fixed
 

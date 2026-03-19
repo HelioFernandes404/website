@@ -53,5 +53,5 @@ Tres aprendizados ficaram evidentes:
 
 ## Links
 
-- [Acompanhar abertura no GitHub](https://github.com/search?q=user%3AHelioFernandes404+cogcs&type=repositories)
+- [Ver repositorio no GitHub](https://github.com/HelioFernandes404/cogcs)
 - [Ver pagina do projeto](/projetos/cogcs/)
