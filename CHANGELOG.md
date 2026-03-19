@@ -19,6 +19,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 * Fourteen blog articles migrated into `apps/site/src/content/blog` as Markdown entries managed by `astro:content`.
 * Redirect coverage and regression tests for the blog migration in `apps/site/tests` and `apps/hub/tests`.
 * ADR documenting the canonical blog migration from `hub` to `site` at `docs/adrs/0005-consolidate-blog-publishing-on-heliosuns404-com.md`.
+* ADR documenting the `COGCS` positioning decision at `docs/adrs/0006-position-cogcs-as-a-learning-project-transitioning-to-open-source.md`.
+* Dedicated `COGCS` case study content in `apps/site/src/content/case-studies/cogcs-open-source-learning-project.md`.
+* Optional primary and secondary CTA labels for `apps/site` project entries in `apps/site/src/content/config.ts`.
 
 ### Changed
 
@@ -38,6 +41,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 * Moved the canonical blog origin from `hub.heliosuns404.com` to `heliosuns404.com/blog`, keeping `apps/site` as the editorial source of truth.
 * Updated `apps/site` blog list/detail pages to render migrated metadata (`category`, `lead`, and `tags`) from frontmatter.
 * Updated `apps/hub` navigation and homepage Writing section to point directly to the website blog.
+* Repositioned `COGCS` across `apps/site` and `apps/hub` as a learning project transitioning to open source, replacing product and waitlist framing with problem, scope, impact, and documentation language.
+* Updated `apps/site/src/pages/projetos/[slug].astro` to render primary and secondary project CTAs from content metadata.
+* Broadened `apps/site/src/pages/case-studies/index.astro` copy to describe technical impact, not only business impact.
 
 ### Fixed
 
@@ -52,3 +58,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 * Per-app `package-lock.json` files in favor of a single pnpm lockfile.
 * Legacy `apps/hub` blog pages and in-repo post dataset now that the website owns blog publishing.
+* Removed the `COGCS` entry from `apps/tools/src/data/tools.ts` so the tools catalog no longer presents it as a product/platform surface.
