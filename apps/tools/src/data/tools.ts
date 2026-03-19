@@ -195,15 +195,6 @@ export const tools: Tool[] = [
     order: 5,
   },
   {
-    id: 'cogcs',
-    name: 'COGCS',
-    description: 'Primary application site and product surface for your learning platform.',
-    url: 'https://cogcs.com/',
-    tags: ['product', 'webapp', 'platform'],
-    categoryId: 'platform-cloud',
-    order: 6,
-  },
-  {
     id: 'k9s',
     name: 'K9s',
     description: 'Terminal UI for observing and managing Kubernetes clusters in real time.',

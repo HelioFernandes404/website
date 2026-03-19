@@ -45,17 +45,30 @@ const canonicalUrl = `https://heliosuns404.com/projetos/${project.slug}/`;
                 </p>
                 {
                     project.data.url && (
-                        <p class="mt-6">
+                        <div class="mt-6 flex flex-wrap gap-3">
                             <a
                                 href={project.data.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="hover-trigger inline-flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 font-medium text-white transition-all duration-300 hover:bg-brand-lime hover:text-black"
                             >
-                                Acessar projeto
+                                {project.data.urlLabel ?? "Acessar projeto"}
                                 <span aria-hidden="true">-></span>
                             </a>
-                        </p>
+                            {
+                                project.data.secondaryUrl && (
+                                    <a
+                                        href={project.data.secondaryUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="hover-trigger inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-all duration-300 hover:border-brand-lime hover:bg-gray-50"
+                                    >
+                                        {project.data.secondaryUrlLabel ?? "Ver contexto"}
+                                        <span aria-hidden="true">-></span>
+                                    </a>
+                                )
+                            }
+                        </div>
                     )
                 }
             </div>

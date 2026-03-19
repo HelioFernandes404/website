@@ -2,10 +2,12 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "Craft | Helio Fernandes";
-const description = "COGCS: flashcards com repetição espaçada e recursos inteligentes para acelerar aprendizado.";
+const description =
+  "COGCS: projeto de estudo em transicao para open source para explorar repeticao espacada, aprendizado ativo e documentacao publica.";
 const site = Astro.site ?? new URL("https://hub.heliosuns404.com");
 const craftUrl = new URL("/craft", site).toString();
-const cogcsUrl = "https://cogcs.com/";
+const cogcsRepoUrl = "https://github.com/search?q=user%3AHelioFernandes404+cogcs&type=repositories";
+const cogcsCaseUrl = "https://heliosuns404.com/case-studies/cogcs-open-source-learning-project/";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -16,13 +18,11 @@ const jsonLd = {
   description,
   inLanguage: "pt-BR",
   mainEntity: {
-    "@type": "SoftwareApplication",
+    "@type": "CreativeWork",
     name: "COGCS",
-    applicationCategory: "EducationalApplication",
-    operatingSystem: "Web",
-    url: cogcsUrl,
+    url: cogcsCaseUrl,
     description:
-      "Flashcards app with spaced repetition and smart learning features to help users learn faster.",
+      "Learning project that is opening up into open source to explore spaced repetition, active learning and product discovery in public.",
   },
 };
 ---
@@ -37,33 +37,59 @@ const jsonLd = {
 >
   <section class="intro-block">
     <h1>Craft</h1>
-    <p class="intro-subtitle">Apps e experimentos em construção.</p>
+    <p class="intro-subtitle">Projetos em abertura para open source e experimentos em construcao.</p>
   </section>
 
   <section class="content-block">
     <h2>COGCS</h2>
 
-    <a
-      class="entry-link"
-      href="https://cogcs.com/"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Open COGCS website"
-    >
-      <span class="entry-top">
-        <span class="entry-title-wrap">
-          <span class="entry-title">cogcs.com</span>
-        </span>
-        <span class="entry-tag">App</span>
-      </span>
-      <span class="entry-description">Learn more in less time with flashcards.</span>
-      <span class="entry-meta">Flashcards • Spaced Repetition • Smart Features</span>
-    </a>
+    <ul class="entry-list">
+      <li>
+        <a
+          class="entry-link"
+          href={cogcsRepoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Search for the COGCS repository on GitHub"
+        >
+          <span class="entry-top">
+            <span class="entry-title-wrap">
+              <span class="entry-title">GitHub</span>
+            </span>
+            <span class="entry-tag">Opening Up</span>
+          </span>
+          <span class="entry-description">Acompanhar a abertura do projeto e quando o codigo publico entrar no ar.</span>
+          <span class="entry-meta">Codigo • Transicao • Documentacao</span>
+        </a>
+      </li>
+      <li>
+        <a
+          class="entry-link"
+          href={cogcsCaseUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open the COGCS case study"
+        >
+          <span class="entry-top">
+            <span class="entry-title-wrap">
+              <span class="entry-title">Case Study</span>
+            </span>
+            <span class="entry-tag">Contexto</span>
+          </span>
+          <span class="entry-description">Problema, escopo, impacto e aprendizados do projeto.</span>
+          <span class="entry-meta">Problema real • Escopo pequeno • Aprendizado publico</span>
+        </a>
+      </li>
+    </ul>
 
     <p class="intro-paragraph">
-      An app for flashcards with spaced repetition and smart features to help you master any
-      subject at your own pace.
+      Cogcs e um projeto de estudo em transicao para open source. Ele nasceu de uma dor real no meu processo de
+      aprendizado e virou um laboratorio para explorar repeticao espacada, UX e decisoes de
+      produto em publico.
     </p>
-    <p class="intro-paragraph">Join the waitlist for early access.</p>
+    <p class="intro-paragraph">
+      A ideia nao e operar um SaaS paralelo. A proposta e manter um projeto enxuto, documentado e
+      util para estudar o problema, medir o que faz sentido e compartilhar o que aprendi.
+    </p>
   </section>
 </BaseLayout>
