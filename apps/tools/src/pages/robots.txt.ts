@@ -7,7 +7,9 @@ export const GET: APIRoute = ({ site }) => {
   const host = base.host;
   const sitemapUrl = new URL('/sitemap.xml', base).toString();
 
-  const body = [`User-agent: *`, `Allow: /`, ``, `Host: ${host}`, `Sitemap: ${sitemapUrl}`].join('\n');
+  const body = [`User-agent: *`, `Allow: /`, ``, `Host: ${host}`, `Sitemap: ${sitemapUrl}`].join(
+    '\n',
+  );
 
   return new Response(body, {
     headers: {
