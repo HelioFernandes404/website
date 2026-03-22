@@ -167,10 +167,10 @@ const testimonials = [
                     >
                         <a
                             href="mailto:heliodevhub@gmail.com?subject=Contato%20via%20site"
-                            class="group relative px-8 py-4 bg-black text-white rounded-lg font-medium overflow-hidden hover-trigger shadow-lg hover:shadow-xl transition-all"
+                            class="group relative overflow-hidden rounded-lg bg-black px-8 py-4 font-medium text-white shadow-lg transition-[transform,box-shadow,color,background-color] duration-300 hover-trigger hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                         >
                             <div
-                                class="absolute inset-0 w-full h-full bg-brand-lime transition-all duration-300 translate-y-full group-hover:translate-y-0"
+                                class="absolute inset-0 h-full w-full translate-y-full bg-brand-lime transition-transform duration-300 group-hover:translate-y-0"
                             ></div>
                             <span
                                 class="relative group-hover:text-black transition-colors flex items-center gap-2"
@@ -181,7 +181,7 @@ const testimonials = [
                         </a>
                         <a
                             href="#projetos"
-                            class="px-8 py-4 rounded-lg border border-gray-200 font-medium hover:bg-gray-50 transition-colors hover-trigger hover:border-gray-400"
+                            class="rounded-lg border border-gray-200 px-8 py-4 font-medium transition-[border-color,background-color,color] duration-300 hover-trigger hover:border-gray-400 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                         >
                             Ver Portfolio
                         </a>
@@ -199,6 +199,8 @@ const testimonials = [
                             <img
                                 src="/sobre.webp"
                                 alt="Hélio Fernandes - DevOps Architect especializado em Kubernetes e infraestrutura cloud"
+                                width="1920"
+                                height="2456"
                                 class="w-full h-auto object-cover"
                                 loading="eager"
                                 decoding="async"
@@ -250,7 +252,7 @@ const testimonials = [
                         services.map((service) => (
                             <article
                                 class:list={[
-                                    "group reveal-on-scroll hover-trigger rounded-2xl border p-8 shadow-sm transition-all duration-300 hover:-translate-y-2",
+                                    "group reveal-on-scroll hover-trigger rounded-2xl border p-8 shadow-sm transition-[transform,border-color,box-shadow,background-color,color] duration-300 hover:-translate-y-2",
                                     service.highlight
                                         ? "border-gray-800 bg-black text-white hover:shadow-xl"
                                         : "border-gray-100 bg-white hover:border-brand-lime hover:shadow-xl",
@@ -259,7 +261,7 @@ const testimonials = [
                             >
                                 <div
                                     class:list={[
-                                        "mb-6 flex h-12 w-12 items-center justify-center rounded-lg font-mono text-sm font-semibold transition-all duration-300 group-hover:scale-110",
+                                        "mb-6 flex h-12 w-12 items-center justify-center rounded-lg font-mono text-sm font-semibold transition-[transform,background-color,color] duration-300 group-hover:scale-110",
                                         service.highlight
                                             ? "bg-white/10 text-white group-hover:bg-brand-lime group-hover:text-black"
                                             : "bg-gray-50 text-gray-600 group-hover:bg-brand-lime group-hover:text-black",
@@ -386,7 +388,7 @@ const testimonials = [
                                     </div>
                                     <a
                                         href={`/projetos/${project.slug}/`}
-                                        class="hover-trigger inline-flex items-center gap-2 rounded-lg border border-white/20 px-5 py-2.5 font-medium transition-all duration-300 hover:border-brand-lime hover:bg-brand-lime hover:text-black"
+                                        class="hover-trigger inline-flex items-center gap-2 rounded-lg border border-white/20 px-5 py-2.5 font-medium transition-[border-color,background-color,color,transform] duration-300 hover:border-brand-lime hover:bg-brand-lime hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                                     >
                                         Ver caso
                                         <span aria-hidden="true">-></span>
@@ -424,7 +426,7 @@ const testimonials = [
                                         <img
                                             src={project.image}
                                             alt={project.alt}
-                                            class="h-full w-full object-cover opacity-60 grayscale transition-all duration-700 group-hover:opacity-100 group-hover:grayscale-0"
+                                            class="h-full w-full object-cover opacity-60 grayscale transition-[opacity,filter] duration-700 group-hover:opacity-100 group-hover:grayscale-0"
                                             loading="lazy"
                                             decoding="async"
                                             fetchpriority="low"
@@ -493,7 +495,7 @@ const testimonials = [
                         testimonials.map((testimonial, index) => (
                             <article
                                 class:list={[
-                                    "reveal-on-scroll rounded-2xl border border-gray-100 bg-gray-50 p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-lime hover:shadow-lg",
+                                    "reveal-on-scroll rounded-2xl border border-gray-100 bg-gray-50 p-8 shadow-sm transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-brand-lime hover:shadow-lg",
                                     index === 0
                                         ? "stagger-delay-1"
                                         : index === 1

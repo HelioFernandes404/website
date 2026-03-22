@@ -125,12 +125,13 @@ const isActiveLink = (href: string) => {
     />
   </head>
   <body class="selection:bg-brand-lime selection:text-black">
+    <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
     <div class="noise-overlay"></div>
 
     <div class="relative flex min-h-screen flex-col">
       <header
         id="main-header"
-        class="site-header fixed top-0 z-50 w-full border-b border-transparent bg-white/80 backdrop-blur-md transition-all duration-300"
+        class="site-header fixed top-0 z-50 w-full border-b border-transparent bg-white/80 backdrop-blur-md transition-[border-color,box-shadow,background-color] duration-300"
       >
         <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
           <a href="/" class="site-brand-link group flex items-center gap-2 hover-trigger">
@@ -140,7 +141,7 @@ const isActiveLink = (href: string) => {
               H
             </div>
             <span
-              class="site-brand-wordmark font-display text-lg font-bold tracking-tight transition-all duration-300 group-hover:tracking-wide"
+              class="site-brand-wordmark font-display text-lg font-bold tracking-tight transition-[letter-spacing,color] duration-300 group-hover:tracking-wide"
             >
               Helio.dev
             </span>
@@ -165,7 +166,7 @@ const isActiveLink = (href: string) => {
                     <span class="relative z-10">{link.label}</span>
                     <span
                       class:list={[
-                        "absolute bottom-0 left-0 h-0.5 bg-brand-lime transition-all duration-300",
+                        "absolute bottom-0 left-0 h-0.5 bg-brand-lime transition-[width] duration-300",
                         active ? "w-full" : "w-0 group-hover:w-full",
                       ]}
                     ></span>
@@ -225,7 +226,7 @@ const isActiveLink = (href: string) => {
         </div>
       </header>
 
-      <div class="flex-1 pt-20">
+      <div id="main-content" class="flex-1 pt-20" tabindex="-1">
         <slot />
       </div>
 
@@ -243,7 +244,7 @@ const isActiveLink = (href: string) => {
           <button
             id="back-to-top"
             type="button"
-            class="site-back-to-top hover-trigger flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-black hover:bg-black hover:text-brand-lime"
+            class="site-back-to-top hover-trigger flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm transition-[transform,border-color,background-color,color,box-shadow] duration-300 hover:-translate-y-1 hover:border-black hover:bg-black hover:text-brand-lime"
             aria-label="Voltar ao topo"
           >
             <svg
@@ -265,6 +266,9 @@ const isActiveLink = (href: string) => {
 
     <script is:inline>
       const header = document.getElementById("main-header");
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
 
       if (header instanceof HTMLElement) {
         const updateHeaderState = () => {
@@ -286,7 +290,11 @@ const isActiveLink = (href: string) => {
       );
 
       if (revealElements.length > 0) {
-        if ("IntersectionObserver" in window) {
+        if (prefersReducedMotion) {
+          revealElements.forEach((element) =>
+            element.classList.add("is-visible"),
+          );
+        } else if ("IntersectionObserver" in window) {
           const observer = new IntersectionObserver(
             (entries) => {
               entries.forEach((entry) => {
@@ -331,7 +339,10 @@ const isActiveLink = (href: string) => {
 
       if (backToTopButton instanceof HTMLButtonElement) {
         backToTopButton.addEventListener("click", () => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({
+            top: 0,
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+          });
         });
       }
     </script>

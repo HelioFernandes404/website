@@ -106,6 +106,7 @@ const isActive = (href: string) => {
   </head>
   <body>
     <div class="site-frame">
+      <a class="skip-link" href="#main-content">Skip to content</a>
       <header class="site-header">
         <div class="shell nav-shell">
           <a href="/" class="brand-link">Helio Fernandes</a>
@@ -135,7 +136,7 @@ const isActive = (href: string) => {
         </div>
       </header>
 
-      <main class="shell page-shell">
+      <main id="main-content" class="shell page-shell" tabindex="-1">
         <slot />
       </main>
     </div>
