@@ -25,18 +25,7 @@ const projects = defineCollection({
   }),
 });
 
-const caseStudies = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    client: z.string(),
-    date: z.coerce.date(),
-  }),
-});
-
 export const collections = {
   blog,
   projects,
-  'case-studies': caseStudies,
 };
