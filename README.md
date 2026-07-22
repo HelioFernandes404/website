@@ -1,12 +1,11 @@
 # heliosuns404 monorepo
 
-Monorepo containing three independent Astro apps deployed to Cloudflare Pages.
+Monorepo containing two independent Astro apps deployed to Cloudflare Pages.
 
 ## Apps
 
 - `apps/site` -> `heliosuns404.com` (portfolio + canonical blog)
 - `apps/hub` -> `hub.heliosuns404.com` (profile hub; blog routes redirect to `apps/site`)
-- `apps/tools` -> `tools.heliosuns404.com`
 
 ## Workspace
 
@@ -16,7 +15,6 @@ Monorepo containing three independent Astro apps deployed to Cloudflare Pages.
 - Build all:
   - `pnpm build:site`
   - `pnpm build:hub`
-  - `pnpm build:tools`
 - Run CI-equivalent checks: `pnpm run qa`
 
 ## Content Ownership
