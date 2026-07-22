@@ -5,14 +5,12 @@
   "scripts": {
     "dev:site": "pnpm -C apps/site dev",
     "dev:hub": "pnpm -C apps/hub dev",
-    "dev:tools": "pnpm -C apps/tools dev",
     "build:site": "pnpm -C apps/site build",
     "build:hub": "pnpm -C apps/hub build",
-    "build:tools": "pnpm -C apps/tools build",
     "check": "pnpm -r --if-present check",
     "test": "pnpm -r --if-present test",
     "lint": "pnpm -r --if-present lint",
     "format": "pnpm -r --if-present format",
-    "qa": "pnpm run lint && pnpm run check && pnpm run test && pnpm run build:site && pnpm run build:hub && pnpm run build:tools"
+    "qa": "pnpm run lint && pnpm run check && pnpm run test && pnpm run build:site && pnpm run build:hub"
   }
 }
