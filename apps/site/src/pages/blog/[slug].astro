@@ -3,25 +3,38 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
-    const posts = await getCollection("blog");
+    const posts = (await getCollection("blog")).sort(
+        (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+    );
 
-    return posts.map((post) => ({
+    return posts.map((post, index) => ({
         params: { slug: post.slug },
-        props: { post },
+        props: {
+            post,
+            older: posts[index + 1] ?? null,
+            newer: posts[index - 1] ?? null,
+        },
     }));
 }
 
 interface Props {
     post: CollectionEntry<"blog">;
+    older: CollectionEntry<"blog"> | null;
+    newer: CollectionEntry<"blog"> | null;
 }
 
-const { post } = Astro.props as Props;
+const { post, older, newer } = Astro.props as Props;
 const { Content } = await post.render();
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "long",
     timeZone: "UTC",
 });
+
+const readingMinutes = Math.max(
+    1,
+    Math.round(post.body.trim().split(/\s+/).length / 200),
+);
 
 const title = `${post.data.title} | Blog`;
 const description = post.data.description;
@@ -36,6 +49,13 @@ const canonicalUrl = `https://heliosuns404.com/blog/${post.slug}/`;
     canonicalUrl={canonicalUrl}
     readingModeEnabled={true}
 >
+    <div
+        class="blog-post-progress fixed inset-x-0 top-0 z-40 h-1 origin-left scale-x-0 bg-brand-lime"
+        data-reading-progress
+        aria-hidden="true"
+    >
+    </div>
+
     <main class="blog-post-page min-h-screen">
         <section class="blog-post-hero border-b border-gray-100 bg-gray-50/70">
             <div class="mx-auto max-w-3xl px-6 py-16 md:py-20">
@@ -51,11 +71,13 @@ const canonicalUrl = `https://heliosuns404.com/blog/${post.slug}/`;
                 <p class="blog-post-summary mt-4 text-lg text-gray-600">
                     {post.data.lead ?? post.data.description}
                 </p>
-                <p class="mt-6 font-mono text-xs uppercase tracking-wide text-gray-500">
+                <div class="mt-6 flex flex-wrap items-center gap-3 font-mono text-xs uppercase tracking-wide text-gray-500">
                     <time datetime={post.data.pubDate.toISOString()}>
                         {dateFormatter.format(post.data.pubDate)}
                     </time>
-                </p>
+                    <span aria-hidden="true">•</span>
+                    <span>{readingMinutes} min de leitura</span>
+                </div>
                 {
                     post.data.tags.length > 0 && (
                         <ul class="mt-6 flex flex-wrap gap-2">
@@ -130,12 +152,52 @@ const canonicalUrl = `https://heliosuns404.com/blog/${post.slug}/`;
                 <Content />
             </article>
 
+            {
+                (older || newer) && (
+                    <nav
+                        class="mt-12 grid gap-4 border-t border-gray-100 pt-8 sm:grid-cols-2"
+                        aria-label="Navegacao entre artigos"
+                    >
+                        {older ? (
+                            <a
+                                href={`/blog/${older.slug}/`}
+                                class="blog-post-back-link hover-trigger group flex flex-col gap-1 rounded-2xl border border-gray-200 p-5 transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
+                            >
+                                <span class="font-mono text-xs uppercase tracking-wide text-gray-400">
+                                    &lt;- Anterior
+                                </span>
+                                <span class="font-medium group-hover:text-black">
+                                    {older.data.title}
+                                </span>
+                            </a>
+                        ) : (
+                            <span />
+                        )}
+                        {newer ? (
+                            <a
+                                href={`/blog/${newer.slug}/`}
+                                class="blog-post-back-link hover-trigger group flex flex-col items-end gap-1 rounded-2xl border border-gray-200 p-5 text-right transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime sm:col-start-2"
+                            >
+                                <span class="font-mono text-xs uppercase tracking-wide text-gray-400">
+                                    Proximo -&gt;
+                                </span>
+                                <span class="font-medium group-hover:text-black">
+                                    {newer.data.title}
+                                </span>
+                            </a>
+                        ) : (
+                            <span class="sm:col-start-2" />
+                        )}
+                    </nav>
+                )
+            }
+
             <a
                 href="/blog/"
                 class="blog-post-back-link hover-trigger mt-8 inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-[border-color,background-color,color,transform] duration-300 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
             >
-                Voltar para blog
                 <span aria-hidden="true">&lt;-</span>
+                Voltar para o blog
             </a>
         </section>
     </main>
@@ -148,6 +210,24 @@ const canonicalUrl = `https://heliosuns404.com/blog/${post.slug}/`;
         normalizeReadingThemePreference,
         resolveReadingTheme,
     } from "../../utils/blog-reading.js";
+
+    const progressBar = document.querySelector("[data-reading-progress]");
+
+    if (progressBar instanceof HTMLElement) {
+        const updateProgress = () => {
+            const scrollable =
+                document.documentElement.scrollHeight - window.innerHeight;
+            const ratio =
+                scrollable > 0
+                    ? Math.min(1, Math.max(0, window.scrollY / scrollable))
+                    : 0;
+            progressBar.style.transform = `scaleX(${ratio})`;
+        };
+
+        updateProgress();
+        window.addEventListener("scroll", updateProgress, { passive: true });
+        window.addEventListener("resize", updateProgress);
+    }
 
     const readingControls = document.querySelector("[data-reading-controls]");
 
