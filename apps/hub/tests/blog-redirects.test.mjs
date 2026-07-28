@@ -14,8 +14,8 @@ describe("hub blog migration", () => {
     assert.equal(WEBSITE_BLOG_ROOT, "https://heliosuns404.com/blog/");
     assert.equal(getWebsiteBlogUrl(), "https://heliosuns404.com/blog/");
     assert.equal(
-      getWebsiteBlogUrl("victoriametrics-vs-prometheus-at-scale"),
-      "https://heliosuns404.com/blog/victoriametrics-vs-prometheus-at-scale/",
+      getWebsiteBlogUrl("k3s-multi-tenant-migration-checklist"),
+      "https://heliosuns404.com/blog/k3s-multi-tenant-migration-checklist/",
     );
   });
 
