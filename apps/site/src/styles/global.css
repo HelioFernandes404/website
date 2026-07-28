@@ -173,6 +173,17 @@ main [id] {
 .article-content ol {
   margin-top: 1rem;
   padding-left: 1.5rem;
+  /* Tailwind preflight strips list markers; the padding above only makes
+     sense with them, so restore the type here. */
+  list-style-position: outside;
+}
+
+.article-content ul {
+  list-style-type: disc;
+}
+
+.article-content ol {
+  list-style-type: decimal;
 }
 
 .article-content li + li {
