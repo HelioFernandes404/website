@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import ArchitectureFlow from "../../components/ArchitectureFlow";
 
 export async function getStaticPaths() {
     const projects = await getCollection("projects");
@@ -22,6 +23,17 @@ const title = `${project.data.title} | Projetos`;
 const description = project.data.description;
 const ogImage = "/og-image.webp";
 const canonicalUrl = `https://heliosuns404.com/projetos/${project.slug}/`;
+
+const { carl, architecture } = project.data;
+
+const carlSections = carl
+    ? [
+          { key: "context", label: "Contexto", body: carl.context },
+          { key: "action", label: "Acao", body: carl.action },
+          { key: "result", label: "Resultado", body: carl.result },
+          { key: "learning", label: "Aprendizado", body: carl.learning },
+      ]
+    : [];
 ---
 
 <Layout
@@ -34,15 +46,31 @@ const canonicalUrl = `https://heliosuns404.com/projetos/${project.slug}/`;
         <section class="border-b border-gray-100 bg-gray-50/70">
             <div class="mx-auto max-w-3xl px-6 py-16 md:py-20">
                 <p class="font-mono text-sm uppercase tracking-wider text-brand-gray">
-                    Projeto
+                    {project.data.category}
                 </p>
                 <h1 class="mt-3 text-4xl font-display font-bold tracking-tight lg:text-5xl">
                     {project.data.title}
                 </h1>
                 <p class="mt-4 text-lg text-gray-600">{project.data.description}</p>
-                <p class="mt-6 font-mono text-xs uppercase tracking-wide text-gray-500">
-                    {project.data.tech.join(" • ")}
-                </p>
+
+                <div class="mt-6 flex flex-wrap gap-2 font-mono text-xs">
+                    {
+                        project.data.tech.map((item) => (
+                            <span class="rounded-full border border-gray-200 bg-white px-3 py-1 text-gray-600">
+                                {item}
+                            </span>
+                        ))
+                    }
+                </div>
+
+                <div class="mt-8 inline-flex items-baseline gap-3 border-l-2 border-brand-lime pl-4">
+                    <span class="text-3xl font-display font-bold">
+                        {project.data.metricValue}
+                    </span>
+                    <span class="font-mono text-xs uppercase tracking-wider text-brand-gray">
+                        {project.data.metricLabel} / {project.data.metricCaption}
+                    </span>
+                </div>
                 {
                     project.data.url && (
                         <div class="mt-6 flex flex-wrap gap-3">
@@ -74,8 +102,50 @@ const canonicalUrl = `https://heliosuns404.com/projetos/${project.slug}/`;
             </div>
         </section>
 
-        <section class="mx-auto max-w-3xl px-6 py-16 md:py-20">
-            <article class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm md:p-10">
+        <section class="mx-auto max-w-5xl px-6 py-16 md:py-20">
+            {
+                carlSections.length > 0 && (
+                    <ol class="space-y-10">
+                        {carlSections.map((section, index) => (
+                            <li class="grid gap-4 md:grid-cols-[8rem_minmax(0,1fr)]">
+                                <p class="font-mono text-xs uppercase tracking-wider text-brand-gray md:pt-1">
+                                    <span class="text-brand-lime">
+                                        0{index + 1}
+                                    </span>{" "}
+                                    {section.label}
+                                </p>
+                                <p class="text-lg leading-relaxed text-gray-700">
+                                    {section.body}
+                                </p>
+                            </li>
+                        ))}
+                    </ol>
+                )
+            }
+
+            {
+                architecture && (
+                    <div class="mt-16">
+                        <h2 class="text-2xl font-display font-bold tracking-tight">
+                            {architecture.title}
+                        </h2>
+                        <p class="mt-2 text-gray-600">
+                            Cada componente carrega a decisao que foi tomada ali
+                            e o que ela custou.
+                        </p>
+                        <div class="mt-6">
+                            <ArchitectureFlow
+                                client:visible
+                                nodes={architecture.nodes}
+                                edges={architecture.edges}
+                                hint={architecture.hint}
+                            />
+                        </div>
+                    </div>
+                )
+            }
+
+            <article class="mt-16 max-w-3xl rounded-2xl border border-gray-100 bg-white p-8 shadow-sm md:p-10">
                 <Content />
             </article>
 
