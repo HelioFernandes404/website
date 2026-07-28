@@ -3,11 +3,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "Craft | Helio Fernandes";
 const description =
-  "COGCS: projeto de estudo em transicao para open source para explorar repeticao espacada, aprendizado ativo e documentacao publica.";
+  "OpenFlashcards: projeto de estudo em transicao para open source para explorar repeticao espacada, aprendizado ativo e documentacao publica.";
 const site = Astro.site ?? new URL("https://hub.heliosuns404.com");
 const craftUrl = new URL("/craft", site).toString();
-const cogcsRepoUrl = "https://github.com/HelioFernandes404/cogcs";
-const cogcsCaseUrl = "https://heliosuns404.com/case-studies/cogcs-open-source-learning-project/";
+const openflashcardsRepoUrl = "https://github.com/HelioFernandes404/openflashcards";
+const openflashcardsSiteUrl = "https://openflashcards.heliosuns404.com/";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -19,8 +19,8 @@ const jsonLd = {
   inLanguage: "pt-BR",
   mainEntity: {
     "@type": "CreativeWork",
-    name: "COGCS",
-    url: cogcsCaseUrl,
+    name: "OpenFlashcards",
+    url: openflashcardsSiteUrl,
     description:
       "Learning project that is opening up into open source to explore spaced repetition, active learning and product discovery in public.",
   },
@@ -41,16 +41,16 @@ const jsonLd = {
   </section>
 
   <section class="content-block">
-    <h2>COGCS</h2>
+    <h2>OpenFlashcards</h2>
 
     <ul class="entry-list">
       <li>
         <a
           class="entry-link"
-          href={cogcsRepoUrl}
+          href={openflashcardsRepoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Search for the COGCS repository on GitHub"
+          aria-label="Search for the OpenFlashcards repository on GitHub"
         >
           <span class="entry-top">
             <span class="entry-title-wrap">
@@ -65,25 +65,25 @@ const jsonLd = {
       <li>
         <a
           class="entry-link"
-          href={cogcsCaseUrl}
+          href={openflashcardsSiteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Open the COGCS case study"
+          aria-label="Open the OpenFlashcards project site"
         >
           <span class="entry-top">
             <span class="entry-title-wrap">
-              <span class="entry-title">Case Study</span>
+              <span class="entry-title">Site</span>
             </span>
-            <span class="entry-tag">Contexto</span>
+            <span class="entry-tag">Projeto</span>
           </span>
-          <span class="entry-description">Problema, escopo, impacto e aprendizados do projeto.</span>
+          <span class="entry-description">Acessar o projeto ao vivo.</span>
           <span class="entry-meta">Problema real • Escopo pequeno • Aprendizado publico</span>
         </a>
       </li>
     </ul>
 
     <p class="intro-paragraph">
-      Cogcs e um projeto de estudo em transicao para open source. Ele nasceu de uma dor real no meu processo de
+      OpenFlashcards e um projeto de estudo em transicao para open source. Ele nasceu de uma dor real no meu processo de
       aprendizado e virou um laboratorio para explorar repeticao espacada, UX e decisoes de
       produto em publico.
     </p>

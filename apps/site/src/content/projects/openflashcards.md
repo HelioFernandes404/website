@@ -1,18 +1,18 @@
 ---
-title: "Cogcs"
+title: "OpenFlashcards"
 description: "Projeto de estudo em transicao para open source, criado para explorar repeticao espacada, aprendizado ativo e decisoes de produto a partir de um problema real."
 tech:
   - "K3s"
   - "Ansible"
   - "Cloudflare"
-url: "https://github.com/HelioFernandes404/cogcs"
+url: "https://github.com/HelioFernandes404/openflashcards"
 urlLabel: "Ver repositorio no GitHub"
-secondaryUrl: "https://heliosuns404.com/case-studies/cogcs-open-source-learning-project/"
-secondaryUrlLabel: "Ler case study"
+secondaryUrl: "https://openflashcards.heliosuns404.com/"
+secondaryUrlLabel: "Acessar o projeto"
 ---
 03. Learning Project
 
-Cogcs nasceu de uma dor concreta no meu processo de estudo: eu queria testar uma forma mais deliberada de revisar conteudo, organizar flashcards e aprender com feedback rapido. Em vez de tratar isso como um segundo produto ou um SaaS paralelo, a decisao foi abrir o projeto aos poucos e leva-lo para uma transicao honesta em direcao a open source.
+OpenFlashcards nasceu de uma dor concreta no meu processo de estudo: eu queria testar uma forma mais deliberada de revisar conteudo, organizar flashcards e aprender com feedback rapido. Em vez de tratar isso como um segundo produto ou um SaaS paralelo, a decisao foi abrir o projeto aos poucos e leva-lo para uma transicao honesta em direcao a open source.
 
 ## Escopo inicial
 
@@ -36,4 +36,4 @@ Em vez de vender uma promessa de produto, quero medir tres coisas:
 
 ## Leitura correta do projeto
 
-Cogcs deve ser lido como um projeto de estudo em transicao para open source. Ele existe para explorar um problema real, testar solucoes com escopo controlado e gerar contexto tecnico melhor para portfolio, conversas de engenharia e aprendizado continuo.
+OpenFlashcards deve ser lido como um projeto de estudo em transicao para open source. Ele existe para explorar um problema real, testar solucoes com escopo controlado e gerar contexto tecnico melhor para portfolio, conversas de engenharia e aprendizado continuo.
