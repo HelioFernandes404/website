@@ -31,7 +31,7 @@ export interface ArchEdgeInput {
   from: string;
   to: string;
   label?: string;
-  /** Dashed/animated edges read as async rather than a blocking call. */
+  /** Animated edges read as async rather than a blocking call. */
   async?: boolean;
 }
 
@@ -42,17 +42,22 @@ interface Props {
   hint?: string;
 }
 
+const LIME = "#ccff00";
+
 const KIND_STYLE: Record<ArchKind, { border: string; badge: string; label: string }> = {
-  entry: { border: "#ccff00", badge: "#ccff00", label: "entrada" },
+  entry: { border: LIME, badge: LIME, label: "entrada" },
   service: { border: "#374151", badge: "#9ca3af", label: "servico" },
   data: { border: "#4b5563", badge: "#9ca3af", label: "dados" },
   external: { border: "#6b7280", badge: "#6b7280", label: "externo" },
 };
 
+const KIND_ORDER: ArchKind[] = ["entry", "service", "data", "external"];
+
 // React Flow v12 constrains node data to Record<string, unknown>, so the
 // index signature is intersected in. Named properties keep their real types.
 type FlowNodeData = ArchNodeInput & {
   isSelected: boolean;
+  isDimmed: boolean;
   hasDetail: boolean;
   onPick: (id: string) => void;
 } & Record<string, unknown>;
@@ -68,6 +73,7 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
       role={interactive ? "button" : undefined}
       tabIndex={interactive ? 0 : undefined}
       aria-pressed={interactive ? data.isSelected : undefined}
+      aria-label={interactive ? `${data.label}: ver decisao` : data.label}
       onClick={interactive ? () => data.onPick(data.id) : undefined}
       onKeyDown={
         interactive
@@ -80,16 +86,18 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
           : undefined
       }
       style={{
-        minWidth: 168,
+        minWidth: 176,
         borderRadius: 12,
-        border: `1px solid ${data.isSelected ? "#ccff00" : style.border}`,
-        background: data.isSelected ? "#111827" : "#0a0a0a",
+        border: `1px solid ${data.isSelected ? LIME : style.border}`,
+        background: data.isSelected ? "#161b22" : "#0a0a0a",
         boxShadow: data.isSelected
-          ? "0 0 0 3px rgba(204,255,0,0.25)"
+          ? `0 0 0 3px rgba(204,255,0,0.25), 0 8px 24px rgba(0,0,0,0.5)`
           : "0 1px 2px rgba(0,0,0,0.4)",
         padding: "12px 14px",
         cursor: interactive ? "pointer" : "default",
-        transition: "border-color 200ms, box-shadow 200ms, background-color 200ms",
+        opacity: data.isDimmed ? 0.25 : 1,
+        transition:
+          "border-color 200ms, box-shadow 200ms, background-color 200ms, opacity 200ms",
       }}
     >
       <Handle type="target" position={Position.Left} style={{ background: "#4b5563" }} />
@@ -117,7 +125,7 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
             marginTop: 8,
             fontFamily: "JetBrains Mono, monospace",
             fontSize: 10,
-            color: data.isSelected ? "#ccff00" : "#6b7280",
+            color: data.isSelected ? LIME : "#6b7280",
           }}
         >
           {data.isSelected ? "// lendo" : "// ver decisao"}
@@ -138,6 +146,18 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
     setSelectedId((current) => (current === id ? null : id));
   }, []);
 
+  // Selecting a node focuses its immediate neighbourhood: everything else fades
+  // back so the reader sees what this component actually touches.
+  const focused = useMemo(() => {
+    if (!selectedId) return null;
+    const ids = new Set<string>([selectedId]);
+    for (const edge of edges) {
+      if (edge.from === selectedId) ids.add(edge.to);
+      if (edge.to === selectedId) ids.add(edge.from);
+    }
+    return ids;
+  }, [selectedId, edges]);
+
   const flowNodes = useMemo<ArchFlowNode[]>(
     () =>
       nodes.map((node) => ({
@@ -147,40 +167,54 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
         data: {
           ...node,
           isSelected: node.id === selectedId,
+          isDimmed: Boolean(focused) && !focused?.has(node.id),
           hasDetail: Boolean(node.decision),
           onPick,
         },
       })),
-    [nodes, selectedId, onPick],
+    [nodes, selectedId, focused, onPick],
   );
 
   const flowEdges = useMemo<Edge[]>(
     () =>
-      edges.map((edge) => ({
-        id: `${edge.from}-${edge.to}`,
-        source: edge.from,
-        target: edge.to,
-        label: edge.label,
-        animated: edge.async,
-        style: { stroke: "#4b5563", strokeWidth: 1.5 },
-        labelStyle: {
-          fill: "#9ca3af",
-          fontSize: 11,
-          fontFamily: "JetBrains Mono, monospace",
-        },
-        labelBgStyle: { fill: "#0a0a0a" },
-        labelBgPadding: [6, 3] as [number, number],
-        labelBgBorderRadius: 4,
-      })),
-    [edges],
+      edges.map((edge) => {
+        const touchesSelection =
+          Boolean(selectedId) && (edge.from === selectedId || edge.to === selectedId);
+        const dimmed = Boolean(selectedId) && !touchesSelection;
+
+        return {
+          id: `${edge.from}-${edge.to}`,
+          source: edge.from,
+          target: edge.to,
+          label: edge.label,
+          animated: edge.async || touchesSelection,
+          style: {
+            stroke: touchesSelection ? LIME : "#4b5563",
+            strokeWidth: touchesSelection ? 2 : 1.5,
+            opacity: dimmed ? 0.2 : 1,
+            transition: "stroke 200ms, opacity 200ms",
+          },
+          labelStyle: {
+            fill: touchesSelection ? LIME : "#9ca3af",
+            fontSize: 11,
+            fontFamily: "JetBrains Mono, monospace",
+            opacity: dimmed ? 0.2 : 1,
+          },
+          labelBgStyle: { fill: "#0a0a0a", fillOpacity: dimmed ? 0.2 : 1 },
+          labelBgPadding: [6, 3] as [number, number],
+          labelBgBorderRadius: 4,
+        };
+      }),
+    [edges, selectedId],
   );
 
   const selected = nodes.find((node) => node.id === selectedId) ?? null;
+  const usedKinds = KIND_ORDER.filter((kind) => nodes.some((node) => node.kind === kind));
 
   return (
     <div>
       <div
-        style={{ height: 420 }}
+        style={{ height: 460 }}
         className="overflow-hidden rounded-2xl border border-gray-800 bg-brand-black"
       >
         <ReactFlow
@@ -188,9 +222,11 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
           edges={flowEdges}
           nodeTypes={nodeTypes}
           fitView
+          fitViewOptions={{ padding: 0.15 }}
           nodesDraggable={false}
           nodesConnectable={false}
           edgesFocusable={false}
+          onPaneClick={() => setSelectedId(null)}
           // The diagram sits mid-article: capturing the wheel would trap the
           // reader's page scroll. Zoom stays available through Controls.
           zoomOnScroll={false}
@@ -202,6 +238,30 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
         </ReactFlow>
       </div>
 
+      {/* A wide graph cannot fit a phone without going illegible: fitView is
+          clamped by minZoom, so on small screens it overflows by design and the
+          reader pans instead. Say so, rather than letting it look clipped. */}
+      <p className="mt-3 font-mono text-xs text-gray-500 md:hidden">
+        arraste para explorar o diagrama
+      </p>
+
+      <div className="mt-3 flex flex-wrap items-center gap-4 font-mono text-xs text-gray-500">
+        {usedKinds.map((kind) => (
+          <span key={kind} className="inline-flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              className="inline-block h-2.5 w-2.5 rounded-sm border"
+              style={{ borderColor: KIND_STYLE[kind].border, background: "#0a0a0a" }}
+            />
+            {KIND_STYLE[kind].label}
+          </span>
+        ))}
+        <span className="inline-flex items-center gap-1.5">
+          <span aria-hidden="true" className="inline-block w-5 border-t border-dashed border-gray-500" />
+          assincrono
+        </span>
+      </div>
+
       <div
         aria-live="polite"
         className="mt-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
@@ -211,7 +271,7 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
             <p className="font-mono text-xs uppercase tracking-wider text-brand-gray">
               {selected.label}
             </p>
-            <p className="mt-2 font-semibold">Decisao</p>
+            <p className="mt-3 font-semibold">Decisao</p>
             <p className="mt-1 text-gray-600">{selected.decision}</p>
             {selected.tradeoff && (
               <>
