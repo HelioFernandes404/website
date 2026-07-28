@@ -5,9 +5,13 @@ tech:
   - "Stripe"
   - "AWS"
   - "Node.js"
+order: 1
+category: "01. Fintech"
+metricLabel: "IMPACT FACTOR"
+metricValue: "+30%"
+metricCaption: "CONVERSION RATE"
+image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"
+imageAlt: "Projeto Dai Tec AI com dashboard financeiro e automacao inteligente"
 ---
-01. Fintech
 
-IMPACT FACTOR: +30% CONVERSION RATE
-
-Projeto Dai Tec AI - Dashboard de análise financeira com integração Stripe e OpenAI.
+Dashboard de análise financeira com integração Stripe e OpenAI.

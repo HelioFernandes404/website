@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 
 const title = "Hélio Fernandes - Software Engineer";
@@ -37,56 +38,15 @@ const services = [
     },
 ];
 
-const featuredProjects = [
-    {
-        slug: "dai-tec-ai",
-        category: "01. Fintech",
-        title: "Dai Tec AI",
-        description:
-            "Implementacao de infraestrutura financeira segura. Integracao de Stripe e OpenAI com ganho de 30% em conversao.",
-        tech: ["Stripe", "AWS", "Node.js"],
-        image:
-            "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop",
-        alt: "Projeto Dai Tec AI com dashboard financeiro e automacao inteligente",
-        metricLabel: "IMPACT FACTOR",
-        metricValue: "+30%",
-        metricCaption: "CONVERSION RATE",
-        reverse: false,
-        comingSoon: false,
-    },
-    {
-        slug: "systemframe",
-        category: "02. Data Ops",
-        title: "SystemFrame",
-        description:
-            "Reestruturacao completa de DevOps com Kubernetes, reduzindo taxa de erros em 30% e acelerando time-to-market.",
-        tech: ["K8s", "Helm", "Python"],
-        image:
-            "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop",
-        alt: "Projeto SystemFrame focado em infraestrutura DevOps com Kubernetes",
-        metricLabel: "PERFORMANCE",
-        metricValue: "-30%",
-        metricCaption: "ERROR RATE",
-        reverse: true,
-        comingSoon: false,
-    },
-    {
-        slug: "openflashcards",
-        category: "03. Learning Project",
-        title: "OpenFlashcards",
-        description:
-            "Projeto de estudo em transicao para open source, criado para explorar repeticao espacada, aprendizado ativo e decisoes de produto a partir de uma dor real de estudo.",
-        tech: ["K3s", "Ansible", "Cloudflare"],
-        image:
-            "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=800&auto=format&fit=crop",
-        alt: "Projeto OpenFlashcards em transicao para open source para estudar repeticao espacada e arquitetura",
-        metricLabel: "STATUS",
-        metricValue: "Opening Up",
-        metricCaption: "OPEN SOURCE",
-        reverse: false,
-        comingSoon: false,
-    },
-];
+// Single source of truth: the projects collection. `reverse` is presentation
+// only (alternating layout), so it is derived from position rather than stored.
+const featuredProjects = (await getCollection("projects"))
+    .sort((a, b) => a.data.order - b.data.order)
+    .map((project, index) => ({
+        slug: project.slug,
+        ...project.data,
+        reverse: index % 2 === 1,
+    }));
 
 const testimonials = [
     {
@@ -430,7 +390,7 @@ const testimonials = [
                                         ></div>
                                         <img
                                             src={project.image}
-                                            alt={project.alt}
+                                            alt={project.imageAlt}
                                             class="h-full w-full object-cover opacity-60 grayscale transition-[opacity,filter] duration-700 group-hover:opacity-100 group-hover:grayscale-0"
                                             loading="lazy"
                                             decoding="async"

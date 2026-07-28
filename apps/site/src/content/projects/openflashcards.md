@@ -9,8 +9,14 @@ url: "https://github.com/HelioFernandes404/openflashcards"
 urlLabel: "Ver repositorio no GitHub"
 secondaryUrl: "https://openflashcards.heliosuns404.com/"
 secondaryUrlLabel: "Acessar o projeto"
+order: 3
+category: "03. Learning Project"
+metricLabel: "STATUS"
+metricValue: "Opening Up"
+metricCaption: "OPEN SOURCE"
+image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=800&auto=format&fit=crop"
+imageAlt: "Projeto OpenFlashcards em transicao para open source para estudar repeticao espacada e arquitetura"
 ---
-03. Learning Project
 
 OpenFlashcards nasceu de uma dor concreta no meu processo de estudo: eu queria testar uma forma mais deliberada de revisar conteudo, organizar flashcards e aprender com feedback rapido. Em vez de tratar isso como um segundo produto ou um SaaS paralelo, a decisao foi abrir o projeto aos poucos e leva-lo para uma transicao honesta em direcao a open source.
 
