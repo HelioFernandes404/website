@@ -8,5 +8,24 @@ import designMode from './design-mode/vite-plugin-design-mode';
 export default defineConfig({
   output: 'static',
   site: 'https://heliosuns404.com',
-  integrations: [sitemap(), react(), designMode()],
+  i18n: {
+    defaultLocale: 'pt',
+    locales: ['pt', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'pt',
+        locales: {
+          pt: 'pt-BR',
+          en: 'en-US',
+        },
+      },
+    }),
+    react(),
+    designMode(),
+  ],
 });

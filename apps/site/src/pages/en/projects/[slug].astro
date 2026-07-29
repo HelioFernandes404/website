@@ -1,45 +1,38 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
-import ArchitectureFlow from "../../components/ArchitectureFlow";
-import { useTranslations, stripLocalePrefix } from "../../i18n/utils";
+import Layout from "../../../layouts/Layout.astro";
+import ArchitectureFlow from "../../../components/ArchitectureFlow";
+import { useTranslations, stripLocalePrefix } from "../../../i18n/utils";
 
-const lang = "pt" as const;
+const lang = "en" as const;
 
 export async function getStaticPaths() {
     const projects = (
-        await getCollection("projects", ({ id }) => id.startsWith("pt/"))
-    ).map((project) => ({ ...project, slug: stripLocalePrefix(project.slug, "pt") }));
-    const enSlugs = new Set(
-        (await getCollection("projects", ({ id }) => id.startsWith("en/"))).map(
-            (project) => stripLocalePrefix(project.slug, "en"),
-        ),
-    );
+        await getCollection("projects", ({ id }) => id.startsWith("en/"))
+    ).map((project) => ({ ...project, slug: stripLocalePrefix(project.slug, "en") }));
 
     return projects.map((project) => ({
         params: { slug: project.slug },
         props: {
             project,
-            alternateUrl: enSlugs.has(project.slug)
-                ? `/en/projects/${project.slug}/`
-                : undefined,
+            alternateUrl: `/projetos/${project.slug}/`,
         },
     }));
 }
 
 interface Props {
     project: CollectionEntry<"projects">;
-    alternateUrl?: string;
+    alternateUrl: string;
 }
 
 const { project, alternateUrl } = Astro.props as Props;
 const { Content } = await project.render();
 const t = useTranslations(lang);
 
-const title = `${project.data.title} | Projetos`;
+const title = `${project.data.title} | Projects`;
 const description = project.data.description;
 const ogImage = "/og-image.webp";
-const canonicalUrl = `https://heliosuns404.com/projetos/${project.slug}/`;
+const canonicalUrl = `https://heliosuns404.com/en/projects/${project.slug}/`;
 
 const { carl, architecture } = project.data;
 
@@ -160,12 +153,6 @@ const carlSections = carl
                             />
                         </div>
 
-                        {/* The island only paints one decision at a time, on
-                            click. The text ships either way as serialised island
-                            props, but as JSON it is not readable content. This
-                            renders it as real markup: works with JS off, and
-                            gives phone readers a way to read the decisions
-                            instead of panning a canvas wider than the screen. */}
                         <details class="mt-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
                             <summary class="hover-trigger cursor-pointer font-medium focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime">
                                 {t("projectDetail.viewDecisionsText")}
@@ -202,7 +189,7 @@ const carlSections = carl
             </article>
 
             <a
-                href="/projetos/"
+                href="/en/projects/"
                 class="hover-trigger mt-8 inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-[border-color,background-color,color,transform] duration-300 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
             >
                 {t("projectDetail.backToProjects")}

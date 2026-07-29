@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const blogDir = path.resolve(__dirname, "../src/content/blog");
+const blogDir = path.resolve(__dirname, "../src/content/blog/pt");
 // The migrated set was trimmed down to a single curated post; the rest were
 // removed from the site on purpose.
 const expectedSlugs = ["k3s-multi-tenant-migration-checklist"];

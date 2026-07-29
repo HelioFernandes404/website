@@ -1,9 +1,13 @@
 ---
+import { htmlLang, type Lang } from "../i18n/ui";
+
 interface Props {
     title: string;
     description: string;
     ogImage?: string;
     canonicalUrl?: string;
+    lang?: Lang;
+    alternateUrl?: string;
 }
 
 const {
@@ -11,6 +15,8 @@ const {
     description,
     ogImage = "/og-image.webp",
     canonicalUrl,
+    lang = "pt",
+    alternateUrl,
 }: Props = Astro.props;
 
 const canonicalHref = canonicalUrl
@@ -18,13 +24,26 @@ const canonicalHref = canonicalUrl
     : Astro.url.href;
 const ogImageHref = new URL(ogImage, Astro.url).href;
 
-const normalizedPathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const alternateLang: Lang = lang === "en" ? "pt" : "en";
+const alternateHref = alternateUrl
+    ? new URL(alternateUrl, Astro.url).href
+    : undefined;
+const defaultLangHref = lang === "pt" ? canonicalHref : alternateHref;
+
+const ogLocaleMap: Record<Lang, string> = { pt: "pt_BR", en: "en_US" };
+
+const normalizedPathname = Astro.url.pathname
+    .replace(/^\/en\//, "/")
+    .replace(/^\/en$/, "/")
+    .replace(/\/+$/, "") || "/";
 const isHomeRoute = normalizedPathname === "/";
 const isBlogRoute =
     normalizedPathname === "/blog" || normalizedPathname.startsWith("/blog/");
 const isProjectRoute =
     normalizedPathname === "/projetos" ||
-    normalizedPathname.startsWith("/projetos/");
+    normalizedPathname.startsWith("/projetos/") ||
+    normalizedPathname === "/projects" ||
+    normalizedPathname.startsWith("/projects/");
 
 const ogType = isBlogRoute ? "article" : "website";
 
@@ -103,11 +122,16 @@ if (isHomeRoute) {
 <meta property="og:url" content={canonicalHref} />
 <meta property="og:image" content={ogImageHref} />
 <meta property="og:image:alt" content={title} />
+<meta property="og:locale" content={ogLocaleMap[lang]} />
+{alternateHref && <meta property="og:locale:alternate" content={ogLocaleMap[alternateLang]} />}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageHref} />
 <link rel="canonical" href={canonicalHref} />
+<link rel="alternate" hreflang={htmlLang[lang]} href={canonicalHref} />
+{alternateHref && <link rel="alternate" hreflang={htmlLang[alternateLang]} href={alternateHref} />}
+{defaultLangHref && <link rel="alternate" hreflang="x-default" href={defaultLangHref} />}
 {
     schema && (
         <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
