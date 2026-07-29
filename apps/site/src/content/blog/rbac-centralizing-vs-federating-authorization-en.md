@@ -1,0 +1,82 @@
+---
+title: "Implementing RBAC: when centralizing looked like the right answer"
+description: "Why a centralized RBAC Core turned into a single point of failure and an organizational bottleneck, and how a federated model with OpenFGA fixed it."
+pubDate: "2026-07-29"
+category: "Architecture"
+lead: "Good authorization architecture doesn't concentrate control: it distributes responsibility without losing the ability to govern the whole."
+tags:
+  - "RBAC"
+  - "OpenFGA"
+  - "Authorization"
+  - "Distributed Systems"
+  - "Architecture"
+---
+
+When I started working on an RBAC implementation, the goal looked simple: build one central point to control who could access each resource across the applications.
+
+## The first idea: an RBAC Core
+
+The first idea was to build an **RBAC Core**. Every application would query this service before allowing an action.
+
+The flow looked roughly like this:
+
+```text
+┌─────────┐      ┌─────────┐      ┌───────────┐      ┌──────────┐
+│ App A   │─────▶│         │      │           │      │          │
+├─────────┤      │ RBAC    │─────▶│  OpenFGA  │─────▶│ Decision │
+│ App B   │─────▶│ Core    │      │           │      │          │
+├─────────┤      │         │      │           │      │          │
+│ App C   │─────▶│         │      │           │      │          │
+└─────────┘      └─────────┘      └───────────┘      └──────────┘
+```
+
+In theory, this would deliver standardization, governance, and a single interface. In practice, some important questions started surfacing.
+
+What would happen if the RBAC Core went down? Would every application lose the ability to authorize users? Who would be responsible for updating the authorization models? Would the team owning the central service need to understand every business rule of every system?
+
+I realized we weren't just building a central service — we were building a possible single point of failure and an organizational bottleneck.
+
+## The turn: a federated model
+
+The architecture then started evolving toward a federated model:
+
+```text
+┌─────────┐      ┌──────────────────┐
+│ App A   │─────▶│ Authorization SDK│─────▶┐
+└─────────┘      └──────────────────┘      │
+                                            │
+┌─────────┐      ┌──────────────────┐      ▼
+│ App B   │─────▶│ Authorization SDK│─────▶ OpenFGA
+└─────────┘      └──────────────────┘      ▲
+                                            │
+┌─────────┐      ┌──────────────────┐      │
+│ App C   │─────▶│ Authorization SDK│─────▶┘
+└─────────┘      └──────────────────┘
+                          │
+                          │ versioned models,
+                          │ applied like migrations
+                          ▼
+                 ┌──────────────────┐
+                 │  Central         │
+                 │  governance      │
+                 │  (view/audit,    │
+                 │  off the request │
+                 │  path)           │
+                 └──────────────────┘
+```
+
+Each application became responsible for its own authorization model, its own relations, and its own policies. Those policies would be treated much like database migrations: versioned, reviewed, and applied idempotently during deploy.
+
+The central service stopped sitting in the critical path of requests. Its role shifted to governance: visualizing models, tracking changes, running audits, and helping administer permissions.
+
+We also understood that authorization shouldn't depend entirely on the control plane's availability. That's why strategies like short-lived caching of decisions, automated model application, and direct communication between each system and OpenFGA entered the discussion.
+
+## What stuck
+
+The main discovery from this journey was that RBAC isn't just a table of users, roles, and permissions. It's a distributed architecture decision.
+
+Centralizing governance can be valuable. Centralizing every runtime decision, though, can increase coupling and reduce resilience.
+
+In the end, the implementation stopped being just about controlling access. It became about finding the balance between autonomy, security, governance, and availability.
+
+And maybe that was the biggest lesson: good authorization architecture isn't the one that concentrates all control, but the one that distributes responsibility without losing the ability to govern the whole.
