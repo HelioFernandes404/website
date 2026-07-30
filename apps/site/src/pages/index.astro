@@ -3,37 +3,37 @@ import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import { stripLocalePrefix } from "../i18n/utils";
 
-const lang = "pt" as const;
+const lang = "en" as const;
 
 const title = "Hélio Fernandes - Software Engineer";
 const description =
-    "Software Engineer com profundidade em infraestrutura e backend. Kubernetes, CI/CD, APIs e dados: do design à produção.";
+    "Software Engineer with deep expertise in infrastructure and backend. Kubernetes, CI/CD, APIs, and data: from design to production.";
 const ogImage = "/og-image.webp";
 const canonicalUrl = "https://heliosuns404.com/";
 
 const services = [
     {
-        title: "Infraestrutura & Confiabilidade",
+        title: "Infrastructure & Reliability",
         description:
-            "Sistemas que escalam sem quebrar em producao: rollout previsivel, observabilidade e rollback que funciona.",
+            "Systems that scale without breaking in production: predictable rollouts, observability, and rollback that actually works.",
         stack: ["Kubernetes / CI-CD", "AWS / Azure / Terraform"],
         badge: "/>",
         highlight: false,
         delayClass: "stagger-delay-1",
     },
     {
-        title: "Backend & Dados",
+        title: "Backend & Data",
         description:
-            "APIs e pipelines que aguentam carga real, com foco em performance, custo e manutencao no longo prazo.",
+            "APIs and pipelines that hold up under real load, focused on performance, cost, and long-term maintainability.",
         stack: ["Python / Node.js", "Data Engineering"],
         badge: "{}",
         highlight: true,
         delayClass: "stagger-delay-2",
     },
     {
-        title: "IA Aplicada",
+        title: "Applied AI",
         description:
-            "Agentes e RAG que resolvem um problema real, nao demo: avaliacao, custo e observabilidade desde o inicio.",
+            "Agents and RAG that solve a real problem, not a demo: evaluation, cost, and observability from day one.",
         stack: ["LLMs / RAG", "Databricks"],
         badge: "AI",
         highlight: false,
@@ -44,28 +44,28 @@ const services = [
 // Single source of truth: the projects collection. `reverse` is presentation
 // only (alternating layout), so it is derived from position rather than stored.
 const featuredProjects = (
-    await getCollection("projects", ({ id }) => id.startsWith("pt/"))
+    await getCollection("projects", ({ id }) => id.startsWith("en/"))
 )
     .sort((a, b) => a.data.order - b.data.order)
     .map((project, index) => ({
-        slug: stripLocalePrefix(project.slug, "pt"),
+        slug: stripLocalePrefix(project.slug, "en"),
         ...project.data,
         reverse: index % 2 === 1,
     }));
 
 const testimonials = [
     {
-        text: "Tive o prazer de trabalhar com o Helio. O que mais se destaca e a visao estrategica que ele traz para a equipe.",
+        text: "I had the pleasure of working with Helio. What stands out most is the strategic vision he brings to the team.",
         author: "Acacio Fernandes",
-        role: "Head de Tecnologia",
+        role: "Head of Technology",
     },
     {
-        text: "Trouxe clareza tecnica para o projeto e desenhou uma base de infraestrutura preparada para escalar com seguranca.",
+        text: "He brought technical clarity to the project and designed an infrastructure foundation built to scale safely.",
         author: "Juliana Herane",
         role: "Product Owner",
     },
     {
-        text: "Nao entrega so codigo: entrega solucao ponta a ponta, com criterio tecnico e foco no negocio.",
+        text: "He doesn't just deliver code: he delivers end-to-end solutions, with technical judgment and a focus on the business.",
         author: "Andre Dini",
         role: "Tech Lead",
     },
@@ -78,7 +78,7 @@ const testimonials = [
     ogImage={ogImage}
     canonicalUrl={canonicalUrl}
     lang={lang}
-    alternateUrl="/en/"
+    alternateUrl="/pt/"
 >
     <main class="min-h-screen">
         <section
@@ -99,17 +99,17 @@ const testimonials = [
                         <span
                             class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
                         ></span>
-                        Disponível para novos projetos
+                        Available for new projects
                     </div>
 
                     <h1
                         class="text-5xl lg:text-7xl font-display font-bold leading-[0.95] tracking-tight opacity-0 animate-fade-in-up"
                         style="animation-delay: 0.2s"
                     >
-                        Código eficiente.<br />
-                        Infraestrutura
+                        Efficient code.<br />
+                        Scalable
                         <span class="relative inline-block whitespace-nowrap">
-                            <span class="relative z-10">escalável</span>
+                            <span class="relative z-10">infrastructure</span>
                             <span
                                 class="absolute bottom-2 left-0 w-full h-4 bg-brand-lime/80 -z-0 transform -skew-x-12"
                             ></span>
@@ -120,10 +120,10 @@ const testimonials = [
                         class="text-xl text-gray-500 max-w-xl leading-relaxed opacity-0 animate-fade-in-up"
                         style="animation-delay: 0.3s"
                     >
-                        Stack não é o meu trabalho. É apenas o meio pra chegar
-                        no que realmente importa:
+                        The stack isn't the job. It's just the means to what
+                        actually matters:
                         <strong class="text-black bg-gray-100 px-1"
-                            >resolver problemas</strong
+                            >solving problems</strong
                         >.
                     </p>
 
@@ -132,7 +132,7 @@ const testimonials = [
                         style="animation-delay: 0.4s"
                     >
                         <a
-                            href="mailto:heliodevhub@gmail.com?subject=Contato%20via%20site"
+                            href="mailto:heliodevhub@gmail.com?subject=Contact%20via%20website"
                             class="group relative overflow-hidden rounded-lg bg-black px-8 py-4 font-medium text-white shadow-lg transition-[transform,box-shadow,color,background-color] duration-300 hover-trigger hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                         >
                             <div
@@ -141,15 +141,15 @@ const testimonials = [
                             <span
                                 class="relative group-hover:text-black transition-colors flex items-center gap-2"
                             >
-                                Vamos conversar
+                                Let's talk
                                 <span aria-hidden="true">-></span>
                             </span>
                         </a>
                         <a
-                            href="#projetos"
+                            href="#projects"
                             class="rounded-lg border border-gray-200 px-8 py-4 font-medium transition-[border-color,background-color,color] duration-300 hover-trigger hover:border-gray-400 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                         >
-                            Ver Portfolio
+                            View Portfolio
                         </a>
                     </div>
                 </div>
@@ -164,7 +164,7 @@ const testimonials = [
                         >
                             <img
                                 src="/eu.PNG"
-                                alt="Hélio Fernandes, Software Engineer com foco em infraestrutura e backend"
+                                alt="Hélio Fernandes, Software Engineer focused on infrastructure and backend"
                                 width="517"
                                 height="655"
                                 class="w-full h-auto object-cover"
@@ -199,14 +199,14 @@ const testimonials = [
             </div>
         </section>
 
-        <section id="servicos" class="relative overflow-hidden bg-gray-50 py-24">
+        <section id="services" class="relative overflow-hidden bg-gray-50 py-24">
             <div class="mx-auto max-w-7xl px-6">
                 <div class="mb-16 reveal-on-scroll">
                     <span
                         class="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-brand-gray"
                     >
                         <span class="h-px w-8 bg-brand-lime"></span>
-                        Minha Expertise
+                        My Expertise
                     </span>
                     <h2 class="mt-4 text-3xl font-display font-bold lg:text-4xl">
                         Software Engineer, end-to-end
@@ -214,8 +214,8 @@ const testimonials = [
                     <p
                         class="mt-4 max-w-xl leading-relaxed text-brand-gray"
                     >
-                        Profundidade em infraestrutura e backend. Navego o stack
-                        todo quando o problema pede.
+                        Deep expertise in infrastructure and backend. I move
+                        across the whole stack when the problem calls for it.
                     </p>
                 </div>
 
@@ -288,7 +288,7 @@ const testimonials = [
         </section>
 
         <section
-            id="projetos"
+            id="projects"
             class="relative overflow-hidden bg-brand-black py-24 text-white"
         >
             <div
@@ -308,14 +308,14 @@ const testimonials = [
                             Selected Works
                         </span>
                         <h2 class="mt-4 text-4xl font-display font-bold lg:text-6xl">
-                            Cases Reais
+                            Real-World Cases
                         </h2>
                     </div>
                     <p
                         class="max-w-sm border-l border-gray-700 pl-4 text-right text-gray-400 md:text-left"
                     >
-                        Projetos onde tecnologia e negocio se encontram para
-                        gerar resultados mensuraveis.
+                        Projects where technology and business meet to produce
+                        measurable results.
                     </p>
                 </div>
 
@@ -359,10 +359,10 @@ const testimonials = [
                                         ))}
                                     </div>
                                     <a
-                                        href={`/projetos/${project.slug}/`}
+                                        href={`/projects/${project.slug}/`}
                                         class="hover-trigger inline-flex items-center gap-2 rounded-lg border border-white/20 px-5 py-2.5 font-medium transition-[border-color,background-color,color,transform] duration-300 hover:border-brand-lime hover:bg-brand-lime hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                                     >
-                                        Ver caso
+                                        View case
                                         <span aria-hidden="true">-></span>
                                     </a>
                                 </div>
@@ -436,7 +436,7 @@ const testimonials = [
             </div>
         </section>
 
-        <section id="depoimentos" class="relative bg-white py-24">
+        <section id="testimonials" class="relative bg-white py-24">
             <div class="mx-auto max-w-6xl px-6">
                 <div class="mb-12 text-center reveal-on-scroll">
                     <div
@@ -458,7 +458,7 @@ const testimonials = [
                         </svg>
                     </div>
                     <h2 class="text-3xl font-display font-bold lg:text-4xl">
-                        Feedback de quem trabalhou comigo
+                        Feedback from people I've worked with
                     </h2>
                 </div>
 

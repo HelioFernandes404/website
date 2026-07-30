@@ -3,12 +3,17 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../../layouts/Layout.astro";
 import { useTranslations, stripLocalePrefix } from "../../../i18n/utils";
 
-const lang = "en" as const;
+const lang = "pt" as const;
 
 export async function getStaticPaths() {
-    const posts = (await getCollection("blog", ({ id }) => id.startsWith("en/")))
-        .map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "en") }))
+    const posts = (await getCollection("blog", ({ id }) => id.startsWith("pt/")))
+        .map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "pt") }))
         .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+    const enSlugs = new Set(
+        (await getCollection("blog", ({ id }) => id.startsWith("en/"))).map((post) =>
+            stripLocalePrefix(post.slug, "en"),
+        ),
+    );
 
     return posts.map((post, index) => ({
         params: { slug: post.slug },
@@ -16,7 +21,7 @@ export async function getStaticPaths() {
             post,
             older: posts[index + 1] ?? null,
             newer: posts[index - 1] ?? null,
-            alternateUrl: `/blog/${post.slug}/`,
+            alternateUrl: enSlugs.has(post.slug) ? `/blog/${post.slug}/` : undefined,
         },
     }));
 }
@@ -25,14 +30,14 @@ interface Props {
     post: CollectionEntry<"blog">;
     older: CollectionEntry<"blog"> | null;
     newer: CollectionEntry<"blog"> | null;
-    alternateUrl: string;
+    alternateUrl?: string;
 }
 
 const { post, older, newer, alternateUrl } = Astro.props as Props;
 const { Content } = await post.render();
 const t = useTranslations(lang);
 
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
+const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "long",
     timeZone: "UTC",
 });
@@ -45,7 +50,7 @@ const readingMinutes = Math.max(
 const title = `${post.data.title} | Blog`;
 const description = post.data.description;
 const ogImage = "/og-image.webp";
-const canonicalUrl = `https://heliosuns404.com/en/blog/${post.slug}/`;
+const canonicalUrl = `https://heliosuns404.com/pt/blog/${post.slug}/`;
 ---
 
 <Layout
@@ -174,7 +179,7 @@ const canonicalUrl = `https://heliosuns404.com/en/blog/${post.slug}/`;
                     >
                         {older ? (
                             <a
-                                href={`/en/blog/${older.slug}/`}
+                                href={`/pt/blog/${older.slug}/`}
                                 class="blog-post-back-link hover-trigger group flex flex-col gap-1 rounded-2xl border border-gray-200 p-5 transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                             >
                                 <span class="font-mono text-xs uppercase tracking-wide text-gray-400">
@@ -189,7 +194,7 @@ const canonicalUrl = `https://heliosuns404.com/en/blog/${post.slug}/`;
                         )}
                         {newer ? (
                             <a
-                                href={`/en/blog/${newer.slug}/`}
+                                href={`/pt/blog/${newer.slug}/`}
                                 class="blog-post-back-link hover-trigger group flex flex-col items-end gap-1 rounded-2xl border border-gray-200 p-5 text-right transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime sm:col-start-2"
                             >
                                 <span class="font-mono text-xs uppercase tracking-wide text-gray-400">
@@ -207,7 +212,7 @@ const canonicalUrl = `https://heliosuns404.com/en/blog/${post.slug}/`;
             }
 
             <a
-                href="/en/blog/"
+                href="/pt/blog/"
                 class="blog-post-back-link hover-trigger mt-8 inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-[border-color,background-color,color,transform] duration-300 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
             >
                 <span aria-hidden="true">&lt;-</span>

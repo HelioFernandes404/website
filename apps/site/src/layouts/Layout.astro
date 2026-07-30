@@ -20,21 +20,21 @@ const {
   description,
   ogImage,
   canonicalUrl,
-  lang = "pt",
+  lang = "en",
   readingModeEnabled = false,
   alternateUrl,
 }: Props = Astro.props;
 
 const t = useTranslations(lang);
 const pathname = Astro.url.pathname;
-const basePrefix = lang === "en" ? "/en" : "";
+const basePrefix = lang === "pt" ? "/pt" : "";
 const homeHref = `${basePrefix}/`;
 
 const navLinks = [
   { href: homeHref, label: t("nav.home") },
   { href: `${basePrefix}/blog/`, label: t("nav.blog") },
   {
-    href: lang === "en" ? "/en/projects/" : "/projetos/",
+    href: lang === "en" ? "/projects/" : "/pt/projetos/",
     label: t("nav.projects"),
   },
 ];

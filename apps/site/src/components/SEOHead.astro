@@ -15,7 +15,7 @@ const {
     description,
     ogImage = "/og-image.webp",
     canonicalUrl,
-    lang = "pt",
+    lang = "en",
     alternateUrl,
 }: Props = Astro.props;
 
@@ -28,13 +28,13 @@ const alternateLang: Lang = lang === "en" ? "pt" : "en";
 const alternateHref = alternateUrl
     ? new URL(alternateUrl, Astro.url).href
     : undefined;
-const defaultLangHref = lang === "pt" ? canonicalHref : alternateHref;
+const defaultLangHref = lang === "en" ? canonicalHref : alternateHref;
 
 const ogLocaleMap: Record<Lang, string> = { pt: "pt_BR", en: "en_US" };
 
 const normalizedPathname = Astro.url.pathname
-    .replace(/^\/en\//, "/")
-    .replace(/^\/en$/, "/")
+    .replace(/^\/pt\//, "/")
+    .replace(/^\/pt$/, "/")
     .replace(/\/+$/, "") || "/";
 const isHomeRoute = normalizedPathname === "/";
 const isBlogRoute =

@@ -3,19 +3,19 @@ import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { useTranslations, stripLocalePrefix } from "../../i18n/utils";
 
-const lang = "pt" as const;
+const lang = "en" as const;
 const t = useTranslations(lang);
 
 // Curated order, not alphabetical: the first card is the one worth reading first.
-const projects = (await getCollection("projects", ({ id }) => id.startsWith("pt/")))
-    .map((project) => ({ ...project, slug: stripLocalePrefix(project.slug, "pt") }))
+const projects = (await getCollection("projects", ({ id }) => id.startsWith("en/")))
+    .map((project) => ({ ...project, slug: stripLocalePrefix(project.slug, "en") }))
     .sort((a, b) => a.data.order - b.data.order);
 
-const title = "Projetos | Hélio Fernandes";
+const title = "Projects | Hélio Fernandes";
 const description =
-    "Projetos de engenharia de software, infraestrutura cloud e automacao com foco em performance e confiabilidade.";
+    "Software engineering, cloud infrastructure, and automation projects focused on performance and reliability.";
 const ogImage = "/og-image.webp";
-const canonicalUrl = "https://heliosuns404.com/projetos/";
+const canonicalUrl = "https://heliosuns404.com/projects/";
 ---
 
 <Layout
@@ -24,7 +24,7 @@ const canonicalUrl = "https://heliosuns404.com/projetos/";
     ogImage={ogImage}
     canonicalUrl={canonicalUrl}
     lang={lang}
-    alternateUrl="/en/projects/"
+    alternateUrl="/pt/projetos/"
 >
     <main class="min-h-screen">
         <section
@@ -66,7 +66,7 @@ const canonicalUrl = "https://heliosuns404.com/projetos/";
                                 <article class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-brand-lime hover:shadow-xl">
                                     <a
                                         class="hover-trigger grid gap-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
-                                        href={`/projetos/${project.slug}/`}
+                                        href={`/projects/${project.slug}/`}
                                     >
                                         <div class="relative h-48 overflow-hidden bg-gray-100 md:h-full md:min-h-[15rem]">
                                             <img

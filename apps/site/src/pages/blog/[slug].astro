@@ -3,17 +3,12 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { useTranslations, stripLocalePrefix } from "../../i18n/utils";
 
-const lang = "pt" as const;
+const lang = "en" as const;
 
 export async function getStaticPaths() {
-    const posts = (await getCollection("blog", ({ id }) => id.startsWith("pt/")))
-        .map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "pt") }))
+    const posts = (await getCollection("blog", ({ id }) => id.startsWith("en/")))
+        .map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "en") }))
         .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
-    const enSlugs = new Set(
-        (await getCollection("blog", ({ id }) => id.startsWith("en/"))).map((post) =>
-            stripLocalePrefix(post.slug, "en"),
-        ),
-    );
 
     return posts.map((post, index) => ({
         params: { slug: post.slug },
@@ -21,7 +16,7 @@ export async function getStaticPaths() {
             post,
             older: posts[index + 1] ?? null,
             newer: posts[index - 1] ?? null,
-            alternateUrl: enSlugs.has(post.slug) ? `/en/blog/${post.slug}/` : undefined,
+            alternateUrl: `/pt/blog/${post.slug}/`,
         },
     }));
 }
@@ -30,14 +25,14 @@ interface Props {
     post: CollectionEntry<"blog">;
     older: CollectionEntry<"blog"> | null;
     newer: CollectionEntry<"blog"> | null;
-    alternateUrl?: string;
+    alternateUrl: string;
 }
 
 const { post, older, newer, alternateUrl } = Astro.props as Props;
 const { Content } = await post.render();
 const t = useTranslations(lang);
 
-const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
     dateStyle: "long",
     timeZone: "UTC",
 });

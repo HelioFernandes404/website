@@ -1,0 +1,7 @@
+/en    /    301
+/en/   /    301
+/en/*  /:splat  301
+
+/projetos    /pt/projetos/    301
+/projetos/   /pt/projetos/    301
+/projetos/*  /pt/projetos/:splat  301

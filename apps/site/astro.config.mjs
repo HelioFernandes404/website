@@ -9,7 +9,7 @@ export default defineConfig({
   output: 'static',
   site: 'https://heliosuns404.com',
   i18n: {
-    defaultLocale: 'pt',
+    defaultLocale: 'en',
     locales: ['pt', 'en'],
     routing: {
       prefixDefaultLocale: false,
@@ -18,7 +18,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       i18n: {
-        defaultLocale: 'pt',
+        defaultLocale: 'en',
         locales: {
           pt: 'pt-BR',
           en: 'en-US',

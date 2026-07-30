@@ -3,14 +3,14 @@ import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { useTranslations, stripLocalePrefix, pluralize } from "../../i18n/utils";
 
-const lang = "pt" as const;
+const lang = "en" as const;
 const t = useTranslations(lang);
 
-const posts = (await getCollection("blog", ({ id }) => id.startsWith("pt/")))
-    .map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "pt") }))
+const posts = (await getCollection("blog", ({ id }) => id.startsWith("en/")))
+    .map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "en") }))
     .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
-const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
     dateStyle: "long",
     timeZone: "UTC",
 });
@@ -22,7 +22,7 @@ const [featured, ...rest] = posts;
 
 const title = "Blog | Hélio Fernandes";
 const description =
-    "Artigos sobre DevOps, infraestrutura escalável, Kubernetes, CI/CD e desenvolvimento de alta performance.";
+    "Posts about DevOps, scalable infrastructure, Kubernetes, CI/CD, and high-performance engineering.";
 const ogImage = "/og-image.webp";
 const canonicalUrl = "https://heliosuns404.com/blog/";
 ---
@@ -33,7 +33,7 @@ const canonicalUrl = "https://heliosuns404.com/blog/";
     ogImage={ogImage}
     canonicalUrl={canonicalUrl}
     lang={lang}
-    alternateUrl="/en/blog/"
+    alternateUrl="/pt/blog/"
 >
     <main class="min-h-screen">
         <section
