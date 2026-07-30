@@ -12,64 +12,56 @@ tags:
   - "Architecture"
 ---
 
+import ScrollyFlow from "../../../components/blog/ScrollyFlow";
+import { rbacCentralizedScenario, rbacFederatedScenario } from "../../../data/blog-scenarios/rbac";
+import Callout from "../../../components/blog/Callout.astro";
+import DecisionCard from "../../../components/blog/DecisionCard.astro";
+import TradeoffCompare from "../../../components/blog/TradeoffCompare.astro";
+
 Quando comecei a trabalhar na implementação de RBAC, o objetivo parecia simples: criar um ponto central para controlar quem poderia acessar cada recurso das aplicações.
 
 ## A primeira ideia: um RBAC Core
 
-A primeira ideia foi construir um **RBAC Core**. Todas as aplicações consultariam esse serviço antes de permitir uma ação.
+A primeira ideia foi construir um **RBAC Core**. Todas as aplicações consultariam esse serviço antes de permitir uma ação. Acompanhe o cenário: cada etapa revela onde essa centralização passa a pesar.
 
-O fluxo seria parecido com isto:
-
-```text
-┌─────────┐      ┌─────────┐      ┌───────────┐      ┌──────────┐
-│ App A   │─────▶│         │      │           │      │          │
-├─────────┤      │ RBAC    │─────▶│  OpenFGA  │─────▶│ Decisão  │
-│ App B   │─────▶│ Core    │      │           │      │          │
-├─────────┤      │         │      │           │      │          │
-│ App C   │─────▶│         │      │           │      │          │
-└─────────┘      └─────────┘      └───────────┘      └──────────┘
-```
+<ScrollyFlow client:idle scenario={rbacCentralizedScenario} locale="pt" />
 
 Na teoria, isso entregaria padronização, governança e uma interface única. Na prática, começaram a surgir algumas perguntas importantes.
 
 O que aconteceria se o RBAC Core ficasse indisponível? Todas as aplicações perderiam a capacidade de autorizar usuários? Quem seria responsável por atualizar os modelos de autorização? O time responsável pelo serviço central precisaria conhecer todas as regras de negócio de todos os sistemas?
 
+<DecisionCard
+  title="Decisão inicial"
+  decision="Concentrar a autorização em um RBAC Core."
+  rationale="Padronizar a interface e a governança entre aplicações."
+  consequence="O serviço central entra no caminho de todas as decisões de autorização."
+/>
+
+<Callout type="warning" title="Caminho crítico">
+  Um RBAC Core indisponível pode impedir todas as aplicações de autorizar usuários.
+</Callout>
+
 Percebi que estávamos criando não apenas um serviço central, mas também um possível ponto único de falha e um gargalo organizacional.
 
 ## A virada: um modelo federado
 
-A arquitetura começou então a evoluir para um modelo federado:
+A arquitetura começou então a evoluir para um modelo federado. O cenário separa decisões de execução da governança central.
 
-```text
-┌─────────┐      ┌──────────────────┐
-│ App A   │─────▶│ SDK autorização  │─────▶┐
-└─────────┘      └──────────────────┘      │
-                                            │
-┌─────────┐      ┌──────────────────┐      ▼
-│ App B   │─────▶│ SDK autorização  │─────▶ OpenFGA
-└─────────┘      └──────────────────┘      ▲
-                                            │
-┌─────────┐      ┌──────────────────┐      │
-│ App C   │─────▶│ SDK autorização  │─────▶┘
-└─────────┘      └──────────────────┘
-                          │
-                          │ modelos versionados,
-                          │ aplicados como migrations
-                          ▼
-                 ┌──────────────────┐
-                 │  Governança      │
-                 │  central         │
-                 │  (view/audit,    │
-                 │  fora do caminho │
-                 │  crítico)        │
-                 └──────────────────┘
-```
+<ScrollyFlow client:idle scenario={rbacFederatedScenario} locale="pt" />
 
 Cada aplicação passou a ser responsável pelo próprio modelo de autorização, por suas relações e por suas políticas. Essas políticas seriam tratadas de forma semelhante a migrations de banco de dados: versionadas, revisadas e aplicadas de maneira idempotente durante o deploy.
 
 O serviço central deixou de estar no caminho crítico das requisições. Seu papel passou a ser o de governança: visualizar modelos, acompanhar alterações, executar auditorias e ajudar na administração das permissões.
 
 Também entendemos que autorização não deveria depender completamente da disponibilidade do control plane. Por isso, entraram na discussão estratégias como cache temporário das decisões, aplicação automatizada dos modelos e comunicação direta entre cada sistema e o OpenFGA.
+
+<TradeoffCompare
+  title="Centralizar ou federar"
+  options={[
+    { title: "RBAC Core", description: "Interface e governança centralizadas, mas decisões no caminho crítico." },
+    { title: "Modelo federado", description: "Responsabilidades distribuídas; governança permanece central, fora do caminho crítico." },
+  ]}
+/>
 
 ## O que ficou
 

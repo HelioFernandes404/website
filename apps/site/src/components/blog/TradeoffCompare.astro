@@ -1,0 +1,30 @@
+---
+interface Option {
+    title?: string;
+    name?: string;
+    description?: string;
+    pros?: string[];
+    cons?: string[];
+}
+interface Props { title?: string; options: (Option | string)[]; }
+
+const pt = Astro.currentLocale === "pt" || Astro.url.pathname.startsWith("/pt/");
+const labels = pt ? { title: "Trade-offs", pros: "Benefícios", cons: "Custos" } : { title: "Trade-offs", pros: "Benefits", cons: "Costs" };
+const { title = labels.title, options } = Astro.props;
+const normalise = (option: Option | string) => typeof option === "string" ? { title: option } : option;
+---
+
+<section class="blog-tradeoff" aria-label={title}>
+    <h2 class="blog-editorial-title">{title}</h2>
+    <div class="blog-tradeoff__options">
+        {options.map((rawOption) => {
+            const option = normalise(rawOption);
+            return <article class="blog-tradeoff__option">
+                <h3>{option.title ?? option.name}</h3>
+                {option.description && <p>{option.description}</p>}
+                {option.pros && <div><h4>{labels.pros}</h4><ul>{option.pros.map((item) => <li>{item}</li>)}</ul></div>}
+                {option.cons && <div><h4>{labels.cons}</h4><ul>{option.cons.map((item) => <li>{item}</li>)}</ul></div>}
+            </article>;
+        })}
+    </div>
+</section>

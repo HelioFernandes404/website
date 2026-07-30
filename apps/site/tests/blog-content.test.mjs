@@ -5,25 +5,45 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const blogDir = path.resolve(__dirname, "../src/content/blog/pt");
-// The migrated set was trimmed down to a single curated post; the rest were
-// removed from the site on purpose.
-const expectedSlugs = ["k3s-multi-tenant-migration-checklist"];
+const blogRoot = path.resolve(__dirname, "../src/content/blog");
+const locales = ["pt", "en"];
+const expectedSlugs = [
+  "k3s-multi-tenant-migration-checklist",
+  "rbac-centralizing-vs-federating-authorization",
+];
 
 describe("site blog content migration", () => {
-  it("ships all migrated hub slugs as markdown entries", async () => {
-    for (const slug of expectedSlugs) {
-      await access(path.join(blogDir, `${slug}.md`));
+  it("ships every localized post as an MDX entry", async () => {
+    for (const locale of locales) {
+      for (const slug of expectedSlugs) {
+        await access(path.join(blogRoot, locale, `${slug}.mdx`));
+      }
     }
   });
 
   it("stores required frontmatter keys in migrated entries", async () => {
-    const sampleFile = path.join(blogDir, "k3s-multi-tenant-migration-checklist.md");
-    const content = await readFile(sampleFile, "utf8");
+    for (const locale of locales) {
+      for (const slug of expectedSlugs) {
+        const file = path.join(blogRoot, locale, `${slug}.mdx`);
+        const content = await readFile(file, "utf8");
 
-    assert.match(content, /^---\n[\s\S]*title:/m);
-    assert.match(content, /^---\n[\s\S]*description:/m);
-    assert.match(content, /^---\n[\s\S]*pubDate:/m);
-    assert.match(content, /^---\n[\s\S]*category:/m);
+        assert.match(content, /^---\n[\s\S]*title:/m);
+        assert.match(content, /^---\n[\s\S]*description:/m);
+        assert.match(content, /^---\n[\s\S]*pubDate:/m);
+        assert.match(content, /^---\n[\s\S]*category:/m);
+      }
+    }
+  });
+
+  it("contains no legacy ASCII diagrams", async () => {
+    for (const locale of locales) {
+      for (const slug of expectedSlugs) {
+        const file = path.join(blogRoot, locale, `${slug}.mdx`);
+        const content = await readFile(file, "utf8");
+
+        assert.doesNotMatch(content, /[┌┐└┘─▶▼▲│]/u);
+        assert.doesNotMatch(content, /```text/);
+      }
+    }
   });
 });

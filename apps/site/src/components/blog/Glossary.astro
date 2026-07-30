@@ -1,0 +1,14 @@
+---
+interface Term { term?: string; name?: string; definition?: string; description?: string; }
+interface Props { title?: string; terms: (Term | string)[] | Record<string, string>; }
+const pt = Astro.currentLocale === "pt" || Astro.url.pathname.startsWith("/pt/");
+const { title = pt ? "Glossário" : "Glossary", terms } = Astro.props;
+const entries: Term[] = Array.isArray(terms)
+    ? terms.map((entry) => typeof entry === "string" ? { term: entry } : entry)
+    : Object.entries(terms).map(([term, definition]) => ({ term, definition }));
+---
+
+<section class="blog-glossary" aria-label={title}>
+    <h2 class="blog-editorial-title">{title}</h2>
+    <dl>{entries.map((entry) => <div><dt>{entry.term ?? entry.name}</dt><dd>{entry.definition ?? entry.description}</dd></div>)}</dl>
+</section>

@@ -366,3 +366,39 @@ html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-p
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-post-share-status {
   color: var(--color-gray-400);
 }
+
+/* Reusable MDX editorial blocks. */
+.blog-callout, .blog-decision-card, .blog-tradeoff, .blog-checklist, .blog-accordion, .blog-glossary { margin-top: 2rem; border: 1px solid var(--color-gray-200); border-radius: 1rem; background: var(--color-white); }
+.blog-callout { border-left: 4px solid var(--color-brand-lime); padding: 1.25rem 1.5rem; }
+.blog-callout--warning { border-left-color: #f59e0b; }
+.blog-callout--insight { border-left-color: var(--color-brand-black); }
+.blog-callout__label, .blog-editorial-title, .blog-checklist__header output { font-family: var(--font-family-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.blog-callout__label { margin: 0 0 0.5rem; color: var(--color-brand-black); }
+.blog-callout__content > :first-child, .blog-decision-card__content > :first-child, .blog-accordion__content > :first-child { margin-top: 0; }
+.blog-decision-card, .blog-tradeoff, .blog-checklist, .blog-glossary { padding: 1.5rem; }
+.article-content .blog-editorial-title { margin: 0 0 1rem; color: var(--color-brand-black); font-size: 0.75rem; letter-spacing: 0.08em; }
+.blog-decision-card > div + div { margin-top: 1rem; }
+.blog-decision-card h3, .blog-tradeoff h3 { margin: 0; font-size: 1rem; color: var(--color-brand-black); }
+.blog-decision-card h3 + p, .blog-tradeoff h3 + p { margin-top: 0.35rem; }
+.blog-tradeoff__options { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.blog-tradeoff__option { border: 1px solid var(--color-gray-200); border-radius: 0.75rem; padding: 1rem; }
+.blog-tradeoff__option h4 { margin: 1rem 0 0.25rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.blog-tradeoff__option ul { margin: 0; padding-left: 1.25rem; }
+.blog-checklist__header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.blog-checklist__header output { color: var(--color-gray-500); }
+.blog-checklist ul { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.blog-checklist label { display: flex; gap: 0.75rem; align-items: flex-start; cursor: pointer; }
+.blog-checklist input { width: 1.1rem; height: 1.1rem; margin-top: 0.25rem; accent-color: var(--color-brand-lime); }
+.blog-checklist small { display: block; margin-top: 0.15rem; color: var(--color-gray-500); }
+.blog-checklist input:checked + span > span { text-decoration: line-through; color: var(--color-gray-500); }
+.blog-accordion { overflow: hidden; }
+.blog-accordion summary { cursor: pointer; padding: 1.25rem 1.5rem; font-weight: 700; color: var(--color-brand-black); }
+.blog-accordion__content { border-top: 1px solid var(--color-gray-200); padding: 1.25rem 1.5rem; }
+.blog-glossary dl { display: grid; gap: 1rem; margin: 0; }
+.blog-glossary dl > div { display: grid; gap: 0.25rem; }
+.blog-glossary dt { font-weight: 700; color: var(--color-brand-black); }
+.blog-glossary dd { margin: 0; }
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-callout, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-decision-card, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-checklist, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-accordion, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-glossary, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff__option { border-color: rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); }
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-callout__label, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-editorial-title, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-decision-card h3, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff h3, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-accordion summary, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-glossary dt { color: var(--color-white); }
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-post-toc { border-color: rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); }
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-post-toc a { color: var(--color-gray-200); }

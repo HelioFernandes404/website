@@ -1,0 +1,17 @@
+---
+interface Props {
+    type?: "tip" | "warning" | "context" | "insight";
+    title?: string;
+}
+
+const { type = "context", title } = Astro.props;
+const pt = Astro.currentLocale === "pt" || Astro.url.pathname.startsWith("/pt/");
+const labels = pt
+    ? { tip: "Dica", warning: "Atenção", context: "Contexto", insight: "Ideia-chave" }
+    : { tip: "Tip", warning: "Warning", context: "Context", insight: "Key insight" };
+---
+
+<aside class={`blog-callout blog-callout--${type}`} aria-label={title ?? labels[type]}>
+    <p class="blog-callout__label">{title ?? labels[type]}</p>
+    <div class="blog-callout__content"><slot /></div>
+</aside>

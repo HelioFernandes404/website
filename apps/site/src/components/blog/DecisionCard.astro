@@ -1,0 +1,22 @@
+---
+interface Props {
+    title?: string;
+    decision?: string;
+    rationale?: string;
+    consequence?: string;
+}
+
+const pt = Astro.currentLocale === "pt" || Astro.url.pathname.startsWith("/pt/");
+const labels = pt
+    ? { title: "Decisão", decision: "Decisão", rationale: "Motivo", consequence: "Consequência" }
+    : { title: "Decision", decision: "Decision", rationale: "Rationale", consequence: "Consequence" };
+const { title = labels.title, decision, rationale, consequence } = Astro.props;
+---
+
+<section class="blog-decision-card" aria-label={title}>
+    <h2 class="blog-editorial-title">{title}</h2>
+    {decision && <div><h3>{labels.decision}</h3><p>{decision}</p></div>}
+    {rationale && <div><h3>{labels.rationale}</h3><p>{rationale}</p></div>}
+    {consequence && <div><h3>{labels.consequence}</h3><p>{consequence}</p></div>}
+    <div class="blog-decision-card__content"><slot /></div>
+</section>

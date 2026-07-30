@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import designMode from './design-mode/vite-plugin-design-mode';
 
@@ -25,6 +26,7 @@ export default defineConfig({
         },
       },
     }),
+    mdx(),
     react(),
     designMode(),
   ],

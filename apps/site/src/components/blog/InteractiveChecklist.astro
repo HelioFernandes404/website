@@ -1,0 +1,39 @@
+---
+interface ChecklistItem { label?: string; text?: string; description?: string; }
+interface Props { title?: string; items: (ChecklistItem | string)[]; }
+
+const pt = Astro.currentLocale === "pt" || Astro.url.pathname.startsWith("/pt/");
+const { title = pt ? "Checklist" : "Checklist", items } = Astro.props;
+const checklistId = `checklist-${title.toLowerCase().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "")}`;
+const normalise = (item: ChecklistItem | string) => typeof item === "string" ? { label: item } : item;
+---
+
+<section class="blog-checklist" data-checklist id={checklistId} aria-label={title}>
+    <div class="blog-checklist__header"><h2 class="blog-editorial-title">{title}</h2><output data-checklist-progress>0 / {items.length}</output></div>
+    <ul>
+        {items.map((rawItem, index) => {
+            const item = normalise(rawItem);
+            const itemId = `${checklistId}-${index}`;
+            return <li><label for={itemId}><input id={itemId} type="checkbox" data-checklist-item /><span><span>{item.label ?? item.text}</span>{item.description && <small>{item.description}</small>}</span></label></li>;
+        })}
+    </ul>
+</section>
+
+<script>
+    document.querySelectorAll<HTMLElement>("[data-checklist]").forEach((checklist) => {
+        const key = `blog-checklist:${location.pathname}:${checklist.id}`;
+        const inputs = Array.from(checklist.querySelectorAll<HTMLInputElement>("[data-checklist-item]"));
+        const progress = checklist.querySelector<HTMLOutputElement>("[data-checklist-progress]");
+        try {
+            const completed: number[] = JSON.parse(sessionStorage.getItem(key) ?? "[]");
+            inputs.forEach((input, index) => { input.checked = completed.includes(index); });
+        } catch { /* Storage is optional. */ }
+        const update = () => {
+            const completed = inputs.flatMap((input, index) => input.checked ? [index] : []);
+            if (progress) progress.value = `${completed.length} / ${inputs.length}`;
+            try { sessionStorage.setItem(key, JSON.stringify(completed)); } catch { /* Storage is optional. */ }
+        };
+        inputs.forEach((input) => input.addEventListener("change", update));
+        update();
+    });
+</script>
