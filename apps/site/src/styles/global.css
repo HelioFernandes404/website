@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-padding-top: calc(var(--page-top-offset) + var(--space-4));
+}
+
 /* Global & Reset */
 body {
   background-color: var(--color-white);
@@ -151,6 +155,7 @@ main [id] {
   font-family: var(--font-family-display);
   font-weight: 700;
   letter-spacing: -0.02em;
+  scroll-margin-top: calc(var(--page-top-offset) + var(--space-4));
 }
 
 .article-content h2 {
