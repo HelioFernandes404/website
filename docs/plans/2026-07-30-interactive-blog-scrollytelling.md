@@ -1,25 +1,24 @@
-# Interactive Blog Scrollytelling Plan
+# Fixed Blog Diagram Plan
 
 ## Goal
 
-Turn every current and future blog post into an **Artigo interativo**: MDX content rendered inside a shared shell, using scroll-guided visuals and reusable editorial blocks without adding audio or forcing a diagram into every post.
+Turn every current and future blog post into an **Artigo interativo**: MDX content rendered inside a shared shell, using fixed diagrams and reusable editorial blocks without adding audio or forcing a diagram into every post.
 
 ## Product Contract
 
 - Prose stays readable in a `max-w-3xl` column.
 - Complex visual blocks may expand to `max-w-6xl`.
-- Desktop scrollytelling places narrative steps beside a sticky canvas.
-- Mobile places a sticky canvas above its narrative steps.
-- Scroll selects the active visual step. No player, autoplay, or media controls.
-- The final step offers **Modo explorar**: inline expansion on desktop, full-screen canvas on mobile.
-- Explore mode supports pan, zoom, node selection, decisions, and trade-offs without capturing the article's wheel scroll before activation.
+- Desktop places a sticky diagram on the left and narrative notes on the right.
+- Mobile places a non-sticky diagram above its narrative notes.
+- The diagram is static: no scroll-selected visual state, player, autoplay, or media controls.
+- Graph navigation is disabled so the diagram does not capture article scrolling.
 - Light, dark, and system themes share the site tokens and lime accent.
 - `prefers-reduced-motion`, keyboard use, focus restoration, and screen-reader text are required.
 - Without JavaScript, every narrative step and its meaning remains available as server-rendered text.
 
 ## Editorial Kit
 
-- `ScrollyFlow`: React Flow scenario controlled by article scroll.
+- `FixedDiagram`: static React Flow topology with narrative notes.
 - `DecisionCard`: decision, rationale, and consequence.
 - `TradeoffCompare`: bounded comparison between alternatives.
 - `Callout`: tip, warning, context, or key insight.
@@ -28,7 +27,7 @@ Turn every current and future blog post into an **Artigo interativo**: MDX conte
 - `Glossary`: article-specific terms.
 - Shared table of contents and reading progress in the article shell.
 
-Only `ScrollyFlow` needs React. Other blocks should render as Astro/HTML with minimal native browser behavior.
+Only `FixedDiagram` needs React. Other blocks should render as Astro/HTML with minimal native browser behavior.
 
 ## Content Model
 
@@ -37,10 +36,8 @@ Each graph-based explanation is a **Cenário** containing:
 - stable scenario ID;
 - localized title, summary, labels, decisions, and trade-offs;
 - shared node and edge topology;
-- ordered **Etapas visuais**;
-- active nodes and edges per step;
+- ordered explanatory steps;
 - accessible textual explanation per step;
-- optional exploration metadata.
 
 PT and EN posts import the same scenario definition and select localized copy. Scenario validation must reject missing translations, duplicate IDs, references to unknown nodes, and empty step sequences.
 
@@ -48,11 +45,9 @@ PT and EN posts import the same scenario definition and select localized copy. S
 
 1. Add Astro MDX integration and convert all four current `.md` entries to `.mdx` without changing slugs or frontmatter contracts.
 2. Extract duplicated blog-page structure into a shared article shell while retaining locale-specific URLs, dates, translations, canonical links, and previous/next navigation.
-3. Keep scroll-state calculation outside React Flow in a small testable state module.
-4. Render narrative step text on the server. Hydrate `ScrollyFlow` during browser idle time only on posts that contain a scenario; posts without scenarios ship no React Flow JavaScript.
-5. Use `IntersectionObserver` to select steps. Keep wheel zoom disabled during guided reading.
-6. Enable React Flow pan, zoom, and node details only after entering explore mode.
-7. Scope component styling through blog classes and existing design tokens. Avoid copying NaGringa branding or monolithic page HTML.
+3. Render narrative notes beside the diagram and hydrate `FixedDiagram` during browser idle time only on posts that contain a graph; posts without graphs ship no React Flow JavaScript.
+4. Disable graph pan, zoom, and node dragging so article scrolling remains native.
+5. Scope component styling through blog classes and existing design tokens. Avoid copying NaGringa branding or monolithic page HTML.
 
 ## Migration
 
@@ -78,7 +73,7 @@ PT and EN posts import the same scenario definition and select localized copy. S
 - Modify `apps/site/src/pages/pt/blog/[slug].astro`
 - Modify `apps/site/src/styles/global.css`
 - Create `apps/site/src/layouts/BlogPostShell.astro`
-- Create `apps/site/src/components/blog/ScrollyFlow.tsx`
+- Create `apps/site/src/components/blog/FixedDiagram.tsx`
 - Create Astro editorial components under `apps/site/src/components/blog/`
 - Create scenario types, validation, and RBAC scenario data under `apps/site/src/data/blog-scenarios/`
 - Create a testable scroll-state utility under `apps/site/src/utils/`
@@ -89,20 +84,20 @@ Exact boundaries may change after code inspection, but shared scenario data must
 
 ## Verification
 
-- Unit tests: step selection, scenario validation, locale completeness, and explore-mode state.
+- Unit tests: scenario validation and locale completeness.
 - Content tests: all posts load, slugs remain unchanged, PT/EN pairs remain valid, no ASCII diagrams remain.
 - Static checks: `pnpm -C apps/site check`.
 - Production build: `pnpm -C apps/site build`.
 - Workspace gate: `pnpm run qa`.
 - Manual browser matrix: desktop/mobile, light/dark/system, keyboard-only, reduced motion, JavaScript disabled.
-- Confirm posts without `ScrollyFlow` do not request React Flow JavaScript.
+- Confirm posts without `FixedDiagram` do not request React Flow JavaScript.
 
 ## Parallel Implementation Map
 
 Use low-effort `gpt-5.6-terra` subagents with non-overlapping file ownership:
 
 1. **Foundation agent**: MDX integration, shared shell, Astro editorial components.
-2. **Flow agent**: scenario model, state utility, `ScrollyFlow`, focused tests.
+2. **Diagram agent**: scenario model, `FixedDiagram`, focused tests.
 3. **Content agent**: PT/EN migration and scenario copy/data after foundation contracts are available.
 
 Primary agent owns integration points, resolves overlaps, runs full QA, reviews accessibility/performance, and performs final corrections. If contracts are not yet stable, run foundation and flow in parallel first; start content migration only after their public interfaces are fixed.

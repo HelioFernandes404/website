@@ -27,13 +27,10 @@ export function validateScenario(scenario) {
   for (const step of scenario.steps) {
     if (!step?.id || stepIds.has(step.id)) fail(`duplicate or missing step id: ${step?.id ?? "unknown"}`);
     stepIds.add(step.id);
-    for (const id of [...(step.activeNodes ?? []), ...(step.activeEdges ?? [])]) {
-      if (!nodeIds.has(id) && !edgeIds.has(id)) fail(`step ${step.id} references unknown id ${id}`);
-    }
   }
   for (const locale of locales) {
     const copy = scenario.copy?.[locale];
-    if (!copy?.title || !copy?.summary || !copy?.explore || !Array.isArray(copy.steps)) {
+    if (!copy?.title || !copy?.summary || !Array.isArray(copy.steps)) {
       fail(`missing ${locale} scenario copy`);
     }
     if (copy.steps.length !== scenario.steps.length) fail(`${locale} step copy count differs`);

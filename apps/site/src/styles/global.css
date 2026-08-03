@@ -145,6 +145,11 @@ main [id] {
   color: var(--color-gray-700);
 }
 
+.blog-post-article > :not(.fixed-diagram) {
+  width: min(100%, 40rem);
+  margin-inline: auto;
+}
+
 .article-content > * + * {
   margin-top: 1.25rem;
 }

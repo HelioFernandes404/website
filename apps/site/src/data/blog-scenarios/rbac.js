@@ -14,13 +14,13 @@ const centralized = {
     { id: "openfga-decision", source: "openfga", target: "decision" },
   ],
   steps: [
-    { id: "request", activeNodes: ["apps", "core"], activeEdges: ["apps-core"] },
-    { id: "decision", activeNodes: ["core", "openfga", "decision"], activeEdges: ["core-openfga", "openfga-decision"] },
-    { id: "risk", activeNodes: ["core"], activeEdges: [] },
+    { id: "request" },
+    { id: "decision" },
+    { id: "risk" },
   ],
   copy: {
     pt: {
-      title: "O caminho centralizado", summary: "Toda decisão passa pelo RBAC Core.", explore: "Explorar arquitetura",
+      title: "O caminho centralizado", summary: "Toda decisão passa pelo RBAC Core.",
       nodes: { apps: { label: "Aplicações", detail: "App A, B e C", decision: "Consultar um ponto comum antes de cada ação.", tradeoff: "Interface uniforme em troca de dependência operacional." }, core: { label: "RBAC Core", detail: "caminho crítico", decision: "Centralizar a coordenação das decisões.", tradeoff: "Governança simples, porém maior acoplamento e risco de indisponibilidade." }, openfga: { label: "OpenFGA", detail: "relações e checagem", decision: "Resolver relações no mecanismo especializado.", tradeoff: "Modelo expressivo exige operação e versionamento disciplinados." }, decision: { label: "Decisão", detail: "permitir ou negar", decision: "Devolver uma resposta síncrona à aplicação.", tradeoff: "Consistência imediata depende de todo o caminho responder." } },
       steps: [
         { title: "Todas as apps consultam um ponto", body: "Cada requisição chega ao RBAC Core antes da ação ser permitida." },
@@ -29,7 +29,7 @@ const centralized = {
       ],
     },
     en: {
-      title: "The centralized path", summary: "Every decision passes through RBAC Core.", explore: "Explore architecture",
+      title: "The centralized path", summary: "Every decision passes through RBAC Core.",
       nodes: { apps: { label: "Applications", detail: "App A, B, and C", decision: "Query one common point before every action.", tradeoff: "A uniform interface adds an operational dependency." }, core: { label: "RBAC Core", detail: "critical path", decision: "Centralize decision coordination.", tradeoff: "Simple governance increases coupling and availability risk." }, openfga: { label: "OpenFGA", detail: "relations and checks", decision: "Resolve relations in the specialized engine.", tradeoff: "An expressive model requires disciplined operations and versioning." }, decision: { label: "Decision", detail: "allow or deny", decision: "Return a synchronous answer to the application.", tradeoff: "Immediate consistency depends on the entire path responding." } },
       steps: [
         { title: "Every app calls one point", body: "Each request reaches RBAC Core before an action is allowed." },
@@ -54,13 +54,13 @@ const federated = {
     { id: "governance-openfga", source: "governance", target: "openfga" },
   ],
   steps: [
-    { id: "ownership", activeNodes: ["apps", "sdk"], activeEdges: ["apps-sdk"] },
-    { id: "checks", activeNodes: ["sdk", "openfga"], activeEdges: ["sdk-openfga"] },
-    { id: "governance", activeNodes: ["governance", "openfga"], activeEdges: ["governance-openfga"] },
+    { id: "ownership" },
+    { id: "checks" },
+    { id: "governance" },
   ],
   copy: {
     pt: {
-      title: "O caminho federado", summary: "Responsabilidade local; governança fora da requisição.", explore: "Explorar arquitetura",
+      title: "O caminho federado", summary: "Responsabilidade local; governança fora da requisição.",
       nodes: { apps: { label: "Aplicações", detail: "donas das regras", decision: "Manter políticas próximas do domínio protegido.", tradeoff: "Mais autonomia exige padrões e revisão distribuídos." }, sdk: { label: "SDK de autorização", detail: "integração local", decision: "Padronizar a integração sem intermediar a requisição.", tradeoff: "Menos acoplamento operacional, mais responsabilidade nas aplicações." }, openfga: { label: "OpenFGA", detail: "checagem direta", decision: "Receber consultas diretamente dos sistemas.", tradeoff: "Remove um salto, mas exige resiliência e cache bem definidos." }, governance: { label: "Governança central", detail: "auditoria e modelos", decision: "Centralizar auditoria fora do caminho crítico.", tradeoff: "Visibilidade global deixa de controlar cada decisão em runtime." } },
       steps: [
         { title: "Cada app possui seu modelo", body: "Relações e políticas vivem perto do domínio que elas protegem." },
@@ -69,7 +69,7 @@ const federated = {
       ],
     },
     en: {
-      title: "The federated path", summary: "Local ownership; governance outside requests.", explore: "Explore architecture",
+      title: "The federated path", summary: "Local ownership; governance outside requests.",
       nodes: { apps: { label: "Applications", detail: "own their rules", decision: "Keep policies close to the protected domain.", tradeoff: "More autonomy requires distributed standards and review." }, sdk: { label: "Authorization SDK", detail: "local integration", decision: "Standardize integration without mediating requests.", tradeoff: "Less operational coupling adds responsibility to applications." }, openfga: { label: "OpenFGA", detail: "direct check", decision: "Receive checks directly from systems.", tradeoff: "One less hop requires well-defined resilience and caching." }, governance: { label: "Central governance", detail: "audit and models", decision: "Centralize audit outside the critical path.", tradeoff: "Global visibility no longer controls every runtime decision." } },
       steps: [
         { title: "Each app owns its model", body: "Relations and policies live near the domain they protect." },
