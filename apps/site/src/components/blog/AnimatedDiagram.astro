@@ -294,9 +294,8 @@ const canvasAriaLabel = isPortuguese
     }
 
     .animated-diagram-layout {
-      display: grid;
-      grid-template-columns: minmax(280px, 1.1fr) minmax(0, 0.9fr);
-      align-items: start;
+      display: flex;
+      flex-direction: column;
       gap: 32px;
     }
 
@@ -305,10 +304,8 @@ const canvasAriaLabel = isPortuguese
     }
 
     .animated-diagram-canvas {
-      position: sticky;
-      z-index: 1;
-      top: 96px;
-      height: min(640px, calc(100vh - 8rem));
+      position: relative;
+      height: clamp(320px, 46vw, 520px);
       overflow: hidden;
       border: 1px solid var(--diagram-border, #d1d5db);
       border-radius: 16px;
@@ -371,7 +368,6 @@ const canvasAriaLabel = isPortuguese
     }
 
     .animated-diagram-note {
-      min-height: min(50vh, 400px);
       padding: 24px 0;
       border-top: 1px solid var(--diagram-border, #e5e7eb);
     }
@@ -411,21 +407,9 @@ const canvasAriaLabel = isPortuguese
       }
     }
 
-    @media (max-width: 960px) {
-      .animated-diagram-layout {
-        grid-template-columns: minmax(0, 1fr) !important;
-      }
-
-      .animated-diagram-canvas {
-        position: relative !important;
-        top: auto !important;
-        height: clamp(280px, 52vw, 380px) !important;
-      }
-    }
-
     @media (max-width: 720px) {
       .animated-diagram-canvas {
-        height: 280px !important;
+        height: 280px;
       }
     }
   </style>
