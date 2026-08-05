@@ -14,7 +14,7 @@ category: "03. Learning Project"
 metricLabel: "STATUS"
 metricValue: "Opening Up"
 metricCaption: "OPEN SOURCE"
-image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=800&auto=format&fit=crop"
+image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?q=70&w=640&auto=format&fit=crop&fm=webp"
 imageAlt: "Projeto OpenFlashcards em transicao para open source para estudar repeticao espacada e arquitetura"
 ---
 

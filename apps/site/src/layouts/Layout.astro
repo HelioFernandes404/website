@@ -117,16 +117,12 @@ const alternateLangCode = lang === "en" ? "pt" : "en";
         </script>
       )
     }
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
+      as="font"
+      type="font/woff2"
+      href="/fonts/space-grotesk-latin.woff2"
+      crossorigin
     />
     <SEOHead
       title={title}
@@ -306,7 +302,11 @@ const alternateLangCode = lang === "en" ? "pt" : "en";
       ).matches;
 
       if (header instanceof HTMLElement) {
+        let headerUpdateFrame = 0;
+
         const updateHeaderState = () => {
+          headerUpdateFrame = 0;
+
           if (window.scrollY > 50) {
             header.classList.add("shadow-sm", "border-gray-100");
             header.classList.remove("border-transparent");
@@ -316,8 +316,14 @@ const alternateLangCode = lang === "en" ? "pt" : "en";
           }
         };
 
+        const scheduleHeaderUpdate = () => {
+          if (headerUpdateFrame === 0) {
+            headerUpdateFrame = window.requestAnimationFrame(updateHeaderState);
+          }
+        };
+
         updateHeaderState();
-        window.addEventListener("scroll", updateHeaderState, { passive: true });
+        window.addEventListener("scroll", scheduleHeaderUpdate, { passive: true });
       }
 
       const revealElements = Array.from(

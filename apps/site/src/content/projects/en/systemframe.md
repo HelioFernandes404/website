@@ -10,7 +10,7 @@ category: "02. Data Ops"
 metricLabel: "MTTR"
 metricValue: "-60%"
 metricCaption: "50MIN -> 20MIN"
-image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop"
+image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=70&w=640&auto=format&fit=crop&fm=webp"
 imageAlt: "SystemFrame project focused on DevOps infrastructure with Kubernetes"
 carl:
   context: "The platform monitors heterogeneous infrastructure across 12+ clients: Aruba and Meraki equipment, plus Zabbix and GLPI already installed in each client's fleet. There was no consolidated telemetry -- each client was an island, and diagnosing an incident could take a whole day. Alerts reached the team but didn't turn into a ticket on their own."

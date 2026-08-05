@@ -10,7 +10,7 @@ category: "01. Fintech"
 metricLabel: "DEPLOY TIME"
 metricValue: "-80%"
 metricCaption: "40MIN -> 8MIN"
-image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"
+image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=70&w=640&auto=format&fit=crop&fm=webp"
 imageAlt: "Projeto Dai Tec AI com dashboard financeiro e automacao inteligente"
 carl:
   context: "A DAI-TEC operava um SaaS de assistentes de IA conversacional atendendo 7 segmentos de tenant, com entrada por WhatsApp e cobranca recorrente. Cada deploy levava 40 minutos e precisava ser repetido em 3 ambientes, o que travava a frequencia de entrega. Do lado do produto, cada segmento novo exigia isolamento de consumo e de cobranca sem duplicar a base de codigo."
