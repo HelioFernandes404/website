@@ -7,8 +7,13 @@ const { title = pt ? "Comparação" : "Comparison", headers, rows, caption } = A
 
 <section class="blog-comparison-table" aria-label={title}>
     <h2 class="blog-editorial-title">{title}</h2>
-    <div class="blog-comparison-table__scroll">
-        <table>
+    <div
+        class="blog-comparison-table__scroll"
+        role="region"
+        tabindex="0"
+        aria-label={pt ? "Tabela rolável horizontalmente" : "Horizontally scrollable table"}
+    >
+        <table aria-label={caption ?? title}>
             {caption && <caption>{caption}</caption>}
             <thead><tr>{headers.map((header) => <th scope="col">{header}</th>)}</tr></thead>
             <tbody>
@@ -18,4 +23,7 @@ const { title = pt ? "Comparação" : "Comparison", headers, rows, caption } = A
             </tbody>
         </table>
     </div>
+    <p class="blog-comparison-table__hint" aria-hidden="true">
+        {pt ? "Deslize horizontalmente para comparar." : "Swipe horizontally to compare."}
+    </p>
 </section>

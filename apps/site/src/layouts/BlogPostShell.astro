@@ -20,6 +20,12 @@ const dateFormatter = new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : "en-US",
 const readingMinutes = Math.max(1, Math.round(post.body.trim().split(/\s+/).length / 200));
 const urlFor = (slug: string) => `${blogBaseUrl}${slug}/`;
 const tableOfContents = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const readingThemes = ["light", "dark", "system"] as const;
+const readingThemeLabels = {
+    light: t("blogPost.themeLight"),
+    dark: t("blogPost.themeDark"),
+    system: t("blogPost.themeSystem"),
+};
 ---
 
 <Layout title={`${post.data.title} | Blog`} description={post.data.description} ogImage="/og-image.webp" canonicalUrl={canonicalUrl} readingModeEnabled={true} lang={lang} alternateUrl={alternateUrl}>
@@ -38,7 +44,7 @@ const tableOfContents = headings.filter((heading) => heading.depth === 2 || head
         </section>
         <section class="mx-auto max-w-6xl px-6 py-16 md:py-20">
             <div class="blog-post-toolbar mb-8 flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white/90 p-4 shadow-sm backdrop-blur md:flex-row md:items-center md:justify-between" data-reading-controls data-share-url={canonicalUrl} data-share-title={post.data.title} data-i18n-share-shared={t("blogPost.shareStatusShared")} data-i18n-share-cancelled={t("blogPost.shareStatusCancelled")} data-i18n-share-copied={t("blogPost.shareStatusCopied")} data-i18n-share-clipboard-fallback={t("blogPost.shareStatusClipboardFallback")} data-i18n-share-ready={t("blogPost.shareStatusReady")} data-i18n-copy-prompt={t("blogPost.copyPromptLabel")}>
-                <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-4"><p class="font-mono text-xs uppercase tracking-[0.3em] text-gray-500">{t("blogPost.readingModeLabel")}</p><div class="flex flex-wrap gap-2" role="group" aria-label={t("blogPost.readingModeLabel")}>{["light", "dark", "system"].map((theme) => <button type="button" class="blog-post-toolbar-button rounded-full border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-colors" data-theme-option={theme} aria-pressed="false">{theme[0].toUpperCase() + theme.slice(1)}</button>)}</div></div>
+                <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-4"><p class="font-mono text-xs uppercase tracking-[0.3em] text-gray-500">{t("blogPost.readingModeLabel")}</p><div class="flex flex-wrap gap-2" role="group" aria-label={t("blogPost.readingModeLabel")}>{readingThemes.map((theme) => <button type="button" class="blog-post-toolbar-button rounded-full border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-colors" data-theme-option={theme} aria-pressed="false">{readingThemeLabels[theme]}</button>)}</div></div>
                 <div class="flex flex-col items-start gap-3 md:items-end"><button type="button" class="blog-post-toolbar-button rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors" data-share-button>{t("blogPost.shareLink")}</button><p class="blog-post-share-status min-h-5 text-sm text-gray-500" data-share-status role="status" aria-live="polite"></p></div>
             </div>
             {tableOfContents.length > 0 && <nav class="blog-post-toc mb-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" aria-label={lang === "pt" ? "Sumário do artigo" : "Article contents"}>

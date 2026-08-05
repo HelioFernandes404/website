@@ -63,7 +63,7 @@ const canonicalUrl = "https://heliosuns404.com/projects/";
                     <ul class="space-y-8">
                         {projects.map((project) => (
                             <li>
-                                <article class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-brand-lime hover:shadow-xl">
+                                <article class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-brand-lime hover:shadow-xl focus-within:-translate-y-1 focus-within:border-brand-lime focus-within:shadow-xl">
                                     <a
                                         class="hover-trigger grid gap-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
                                         href={`/projects/${project.slug}/`}
@@ -74,11 +74,11 @@ const canonicalUrl = "https://heliosuns404.com/projects/";
                                                 alt={project.data.imageAlt}
                                                 loading="lazy"
                                                 decoding="async"
-                                                class="h-full w-full object-cover grayscale transition-[filter,transform] duration-500 group-hover:grayscale-0 group-hover:scale-105"
+                                                class="h-full w-full object-cover grayscale transition-[filter,transform] duration-500 group-hover:grayscale-0 group-hover:scale-105 group-focus-within:grayscale-0 group-focus-within:scale-105"
                                             />
                                             {project.data.comingSoon && (
                                                 <span class="absolute right-3 top-3 rounded bg-brand-lime px-2.5 py-1 font-mono text-xs font-bold text-black">
-                                                    Coming Soon
+                                                    {t("projectsList.comingSoon")}
                                                 </span>
                                             )}
                                         </div>
@@ -128,7 +128,7 @@ const canonicalUrl = "https://heliosuns404.com/projects/";
 
                                                 <span
                                                     aria-hidden="true"
-                                                    class="inline-flex items-center gap-2 font-medium text-gray-500 transition-[color,transform] duration-300 group-hover:translate-x-1 group-hover:text-black"
+                                                    class="inline-flex items-center gap-2 font-medium text-gray-500 transition-[color,transform] duration-300 group-hover:translate-x-1 group-hover:text-black group-focus-within:translate-x-1 group-focus-within:text-black"
                                                 >
                                                     {t("projectsList.viewProject")} -&gt;
                                                 </span>

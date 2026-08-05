@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "Craft | Helio Fernandes";
 const description =
-  "OpenFlashcards: projeto de estudo em transicao para open source para explorar repeticao espacada, aprendizado ativo e documentacao publica.";
+  "OpenFlashcards: a study project moving toward open source to explore spaced repetition, active learning, and public documentation.";
 const site = Astro.site ?? new URL("https://hub.heliosuns404.com");
 const craftUrl = new URL("/craft", site).toString();
 const openflashcardsRepoUrl = "https://github.com/HelioFernandes404/openflashcards";
@@ -16,7 +16,7 @@ const jsonLd = {
   name: title,
   url: craftUrl,
   description,
-  inLanguage: "pt-BR",
+  inLanguage: "en",
   mainEntity: {
     "@type": "CreativeWork",
     name: "OpenFlashcards",
@@ -32,12 +32,12 @@ const jsonLd = {
   description={description}
   canonicalPath="/craft"
   currentPath="/craft"
-  lang="pt-BR"
+  lang="en"
   jsonLd={jsonLd}
 >
   <section class="intro-block">
     <h1>Craft</h1>
-    <p class="intro-subtitle">Projetos em abertura para open source e experimentos em construcao.</p>
+    <p class="intro-subtitle">Projects moving toward open source and experiments in progress.</p>
   </section>
 
   <section class="content-block">
@@ -50,16 +50,19 @@ const jsonLd = {
           href={openflashcardsRepoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Search for the OpenFlashcards repository on GitHub"
+          aria-label="View the OpenFlashcards repository on GitHub"
         >
           <span class="entry-top">
             <span class="entry-title-wrap">
               <span class="entry-title">GitHub</span>
             </span>
-            <span class="entry-tag">Repository</span>
+            <span class="entry-actions">
+              <span class="entry-tag">Repository</span>
+              <span class="entry-arrow" aria-hidden="true">↗</span>
+            </span>
           </span>
-          <span class="entry-description">Ver o repositorio publico e acompanhar a evolucao do codigo.</span>
-          <span class="entry-meta">Codigo • GitHub • Documentacao</span>
+          <span class="entry-description">View the public repository and follow the code evolve.</span>
+          <span class="entry-meta">Code • GitHub • Documentation</span>
         </a>
       </li>
       <li>
@@ -74,22 +77,24 @@ const jsonLd = {
             <span class="entry-title-wrap">
               <span class="entry-title">Site</span>
             </span>
-            <span class="entry-tag">Projeto</span>
+            <span class="entry-actions">
+              <span class="entry-tag">Project</span>
+              <span class="entry-arrow" aria-hidden="true">↗</span>
+            </span>
           </span>
-          <span class="entry-description">Acessar o projeto ao vivo.</span>
-          <span class="entry-meta">Problema real • Escopo pequeno • Aprendizado publico</span>
+          <span class="entry-description">Open the live project.</span>
+          <span class="entry-meta">Real problem • Small scope • Public learning</span>
         </a>
       </li>
     </ul>
 
     <p class="intro-paragraph">
-      OpenFlashcards e um projeto de estudo em transicao para open source. Ele nasceu de uma dor real no meu processo de
-      aprendizado e virou um laboratorio para explorar repeticao espacada, UX e decisoes de
-      produto em publico.
+      OpenFlashcards is a study project moving toward open source. It started from a real pain point in my learning
+      process and became a lab for exploring spaced repetition, UX, and product decisions in public.
     </p>
     <p class="intro-paragraph">
-      A ideia nao e operar um SaaS paralelo. A proposta e manter um projeto enxuto, documentado e
-      util para estudar o problema, medir o que faz sentido e compartilhar o que aprendi.
+      The goal is not to operate a parallel SaaS. The project stays small, documented, and useful for studying the
+      problem, measuring what matters, and sharing what I learn.
     </p>
   </section>
 </BaseLayout>

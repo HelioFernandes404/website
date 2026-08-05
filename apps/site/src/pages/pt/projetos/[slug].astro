@@ -97,6 +97,7 @@ const carlSections = carl
                                 href={project.data.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                aria-label={`${project.data.urlLabel ?? t("projectDetail.defaultUrlLabel")} ${t("projectDetail.opensInNewTab")}`}
                                 class="hover-trigger inline-flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 font-medium text-white transition-[background-color,color,transform] duration-300 hover:bg-brand-lime hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                             >
                                 {project.data.urlLabel ?? t("projectDetail.defaultUrlLabel")}
@@ -108,6 +109,7 @@ const carlSections = carl
                                         href={project.data.secondaryUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        aria-label={`${project.data.secondaryUrlLabel ?? t("projectDetail.defaultSecondaryUrlLabel")} ${t("projectDetail.opensInNewTab")}`}
                                         class="hover-trigger inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-[border-color,background-color,color,transform] duration-300 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
                                     >
                                         {project.data.secondaryUrlLabel ?? t("projectDetail.defaultSecondaryUrlLabel")}
@@ -157,6 +159,7 @@ const carlSections = carl
                                 nodes={architecture.nodes}
                                 edges={architecture.edges}
                                 hint={architecture.hint}
+                                lang={lang}
                             />
                         </div>
 

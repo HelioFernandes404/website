@@ -120,17 +120,37 @@ const websiteBlogUrl = getWebsiteBlogUrl();
   currentPath="/"
   jsonLd={jsonLd}
 >
-  <section class="intro-block">
-    <h1>{profile.name}</h1>
-    <p class="intro-subtitle">{profile.role}</p>
-    {
-      bioParagraphs.map((paragraph) => (
-        <p class="intro-paragraph">{paragraph}</p>
-      ))
-    }
+  <section class="profile-hero">
+    <div class="profile-portrait-wrap">
+      <img
+        class="profile-portrait"
+        src={profile.image}
+        alt={`${profile.name} profile photo`}
+        width="256"
+        height="256"
+        loading="eager"
+        decoding="async"
+      />
+      <span class="profile-status"><span aria-hidden="true"></span>Available for projects</span>
+    </div>
+
+    <div class="intro-block">
+      <p class="profile-kicker">HELIO / SOFTWARE ENGINEERING</p>
+      <h1>{profile.name}</h1>
+      <p class="intro-subtitle">{profile.role}</p>
+      {
+        bioParagraphs.map((paragraph) => (
+          <p class="intro-paragraph">{paragraph}</p>
+        ))
+      }
+      <div class="profile-actions">
+        {mailUrl && <a class="profile-action profile-action-primary" href={mailUrl}>Start a conversation <span aria-hidden="true">-&gt;</span></a>}
+        <a class="profile-action" href="https://heliosuns404.com">View portfolio <span aria-hidden="true">-&gt;</span></a>
+      </div>
+    </div>
   </section>
 
-  <section class="content-block">
+  <section id="projects" class="content-block">
     <h2>Projects</h2>
     <ul class="entry-list">
       {
@@ -145,6 +165,7 @@ const websiteBlogUrl = getWebsiteBlogUrl();
                 href={link.url}
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
+                aria-label={isExternal ? `${link.label} (opens in a new tab)` : link.label}
               >
                 <span class="entry-top">
                   <span class="entry-title-wrap">
@@ -153,7 +174,10 @@ const websiteBlogUrl = getWebsiteBlogUrl();
                     </span>
                     <span class="entry-title">{link.label}</span>
                   </span>
-                  <span class="entry-tag">{meta.tag}</span>
+                  <span class="entry-actions">
+                    <span class="entry-tag">{meta.tag}</span>
+                    <span class="entry-arrow" aria-hidden="true">↗</span>
+                  </span>
                 </span>
                 <span class="entry-description">{meta.projectDescription}</span>
               </a>
@@ -165,7 +189,7 @@ const websiteBlogUrl = getWebsiteBlogUrl();
   </section>
 
   {resources.length > 0 && (
-    <section class="content-block">
+    <section id="resources" class="content-block">
       <h2>Resources</h2>
       <ul class="entry-list">
         {
@@ -180,6 +204,7 @@ const websiteBlogUrl = getWebsiteBlogUrl();
                   href={link.url}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
+                  aria-label={isExternal ? `${link.label} (opens in a new tab)` : link.label}
                 >
                   <span class="entry-top">
                     <span class="entry-title-wrap">
@@ -188,7 +213,10 @@ const websiteBlogUrl = getWebsiteBlogUrl();
                       </span>
                       <span class="entry-title">{link.label}</span>
                     </span>
+                  <span class="entry-actions">
                     <span class="entry-tag">{meta.tag}</span>
+                    <span class="entry-arrow" aria-hidden="true">↗</span>
+                  </span>
                   </span>
                   <span class="entry-description">{meta.resourceDescription}</span>
                 </a>
@@ -200,7 +228,7 @@ const websiteBlogUrl = getWebsiteBlogUrl();
     </section>
   )}
 
-  <section class="content-block">
+  <section id="writing" class="content-block">
     <h2>Writing</h2>
 
     <a class="entry-link" href={websiteBlogUrl}>
@@ -208,7 +236,10 @@ const websiteBlogUrl = getWebsiteBlogUrl();
         <span class="entry-title-wrap">
           <span class="entry-title">Blog on heliosuns404.com</span>
         </span>
-        <span class="entry-tag">Website</span>
+        <span class="entry-actions">
+          <span class="entry-tag">Website</span>
+          <span class="entry-arrow" aria-hidden="true">↗</span>
+        </span>
       </span>
       <span class="entry-description">
         Technical articles now live on the main website, with canonical URLs on

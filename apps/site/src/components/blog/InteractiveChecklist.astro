@@ -9,7 +9,7 @@ const normalise = (item: ChecklistItem | string) => typeof item === "string" ? {
 ---
 
 <section class="blog-checklist" data-checklist id={checklistId} aria-label={title}>
-    <div class="blog-checklist__header"><h2 class="blog-editorial-title">{title}</h2><output data-checklist-progress>0 / {items.length}</output></div>
+    <div class="blog-checklist__header"><h2 class="blog-editorial-title">{title}</h2><output data-checklist-progress aria-live="polite">0 / {items.length}</output></div>
     <ul>
         {items.map((rawItem, index) => {
             const item = normalise(rawItem);

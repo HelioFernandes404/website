@@ -73,6 +73,19 @@ main [id] {
   outline-offset: 3px;
 }
 
+body.mobile-menu-open {
+  overflow: hidden;
+}
+
+.mobile-menu-link {
+  min-height: 2.75rem;
+}
+
+.architecture-flow-node:focus-visible {
+  outline: 2px solid var(--color-brand-lime);
+  outline-offset: 4px;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-brand-lime);
   outline-offset: 3px;
@@ -253,6 +266,10 @@ main [id] {
   min-height: 1.25rem;
 }
 
+.blog-featured-card {
+  min-height: 20rem;
+}
+
 .site-header,
 .site-mobile-menu,
 .site-footer,
@@ -299,6 +316,14 @@ html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .site-f
 
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .site-footer p {
   color: var(--color-gray-400);
+}
+
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .site-footer-contact {
+  color: var(--color-gray-300);
+}
+
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .site-footer-contact:hover {
+  color: var(--color-white);
 }
 
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .site-back-to-top {
@@ -383,6 +408,12 @@ html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .articl
   .animate-bounce {
     animation: none !important;
   }
+
+  .animate-fade-in-up {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
 }
 
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-post-toolbar-button {
@@ -438,7 +469,9 @@ html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-p
 .blog-metric-bars__track { height: 0.6rem; border-radius: 999px; background: var(--color-gray-100); overflow: hidden; }
 .blog-metric-bars__fill { height: 100%; border-radius: 999px; background: var(--color-brand-lime); }
 .blog-metric-bars__note { margin: 1rem 0 0; color: var(--color-gray-500); font-size: 0.875rem; }
-.blog-comparison-table__scroll { overflow-x: auto; }
+.blog-comparison-table__scroll { overflow-x: auto; scrollbar-width: thin; }
+.blog-comparison-table__scroll:focus-visible { outline: 2px solid var(--color-brand-lime); outline-offset: 0.25rem; }
+.blog-comparison-table__hint { margin: 0.65rem 0 0; color: var(--color-gray-500); font-family: var(--font-family-mono); font-size: 0.7rem; }
 .blog-comparison-table table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .blog-comparison-table th, .blog-comparison-table td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--color-gray-200); vertical-align: top; }
 .blog-comparison-table thead th { font-family: var(--font-family-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-gray-500); }
@@ -450,3 +483,7 @@ html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-c
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-callout__label, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-editorial-title, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-decision-card h3, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff h3, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-accordion summary, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-glossary dt { color: var(--color-white); }
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-post-toc { border-color: rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); }
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-post-toc a { color: var(--color-gray-200); }
+
+@media (min-width: 768px) {
+  .blog-comparison-table__hint { display: none; }
+}

@@ -16,8 +16,15 @@ const max = Math.max(...metrics.map((metric) => metric.value), 1);
                     <span>{metric.label}</span>
                     <strong>{metric.value}{metric.unit ? ` ${metric.unit}` : ""}</strong>
                 </div>
-                <div class="blog-metric-bars__track">
-                    <div class="blog-metric-bars__fill" style={`width: ${(metric.value / max) * 100}%`}></div>
+                <div
+                    class="blog-metric-bars__track"
+                    role="meter"
+                    aria-label={metric.label}
+                    aria-valuemin="0"
+                    aria-valuemax={max}
+                    aria-valuenow={metric.value}
+                >
+                    <div class="blog-metric-bars__fill" style={`width: ${(metric.value / max) * 100}%`} aria-hidden="true"></div>
                 </div>
             </div>
         ))}

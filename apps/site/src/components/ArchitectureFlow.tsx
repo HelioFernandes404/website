@@ -35,21 +35,45 @@ export interface ArchEdgeInput {
   async?: boolean;
 }
 
+export type FlowLanguage = "en" | "pt";
+
 interface Props {
   nodes: ArchNodeInput[];
   edges: ArchEdgeInput[];
   /** Shown before the reader picks a node, so the panel is never empty. */
   hint?: string;
+  lang?: FlowLanguage;
 }
 
 const LIME = "#ccff00";
 
-const KIND_STYLE: Record<ArchKind, { border: string; badge: string; label: string }> = {
-  entry: { border: LIME, badge: LIME, label: "entrada" },
-  service: { border: "#374151", badge: "#9ca3af", label: "servico" },
-  data: { border: "#4b5563", badge: "#9ca3af", label: "dados" },
-  external: { border: "#6b7280", badge: "#6b7280", label: "externo" },
+const KIND_STYLE: Record<ArchKind, { border: string; badge: string }> = {
+  entry: { border: LIME, badge: LIME },
+  service: { border: "#374151", badge: "#9ca3af" },
+  data: { border: "#4b5563", badge: "#9ca3af" },
+  external: { border: "#6b7280", badge: "#6b7280" },
 };
+
+const FLOW_COPY = {
+  en: {
+    kinds: { entry: "entry", service: "service", data: "data", external: "external" },
+    mobileHint: "Drag to explore the diagram.",
+    defaultHint: "Click a component to see the decision behind it.",
+    decision: "Decision",
+    tradeoff: "Trade-off",
+    reading: "// reading",
+    viewDecision: "// view decision",
+  },
+  pt: {
+    kinds: { entry: "entrada", service: "serviço", data: "dados", external: "externo" },
+    mobileHint: "Arraste para explorar o diagrama.",
+    defaultHint: "Clique em um componente para ver a decisão por trás dele.",
+    decision: "Decisão",
+    tradeoff: "Trade-off",
+    reading: "// lendo",
+    viewDecision: "// ver decisão",
+  },
+} as const;
 
 const KIND_ORDER: ArchKind[] = ["entry", "service", "data", "external"];
 
@@ -60,6 +84,7 @@ type FlowNodeData = ArchNodeInput & {
   isDimmed: boolean;
   hasDetail: boolean;
   onPick: (id: string) => void;
+  copy: (typeof FLOW_COPY)[FlowLanguage];
 } & Record<string, unknown>;
 
 type ArchFlowNode = Node<FlowNodeData, "arch">;
@@ -67,13 +92,15 @@ type ArchFlowNode = Node<FlowNodeData, "arch">;
 function ArchNode({ data }: NodeProps<ArchFlowNode>) {
   const style = KIND_STYLE[data.kind];
   const interactive = data.hasDetail;
+  const copy = data.copy;
 
   return (
     <div
+      className="architecture-flow-node"
       role={interactive ? "button" : undefined}
       tabIndex={interactive ? 0 : undefined}
       aria-pressed={interactive ? data.isSelected : undefined}
-      aria-label={interactive ? `${data.label}: ver decisao` : data.label}
+      aria-label={interactive ? `${data.label}: ${copy.viewDecision.replace("// ", "")}` : data.label}
       onClick={interactive ? () => data.onPick(data.id) : undefined}
       onKeyDown={
         interactive
@@ -111,7 +138,7 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
           color: style.badge,
         }}
       >
-        {style.label}
+        {copy.kinds[data.kind]}
       </div>
       <div style={{ marginTop: 4, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>
         {data.label}
@@ -128,7 +155,7 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
             color: data.isSelected ? LIME : "#6b7280",
           }}
         >
-          {data.isSelected ? "// lendo" : "// ver decisao"}
+          {data.isSelected ? copy.reading : copy.viewDecision}
         </div>
       )}
 
@@ -139,8 +166,9 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
 
 const nodeTypes = { arch: ArchNode };
 
-export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
+export default function ArchitectureFlow({ nodes, edges, hint, lang = "en" }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const copy = FLOW_COPY[lang];
 
   const onPick = useCallback((id: string) => {
     setSelectedId((current) => (current === id ? null : id));
@@ -170,9 +198,10 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
           isDimmed: Boolean(focused) && !focused?.has(node.id),
           hasDetail: Boolean(node.decision),
           onPick,
+          copy,
         },
       })),
-    [nodes, selectedId, focused, onPick],
+    [nodes, selectedId, focused, onPick, copy],
   );
 
   const flowEdges = useMemo<Edge[]>(
@@ -212,7 +241,10 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
   const usedKinds = KIND_ORDER.filter((kind) => nodes.some((node) => node.kind === kind));
 
   return (
-    <div>
+    <div
+      role="group"
+      aria-label={lang === "pt" ? "Diagrama de arquitetura interativo" : "Interactive architecture diagram"}
+    >
       <div
         style={{ height: 460 }}
         className="overflow-hidden rounded-2xl border border-gray-800 bg-brand-black"
@@ -242,7 +274,7 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
           clamped by minZoom, so on small screens it overflows by design and the
           reader pans instead. Say so, rather than letting it look clipped. */}
       <p className="mt-3 font-mono text-xs text-gray-500 md:hidden">
-        arraste para explorar o diagrama
+        {copy.mobileHint}
       </p>
 
       <div className="mt-3 flex flex-wrap items-center gap-4 font-mono text-xs text-gray-500">
@@ -253,12 +285,12 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
               className="inline-block h-2.5 w-2.5 rounded-sm border"
               style={{ borderColor: KIND_STYLE[kind].border, background: "#0a0a0a" }}
             />
-            {KIND_STYLE[kind].label}
+            {copy.kinds[kind]}
           </span>
         ))}
         <span className="inline-flex items-center gap-1.5">
           <span aria-hidden="true" className="inline-block w-5 border-t border-dashed border-gray-500" />
-          assincrono
+          {lang === "pt" ? "assíncrono" : "async"}
         </span>
       </div>
 
@@ -271,18 +303,18 @@ export default function ArchitectureFlow({ nodes, edges, hint }: Props) {
             <p className="font-mono text-xs uppercase tracking-wider text-brand-gray">
               {selected.label}
             </p>
-            <p className="mt-3 font-semibold">Decisao</p>
+            <p className="mt-3 font-semibold">{copy.decision}</p>
             <p className="mt-1 text-gray-600">{selected.decision}</p>
             {selected.tradeoff && (
               <>
-                <p className="mt-4 font-semibold">Trade-off</p>
+                <p className="mt-4 font-semibold">{copy.tradeoff}</p>
                 <p className="mt-1 text-gray-600">{selected.tradeoff}</p>
               </>
             )}
           </>
         ) : (
           <p className="text-gray-500">
-            {hint ?? "Clique em um componente do diagrama para ver a decisao por tras dele."}
+            {hint ?? copy.defaultHint}
           </p>
         )}
       </div>
