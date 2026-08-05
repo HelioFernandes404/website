@@ -1,0 +1,112 @@
+---
+title: "Gossip, push/pull e a janela que faltava: dedup no Alertmanager multi-região"
+description: "Como um push/pull interval maior que o peer timeout quebrava a deduplicação entre dois Alertmanagers em regiões diferentes, e o que aprendi validando HA sob falha."
+pubDate: "2026-08-05"
+category: "SRE"
+lead: "Um cluster saudável só prova o happy path. HA de verdade precisa convergir quando os peers estão degradados."
+tags:
+  - "Alertmanager"
+  - "High Availability"
+  - "Gossip Protocol"
+  - "Observability"
+  - "SRE"
+---
+
+import AnimatedDiagram from "../../../components/blog/AnimatedDiagram.astro";
+import { amHealthyScenario, amDegradedScenario, amFixedScenario } from "../../../data/blog-scenarios";
+import Callout from "../../../components/blog/Callout.astro";
+import DecisionCard from "../../../components/blog/DecisionCard.astro";
+import ComparisonTable from "../../../components/blog/ComparisonTable.astro";
+import MetricBars from "../../../components/blog/MetricBars.astro";
+import Glossary from "../../../components/blog/Glossary.astro";
+import InteractiveChecklist from "../../../components/blog/InteractiveChecklist.astro";
+
+## Contexto
+
+Tínhamos dois Alertmanagers em regiões diferentes — um em Virginia, outro em Ohio — atrás de um Prometheus global e de um único receptor no Slack. Quando um dos peers ficava degradado, a deduplicação falhava: cerca de 400 alertas duplicados por dia, a maioria notificações de `resolved`, aumentando o ruído operacional e a desconfiança no canal.
+
+<AnimatedDiagram scenario={amHealthyScenario} locale="pt" />
+
+## Investigação
+
+Conduzi a investigação desde o primeiro alerta duplicado, depurando os dois nós em paralelo e reproduzindo o problema num ambiente isolado. A primeira hipótese foi latência de rede entre as regiões: se o gossip demorasse demais para atravessar a VPN entre Virginia e Ohio, os dois nós decidiriam notificar antes de se reconhecerem.
+
+Testei essa hipótese primeiro — media round-trip entre os peers, comparava com a janela de deduplicação configurada. Não explicava o impacto: a latência medida era pequena demais para, por si só, causar 400 duplicados por dia.
+
+<ComparisonTable
+  title="Hipóteses testadas"
+  headers={["Hipótese", "Teste", "Resultado"]}
+  rows={[
+    ["Latência entre regiões", "Round-trip via VPN medido e comparado à janela de dedup", "Latência pequena demais para explicar o volume — descartada"],
+    ["Reconciliação de estado via Gossip", "Broadcast incremental perdido + janela de push/pull vs. peer timeout", "Estado não reconciliava a tempo — causa raiz"],
+  ]}
+/>
+
+Com a hipótese de latência descartada, aprofundei na comunicação Gossip entre os dois Alertmanagers.
+
+<AnimatedDiagram scenario={amDegradedScenario} locale="pt" />
+
+A configuração padrão usava `push/pull interval` de 60s e `peer timeout` de 15s. O `push/pull` é a sincronização completa de estado via TCP; o `peer timeout` é a janela de espera que a deduplicação usa antes de decidir que o peer não respondeu. Com push/pull maior que o peer timeout, um broadcast Gossip incremental perdido não tinha chance de ser corrigido pelo próximo ciclo completo antes da janela de dedup se esgotar — e o nó decidia reenviar a notificação de `resolved` sem conhecer o estado atualizado do outro peer.
+
+<Callout type="insight" title="A causa não era o peer cair">
+  O peer não precisava estar fora do ar. Bastava um broadcast incremental se perder e o próximo push/pull completo (60s) chegar depois do peer timeout (15s) expirar.
+</Callout>
+
+## Ação
+
+<DecisionCard
+  title="Ajuste de intervalos do cluster"
+  decision="Reduzir o push/pull interval de 60s para 10s, mantendo o peer timeout em 15s."
+  rationale="O push/pull precisa ser menor que o peer timeout para garantir que o estado reconcilie dentro da janela de dedup, mesmo quando um broadcast incremental se perde."
+  consequence="Mais tráfego de sincronização entre os peers, em troca de convergência de estado dentro da janela esperada."
+/>
+
+```diff
+- --cluster.pushpull-interval=60s
++ --cluster.pushpull-interval=10s
+  --cluster.peer-timeout=15s
+```
+
+O fix foi levado para produção como patch direto na configuração do cluster.
+
+<AnimatedDiagram scenario={amFixedScenario} locale="pt" />
+
+## Resultado
+
+<MetricBars
+  title="Alertas duplicados por dia"
+  metrics={[
+    { label: "Antes do fix", value: 400, unit: "/dia" },
+    { label: "Depois do fix", value: 175, unit: "/dia (150–200)" },
+  ]}
+  note="Redução de 50% a 62,5%. O residual não é mais deduplicação: é ruído legítimo de variação de rede dos clientes, fora do escopo deste fix."
+/>
+
+Os alertas duplicados caíram de aproximadamente 400 por dia para 150–200 por dia. Antes de comemorar a redução inteira como mérito do fix, separei o que sobrou: o residual é o fluxo padrão de alertas abertos pela variação real de rede dos clientes — não duplicação por falha de dedup. Atribuir esse ruído ao fix teria inflado o resultado e escondido um problema diferente.
+
+## Aprendizado
+
+Passei a validar HA também sob falha, não só no caminho feliz:
+
+<InteractiveChecklist
+  title="Como valido HA de cluster agora"
+  items={[
+    "Degradar e tornar indisponível cada nó do cluster, um por vez, e observar o comportamento do restante.",
+    "Injetar atraso e perda de comunicação entre peers, não só medir latência do caminho saudável.",
+    "Confirmar que a reconciliação de estado acontece dentro da janela de deduplicação esperada, sob perda de broadcast.",
+    "Revisar intervalos de sincronização contra timeouts de espera — o intervalo precisa ser menor que o timeout, não o contrário.",
+    "Acompanhar logs e métricas por pelo menos alguns dias após o deploy, separando ruído legítimo do que o fix deveria eliminar.",
+  ]}
+/>
+
+Um cluster saudável só prova o happy path. HA de verdade precisa convergir quando os peers estão degradados — e medir o resultado exige separar o sinal que o fix resolveu do ruído que nunca foi problema de dedup.
+
+<Glossary
+  title="Glossário"
+  terms={[
+    { term: "Gossip protocol", definition: "Protocolo pelo qual os peers do Alertmanager trocam estado entre si, sem depender de um coordenador central." },
+    { term: "Push/pull interval", definition: "Intervalo em que cada peer sincroniza seu estado completo com os demais via TCP, complementando os broadcasts incrementais do Gossip." },
+    { term: "Peer timeout", definition: "Janela de espera que a deduplicação usa antes de decidir que um peer não respondeu ou não reconciliou o estado a tempo." },
+    { term: "Janela de deduplicação", definition: "Intervalo dentro do qual os peers precisam concordar sobre o estado de um alerta para evitar que mais de um notifique o mesmo evento." },
+  ]}
+/>

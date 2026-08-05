@@ -12,7 +12,7 @@ tags:
   - "Architecture"
 ---
 
-import FixedDiagram from "../../../components/blog/FixedDiagram";
+import AnimatedDiagram from "../../../components/blog/AnimatedDiagram.astro";
 import { rbacCentralizedScenario, rbacFederatedScenario } from "../../../data/blog-scenarios/rbac";
 import Callout from "../../../components/blog/Callout.astro";
 import DecisionCard from "../../../components/blog/DecisionCard.astro";
@@ -24,7 +24,7 @@ Quando comecei a trabalhar na implementação de RBAC, o objetivo parecia simple
 
 A primeira ideia foi construir um **RBAC Core**. Todas as aplicações consultariam esse serviço antes de permitir uma ação. O diagrama fixo mantém a topologia visível enquanto as notas ao lado explicam onde essa centralização passa a pesar.
 
-<FixedDiagram client:idle scenario={rbacCentralizedScenario} locale="pt" />
+<AnimatedDiagram scenario={rbacCentralizedScenario} locale="pt" />
 
 Na teoria, isso entregaria padronização, governança e uma interface única. Na prática, começaram a surgir algumas perguntas importantes.
 
@@ -47,7 +47,7 @@ Percebi que estávamos criando não apenas um serviço central, mas também um p
 
 A arquitetura começou então a evoluir para um modelo federado. O cenário separa decisões de execução da governança central.
 
-<FixedDiagram client:idle scenario={rbacFederatedScenario} locale="pt" />
+<AnimatedDiagram scenario={rbacFederatedScenario} locale="pt" />
 
 Cada aplicação passou a ser responsável pelo próprio modelo de autorização, por suas relações e por suas políticas. Essas políticas seriam tratadas de forma semelhante a migrations de banco de dados: versionadas, revisadas e aplicadas de maneira idempotente durante o deploy.
 

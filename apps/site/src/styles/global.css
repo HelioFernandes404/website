@@ -378,14 +378,14 @@ html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-p
 }
 
 /* Reusable MDX editorial blocks. */
-.blog-callout, .blog-decision-card, .blog-tradeoff, .blog-checklist, .blog-accordion, .blog-glossary { margin-top: 2rem; border: 1px solid var(--color-gray-200); border-radius: 1rem; background: var(--color-white); }
+.blog-callout, .blog-decision-card, .blog-tradeoff, .blog-checklist, .blog-accordion, .blog-glossary, .blog-metric-bars, .blog-comparison-table { margin-top: 2rem; border: 1px solid var(--color-gray-200); border-radius: 1rem; background: var(--color-white); }
 .blog-callout { border-left: 4px solid var(--color-brand-lime); padding: 1.25rem 1.5rem; }
 .blog-callout--warning { border-left-color: #f59e0b; }
 .blog-callout--insight { border-left-color: var(--color-brand-black); }
 .blog-callout__label, .blog-editorial-title, .blog-checklist__header output { font-family: var(--font-family-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .blog-callout__label { margin: 0 0 0.5rem; color: var(--color-brand-black); }
 .blog-callout__content > :first-child, .blog-decision-card__content > :first-child, .blog-accordion__content > :first-child { margin-top: 0; }
-.blog-decision-card, .blog-tradeoff, .blog-checklist, .blog-glossary { padding: 1.5rem; }
+.blog-decision-card, .blog-tradeoff, .blog-checklist, .blog-glossary, .blog-metric-bars, .blog-comparison-table { padding: 1.5rem; }
 .article-content .blog-editorial-title { margin: 0 0 1rem; color: var(--color-brand-black); font-size: 0.75rem; letter-spacing: 0.08em; }
 .blog-decision-card > div + div { margin-top: 1rem; }
 .blog-decision-card h3, .blog-tradeoff h3 { margin: 0; font-size: 1rem; color: var(--color-brand-black); }
@@ -408,7 +408,21 @@ html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-p
 .blog-glossary dl > div { display: grid; gap: 0.25rem; }
 .blog-glossary dt { font-weight: 700; color: var(--color-brand-black); }
 .blog-glossary dd { margin: 0; }
-html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-callout, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-decision-card, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-checklist, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-accordion, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-glossary, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff__option { border-color: rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); }
+.blog-metric-bars__rows { display: grid; gap: 1rem; }
+.blog-metric-bars__row-header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 0.35rem; }
+.blog-metric-bars__row-header strong { font-family: var(--font-family-mono); color: var(--color-brand-black); }
+.blog-metric-bars__track { height: 0.6rem; border-radius: 999px; background: var(--color-gray-100); overflow: hidden; }
+.blog-metric-bars__fill { height: 100%; border-radius: 999px; background: var(--color-brand-lime); }
+.blog-metric-bars__note { margin: 1rem 0 0; color: var(--color-gray-500); font-size: 0.875rem; }
+.blog-comparison-table__scroll { overflow-x: auto; }
+.blog-comparison-table table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.blog-comparison-table th, .blog-comparison-table td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--color-gray-200); vertical-align: top; }
+.blog-comparison-table thead th { font-family: var(--font-family-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-gray-500); }
+.blog-comparison-table tbody th { font-weight: 700; color: var(--color-brand-black); white-space: nowrap; }
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-callout, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-decision-card, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-checklist, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-accordion, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-glossary, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff__option, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-metric-bars, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-comparison-table { border-color: rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); }
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-metric-bars__row-header strong, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-comparison-table tbody th { color: var(--color-white); }
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-metric-bars__track { background: rgba(255, 255, 255, 0.08); }
+html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-comparison-table th, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-comparison-table td { border-color: rgba(255, 255, 255, 0.12); }
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-callout__label, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-editorial-title, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-decision-card h3, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-tradeoff h3, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-accordion summary, html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-glossary dt { color: var(--color-white); }
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-post-toc { border-color: rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); }
 html[data-reading-mode-enabled="true"][data-reading-theme-active="dark"] .blog-post-toc a { color: var(--color-gray-200); }

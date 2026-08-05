@@ -1,0 +1,112 @@
+---
+title: "Gossip, push/pull, and the missing window: multi-region Alertmanager dedup"
+description: "How a push/pull interval larger than the peer timeout broke deduplication between two Alertmanagers in different regions, and what I learned validating HA under failure."
+pubDate: "2026-08-05"
+category: "SRE"
+lead: "A healthy cluster only proves the happy path. Real HA needs to converge when peers are degraded."
+tags:
+  - "Alertmanager"
+  - "High Availability"
+  - "Gossip Protocol"
+  - "Observability"
+  - "SRE"
+---
+
+import AnimatedDiagram from "../../../components/blog/AnimatedDiagram.astro";
+import { amHealthyScenario, amDegradedScenario, amFixedScenario } from "../../../data/blog-scenarios";
+import Callout from "../../../components/blog/Callout.astro";
+import DecisionCard from "../../../components/blog/DecisionCard.astro";
+import ComparisonTable from "../../../components/blog/ComparisonTable.astro";
+import MetricBars from "../../../components/blog/MetricBars.astro";
+import Glossary from "../../../components/blog/Glossary.astro";
+import InteractiveChecklist from "../../../components/blog/InteractiveChecklist.astro";
+
+## Context
+
+We had two Alertmanagers in different regions — one in Virginia, one in Ohio — sitting behind a single global Prometheus and a single Slack receiver. Whenever one of the peers degraded, deduplication broke: around 400 duplicate alerts a day, mostly `resolved` notifications, driving up operational noise and eroding trust in the channel.
+
+<AnimatedDiagram scenario={amHealthyScenario} locale="en" />
+
+## Investigation
+
+I led the investigation from the first duplicate alert, debugging both nodes in parallel and reproducing the problem in an isolated environment. The first hypothesis was network latency between the regions: if Gossip took too long to cross the VPN between Virginia and Ohio, both nodes would decide to notify before recognizing each other.
+
+I tested that hypothesis first — measuring round-trip time between the peers and comparing it against the configured deduplication window. It didn't explain the impact: the measured latency was too small on its own to account for 400 duplicates a day.
+
+<ComparisonTable
+  title="Hypotheses tested"
+  headers={["Hypothesis", "Test", "Result"]}
+  rows={[
+    ["Latency between regions", "Round-trip over the VPN measured and compared against the dedup window", "Too small to explain the volume — ruled out"],
+    ["State reconciliation via Gossip", "Lost incremental broadcast vs. push/pull window vs. peer timeout", "State didn't reconcile in time — root cause"],
+  ]}
+/>
+
+With the latency hypothesis ruled out, I dug deeper into the Gossip communication between the two Alertmanagers.
+
+<AnimatedDiagram scenario={amDegradedScenario} locale="en" />
+
+The default configuration used a `push/pull interval` of 60s and a `peer timeout` of 15s. Push/pull is the full state sync over TCP; peer timeout is the wait window deduplication uses before deciding a peer hasn't responded. With push/pull larger than the peer timeout, a lost incremental Gossip broadcast had no chance of being corrected by the next full cycle before the dedup window ran out — so the node would resend the `resolved` notification without knowing the other peer's updated state.
+
+<Callout type="insight" title="The cause wasn't the peer going down">
+  The peer didn't need to be unavailable. It only took one lost incremental broadcast, with the next full push/pull cycle (60s) landing after the peer timeout (15s) had already expired.
+</Callout>
+
+## Action
+
+<DecisionCard
+  title="Cluster interval adjustment"
+  decision="Reduce the push/pull interval from 60s to 10s, keeping the peer timeout at 15s."
+  rationale="Push/pull needs to be smaller than the peer timeout to guarantee state reconciles inside the dedup window, even when an incremental broadcast is lost."
+  consequence="More sync traffic between peers, in exchange for state convergence inside the expected window."
+/>
+
+```diff
+- --cluster.pushpull-interval=60s
++ --cluster.pushpull-interval=10s
+  --cluster.peer-timeout=15s
+```
+
+The fix went to production as a direct patch to the cluster configuration.
+
+<AnimatedDiagram scenario={amFixedScenario} locale="en" />
+
+## Result
+
+<MetricBars
+  title="Duplicate alerts per day"
+  metrics={[
+    { label: "Before the fix", value: 400, unit: "/day" },
+    { label: "After the fix", value: 175, unit: "/day (150–200)" },
+  ]}
+  note="A 50% to 62.5% reduction. What's left isn't deduplication anymore: it's legitimate noise from client-side network variation, outside this fix's scope."
+/>
+
+Duplicate alerts dropped from roughly 400 a day to 150–200 a day. Before crediting the entire drop to the fix, I separated out what remained: the residual is the standard flow of alerts opened by real client-side network variation — not duplication from a dedup failure. Attributing that noise to the fix would have inflated the result and hidden a different problem.
+
+## Lessons learned
+
+I now validate HA under failure too, not just the happy path:
+
+<InteractiveChecklist
+  title="How I validate cluster HA now"
+  items={[
+    "Degrade and take down each cluster node, one at a time, and observe how the rest behaves.",
+    "Inject delay and communication loss between peers, not just measure latency on the healthy path.",
+    "Confirm state reconciliation happens inside the expected deduplication window under broadcast loss.",
+    "Review sync intervals against wait timeouts — the interval needs to be smaller than the timeout, not the other way around.",
+    "Watch logs and metrics for at least a few days after deploy, separating legitimate noise from what the fix was supposed to eliminate.",
+  ]}
+/>
+
+A healthy cluster only proves the happy path. Real HA needs to converge when peers are degraded — and measuring the result means separating the signal the fix actually solved from noise that was never a dedup problem.
+
+<Glossary
+  title="Glossary"
+  terms={[
+    { term: "Gossip protocol", definition: "The protocol Alertmanager peers use to exchange state with each other, without depending on a central coordinator." },
+    { term: "Push/pull interval", definition: "The interval at which each peer syncs its full state with the others over TCP, complementing Gossip's incremental broadcasts." },
+    { term: "Peer timeout", definition: "The wait window deduplication uses before deciding a peer hasn't responded or reconciled state in time." },
+    { term: "Deduplication window", definition: "The interval within which peers need to agree on an alert's state to avoid more than one of them notifying the same event." },
+  ]}
+/>

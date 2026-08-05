@@ -1,0 +1,26 @@
+---
+interface Metric { label: string; value: number; unit?: string; }
+interface Props { title?: string; metrics: Metric[]; note?: string; }
+
+const pt = Astro.currentLocale === "pt" || Astro.url.pathname.startsWith("/pt/");
+const { title = pt ? "Métrica" : "Metric", metrics, note } = Astro.props;
+const max = Math.max(...metrics.map((metric) => metric.value), 1);
+---
+
+<section class="blog-metric-bars" aria-label={title}>
+    <h2 class="blog-editorial-title">{title}</h2>
+    <div class="blog-metric-bars__rows">
+        {metrics.map((metric) => (
+            <div class="blog-metric-bars__row">
+                <div class="blog-metric-bars__row-header">
+                    <span>{metric.label}</span>
+                    <strong>{metric.value}{metric.unit ? ` ${metric.unit}` : ""}</strong>
+                </div>
+                <div class="blog-metric-bars__track">
+                    <div class="blog-metric-bars__fill" style={`width: ${(metric.value / max) * 100}%`}></div>
+                </div>
+            </div>
+        ))}
+    </div>
+    {note && <p class="blog-metric-bars__note">{note}</p>}
+</section>

@@ -12,7 +12,7 @@ tags:
   - "Architecture"
 ---
 
-import FixedDiagram from "../../../components/blog/FixedDiagram";
+import AnimatedDiagram from "../../../components/blog/AnimatedDiagram.astro";
 import { rbacCentralizedScenario, rbacFederatedScenario } from "../../../data/blog-scenarios/rbac";
 import Callout from "../../../components/blog/Callout.astro";
 import DecisionCard from "../../../components/blog/DecisionCard.astro";
@@ -24,7 +24,7 @@ When I started working on an RBAC implementation, the goal looked simple: build 
 
 The first idea was to build an **RBAC Core**. Every application would query this service before allowing an action. The fixed diagram keeps the topology visible while the notes beside it explain where that centralization starts to weigh on the system.
 
-<FixedDiagram client:idle scenario={rbacCentralizedScenario} locale="en" />
+<AnimatedDiagram scenario={rbacCentralizedScenario} locale="en" />
 
 In theory, this would deliver standardization, governance, and a single interface. In practice, some important questions started surfacing.
 
@@ -47,7 +47,7 @@ I realized we weren't just building a central service — we were building a pos
 
 The architecture then started evolving toward a federated model. The scenario separates runtime decisions from central governance.
 
-<FixedDiagram client:idle scenario={rbacFederatedScenario} locale="en" />
+<AnimatedDiagram scenario={rbacFederatedScenario} locale="en" />
 
 Each application became responsible for its own authorization model, its own relations, and its own policies. Those policies would be treated much like database migrations: versioned, reviewed, and applied idempotently during deploy.
 

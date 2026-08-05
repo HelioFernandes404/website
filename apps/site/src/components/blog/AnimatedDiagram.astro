@@ -1,0 +1,452 @@
+---
+import { validateScenario } from "../../data/blog-scenarios/validate.js";
+
+type Locale = "pt" | "en";
+
+interface ScenarioNode {
+  id: string;
+  x: number;
+  y: number;
+  kind: string;
+}
+
+interface ScenarioEdge {
+  id: string;
+  source: string;
+  target: string;
+  label?: string;
+  tone?: "ok" | "danger" | "muted";
+  active?: boolean;
+  animated?: boolean;
+}
+
+interface Copy {
+  title: string;
+  summary: string;
+  nodes: Record<string, { label: string; detail?: string }>;
+  steps: Array<{ title: string; body: string }>;
+}
+
+interface Scenario {
+  id: string;
+  nodes: ScenarioNode[];
+  edges: ScenarioEdge[];
+  steps: Array<{ id: string }>;
+  copy: Record<Locale, Copy>;
+}
+
+interface Props {
+  scenario: Scenario;
+  locale: Locale;
+}
+
+const { scenario: inputScenario, locale } = Astro.props;
+const scenario = validateScenario(inputScenario) as Scenario;
+const copy = scenario.copy[locale];
+const isPortuguese = locale === "pt";
+
+const NODE_W = 176;
+const NODE_H = 64;
+const PAD = 48;
+
+const minX = Math.min(...scenario.nodes.map((n) => n.x)) - PAD;
+const minY = Math.min(...scenario.nodes.map((n) => n.y)) - PAD;
+const maxX = Math.max(...scenario.nodes.map((n) => n.x + NODE_W)) + PAD;
+const maxY = Math.max(...scenario.nodes.map((n) => n.y + NODE_H)) + PAD;
+const viewBoxWidth = maxX - minX;
+const viewBoxHeight = maxY - minY;
+const viewBox = `${minX} ${minY} ${viewBoxWidth} ${viewBoxHeight}`;
+
+const nodeById = new Map(scenario.nodes.map((node) => [node.id, node]));
+
+interface EdgeGeometry {
+  edge: ScenarioEdge;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  midX: number;
+  midY: number;
+  stroke: string;
+  dash: string;
+  opacity: number;
+  moving: boolean;
+}
+
+const TONE_STROKE: Record<string, string> = {
+  ok: "var(--color-brand-lime, #ccff00)",
+  danger: "#f87171",
+  muted: "var(--diagram-muted, #9ca3af)",
+};
+
+function anchorPoints(source: ScenarioNode, target: ScenarioNode) {
+  const sourceCenter = { x: source.x + NODE_W / 2, y: source.y + NODE_H / 2 };
+  const targetCenter = { x: target.x + NODE_W / 2, y: target.y + NODE_H / 2 };
+  const dx = targetCenter.x - sourceCenter.x;
+  const dy = targetCenter.y - sourceCenter.y;
+
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    return dx >= 0
+      ? { x1: source.x + NODE_W, y1: sourceCenter.y, x2: target.x, y2: targetCenter.y }
+      : { x1: source.x, y1: sourceCenter.y, x2: target.x + NODE_W, y2: targetCenter.y };
+  }
+
+  return dy >= 0
+    ? { x1: sourceCenter.x, y1: source.y + NODE_H, x2: targetCenter.x, y2: target.y }
+    : { x1: sourceCenter.x, y1: source.y, x2: targetCenter.x, y2: target.y + NODE_H };
+}
+
+const edgeGeometries: EdgeGeometry[] = scenario.edges.map((edge) => {
+  const source = nodeById.get(edge.source);
+  const target = nodeById.get(edge.target);
+  if (!source || !target) {
+    throw new Error(`AnimatedDiagram: edge ${edge.id} references an unknown node`);
+  }
+
+  const { x1, y1, x2, y2 } = anchorPoints(source, target);
+  const tone = edge.tone ?? "ok";
+  const active = edge.active !== false;
+  const animated = edge.animated !== false;
+
+  let stroke: string;
+  let dash: string;
+  let opacity: number;
+  let moving: boolean;
+
+  if (!active) {
+    stroke = TONE_STROKE.muted;
+    dash = "4 5";
+    opacity = 0.35;
+    moving = false;
+  } else if (tone === "danger") {
+    stroke = TONE_STROKE.danger;
+    dash = "7 6";
+    opacity = 0.9;
+    moving = animated;
+  } else if (tone === "muted") {
+    stroke = TONE_STROKE.muted;
+    dash = "4 5";
+    opacity = 0.4;
+    moving = false;
+  } else {
+    stroke = TONE_STROKE.ok;
+    dash = animated ? "8 6" : "0";
+    opacity = 0.85;
+    moving = animated;
+  }
+
+  return {
+    edge,
+    x1,
+    y1,
+    x2,
+    y2,
+    midX: (x1 + x2) / 2,
+    midY: (y1 + y2) / 2,
+    stroke,
+    dash,
+    opacity,
+    moving,
+  };
+});
+
+const canvasAriaLabel = isPortuguese
+  ? `Diagrama animado da arquitetura: ${copy.title}`
+  : `Animated architecture diagram: ${copy.title}`;
+---
+
+<section class="animated-diagram" aria-labelledby={`${scenario.id}-title`}>
+  <header class="animated-diagram-header">
+    <p class="animated-diagram-kicker">
+      {isPortuguese ? "Diagrama de arquitetura" : "Architecture diagram"}
+    </p>
+    <h2 id={`${scenario.id}-title`} class="animated-diagram-title">{copy.title}</h2>
+    <p class="animated-diagram-summary">{copy.summary}</p>
+  </header>
+
+  <div class="animated-diagram-layout">
+    <div class="animated-diagram-canvas">
+      <div class="animated-diagram-badge" aria-hidden="true">
+        {isPortuguese ? "Diagrama animado" : "Animated diagram"}
+      </div>
+      <svg
+        viewBox={viewBox}
+        role="img"
+        aria-label={canvasAriaLabel}
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          {Object.entries(TONE_STROKE).map(([tone, color]) => (
+            <marker
+              id={`${scenario.id}-arrow-${tone}`}
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill={color} />
+            </marker>
+          ))}
+        </defs>
+
+        {edgeGeometries.map(({ edge, x1, y1, x2, y2, midX, midY, stroke, dash, opacity, moving }) => {
+          const tone = edge.tone ?? "ok";
+          const markerTone = edge.active === false ? "muted" : tone === "danger" ? "danger" : tone === "muted" ? "muted" : "ok";
+          return (
+            <g class="animated-diagram-edge">
+              <path
+                d={`M ${x1} ${y1} L ${x2} ${y2}`}
+                fill="none"
+                stroke={stroke}
+                stroke-width="2"
+                stroke-opacity={opacity}
+                stroke-dasharray={dash === "0" ? undefined : dash}
+                marker-end={`url(#${scenario.id}-arrow-${markerTone})`}
+                class={moving ? "animated-diagram-edge-path animated-diagram-edge-path--flow" : "animated-diagram-edge-path"}
+              />
+              {edge.label && (
+                <g class="animated-diagram-edge-label">
+                  <rect
+                    x={midX - (edge.label.length * 3 + 6)}
+                    y={midY - 10}
+                    width={edge.label.length * 6 + 12}
+                    height="16"
+                    rx="4"
+                    class="animated-diagram-edge-label-bg"
+                  />
+                  <text x={midX} y={midY + 2} text-anchor="middle" class="animated-diagram-edge-label-text">
+                    {edge.label}
+                  </text>
+                </g>
+              )}
+            </g>
+          );
+        })}
+
+        {scenario.nodes.map((node) => {
+          const nodeCopy = copy.nodes[node.id];
+          return (
+            <g class="animated-diagram-node" data-kind={node.kind}>
+              <rect
+                x={node.x}
+                y={node.y}
+                width={NODE_W}
+                height={NODE_H}
+                rx="12"
+                class="animated-diagram-node-box"
+              />
+              <text x={node.x + 14} y={node.y + 26} class="animated-diagram-node-label">
+                {nodeCopy.label}
+              </text>
+              {nodeCopy.detail && (
+                <text x={node.x + 14} y={node.y + 44} class="animated-diagram-node-detail">
+                  {nodeCopy.detail}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+
+    <div class="animated-diagram-notes">
+      {copy.steps.map((step, index) => (
+        <article class="animated-diagram-note">
+          <p class="animated-diagram-note-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</p>
+          <h3 class="animated-diagram-note-title">{step.title}</h3>
+          <p class="animated-diagram-note-body">{step.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <style>
+    .animated-diagram {
+      box-sizing: border-box;
+      width: min(72rem, calc(100vw - 3rem));
+      margin: 3rem auto;
+      margin-left: 50% !important;
+      transform: translateX(-50%);
+    }
+
+    .animated-diagram-header {
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .animated-diagram-kicker {
+      color: var(--diagram-muted, #4b5563);
+      font-family: var(--font-family-mono, monospace);
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .animated-diagram-title {
+      margin: 8px 0;
+      font-size: clamp(1.5rem, 4vw, 2.25rem);
+    }
+
+    .animated-diagram-summary {
+      margin: 0;
+      color: var(--diagram-text, #374151);
+    }
+
+    .animated-diagram-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 1.1fr) minmax(0, 0.9fr);
+      align-items: start;
+      gap: 32px;
+    }
+
+    .animated-diagram-layout > * {
+      min-width: 0;
+    }
+
+    .animated-diagram-canvas {
+      position: sticky;
+      z-index: 1;
+      top: 96px;
+      height: min(640px, calc(100vh - 8rem));
+      overflow: hidden;
+      border: 1px solid var(--diagram-border, #d1d5db);
+      border-radius: 16px;
+      background: var(--diagram-surface, #fff);
+    }
+
+    .animated-diagram-canvas svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .animated-diagram-badge {
+      position: absolute;
+      z-index: 2;
+      top: 16px;
+      left: 16px;
+      border: 1px solid var(--diagram-border, #3f3f46);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: color-mix(in srgb, var(--diagram-surface, #161616) 88%, transparent);
+      color: var(--diagram-text, #f3f4f6);
+      font-family: var(--font-family-mono, monospace);
+      font-size: 11px;
+      pointer-events: none;
+    }
+
+    .animated-diagram-node-box {
+      stroke: var(--color-brand-lime, #ccff00);
+      stroke-width: 1;
+      fill: var(--diagram-node, #0a0a0a);
+    }
+
+    .animated-diagram-node-label {
+      fill: var(--diagram-node-text, #fff);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-family-sans, sans-serif);
+    }
+
+    .animated-diagram-node-detail {
+      fill: var(--diagram-muted, #9ca3af);
+      font-size: 11px;
+      font-family: var(--font-family-sans, sans-serif);
+    }
+
+    .animated-diagram-edge-label-bg {
+      fill: var(--diagram-surface, #fff);
+      fill-opacity: 0.9;
+    }
+
+    .animated-diagram-edge-label-text {
+      fill: var(--diagram-text, #111);
+      font-size: 11px;
+      font-family: var(--font-family-mono, monospace);
+    }
+
+    .animated-diagram-notes {
+      display: block;
+    }
+
+    .animated-diagram-note {
+      min-height: min(50vh, 400px);
+      padding: 24px 0;
+      border-top: 1px solid var(--diagram-border, #e5e7eb);
+    }
+
+    .animated-diagram-note-index {
+      color: var(--diagram-muted, #6b7280);
+      font-family: var(--font-family-mono, monospace);
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .animated-diagram-note-title {
+      margin: 8px 0 12px;
+      font-size: 1.25rem;
+    }
+
+    .animated-diagram-note-body {
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .animated-diagram-edge-path--flow {
+        animation: animated-diagram-flow 2.5s linear infinite;
+      }
+
+      @keyframes animated-diagram-flow {
+        to {
+          stroke-dashoffset: -28;
+        }
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animated-diagram-edge-path {
+        animation: none !important;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .animated-diagram-layout {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      .animated-diagram-canvas {
+        position: relative !important;
+        top: auto !important;
+        height: clamp(280px, 52vw, 380px) !important;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .animated-diagram-canvas {
+        height: 280px !important;
+      }
+    }
+  </style>
+
+  <style is:global>
+    html[data-reading-theme-active="light"] .animated-diagram {
+      --diagram-surface: #fff;
+      --diagram-text: #111;
+      --diagram-node: #0a0a0a;
+      --diagram-node-text: #fff;
+      --diagram-muted: #6b7280;
+      --diagram-border: #d1d5db;
+    }
+
+    html[data-reading-theme-active="dark"] .animated-diagram {
+      --diagram-surface: #161616;
+      --diagram-text: #f3f4f6;
+      --diagram-node: #242424;
+      --diagram-node-text: #fff;
+      --diagram-muted: #9ca3af;
+      --diagram-border: #3f3f46;
+    }
+  </style>
+</section>
