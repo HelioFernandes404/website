@@ -2,202 +2,152 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import ArchitectureFlow from "../../components/ArchitectureFlow";
-import { useTranslations, stripLocalePrefix } from "../../i18n/utils";
-
-const lang = "en" as const;
-
+import ContactCallout from "../../components/ContactCallout.astro";
+import { stripLocalePrefix } from "../../i18n/utils";
 export async function getStaticPaths() {
-    const projects = (
-        await getCollection("projects", ({ id }) => id.startsWith("en/"))
-    ).map((project) => ({ ...project, slug: stripLocalePrefix(project.slug, "en") }));
-
-    return projects.map((project) => ({
-        params: { slug: project.slug },
-        props: {
-            project,
-            alternateUrl: `/pt/projetos/${project.slug}/`,
-        },
-    }));
+  return (
+    await getCollection("projects", ({ id }) => id.startsWith("en/"))
+  ).map((project) => ({
+    params: { slug: stripLocalePrefix(project.slug, "en") },
+    props: { project },
+  }));
 }
-
 interface Props {
-    project: CollectionEntry<"projects">;
-    alternateUrl: string;
+  project: CollectionEntry<"projects">;
 }
-
-const { project, alternateUrl } = Astro.props as Props;
+const { project } = Astro.props;
 const { Content } = await project.render();
-const t = useTranslations(lang);
-
-const title = `${project.data.title} | Projects`;
-const description = project.data.description;
-const ogImage = "/og-image.webp";
-const canonicalUrl = `https://heliosuns404.com/projects/${project.slug}/`;
-
 const { carl, architecture } = project.data;
-
-const carlSections = carl
-    ? [
-          { key: "context", label: t("projectDetail.carlContext"), body: carl.context },
-          { key: "action", label: t("projectDetail.carlAction"), body: carl.action },
-          { key: "result", label: t("projectDetail.carlResult"), body: carl.result },
-          { key: "learning", label: t("projectDetail.carlLearning"), body: carl.learning },
-      ]
-    : [];
+const slug = stripLocalePrefix(project.slug, "en");
+const sections = carl
+  ? [
+      { label: "The context", body: carl.context },
+      { label: "My contribution", body: carl.action },
+      { label: "The outcome", body: carl.result },
+      { label: "What I learned", body: carl.learning },
+    ]
+  : [];
 ---
 
 <Layout
-    title={title}
-    description={description}
-    ogImage={ogImage}
-    canonicalUrl={canonicalUrl}
-    lang={lang}
-    alternateUrl={alternateUrl}
+  title={`${project.data.title} — Case Study | Hélio Fernandes`}
+  description={project.data.description}
+  ogImage={project.data.image}
+  canonicalUrl={`https://heliosuns404.com/projects/${slug}/`}
 >
-    <main class="min-h-screen">
-        <section class="border-b border-gray-100 bg-gray-50/70">
-            <div class="mx-auto max-w-3xl px-6 py-16 md:py-20">
-                <p class="font-mono text-sm uppercase tracking-wider text-brand-gray">
-                    {project.data.category}
-                </p>
-                <h1 class="mt-3 text-4xl font-display font-bold tracking-tight lg:text-5xl">
-                    {project.data.title}
-                </h1>
-                <p class="mt-4 text-lg text-gray-600">{project.data.description}</p>
-
-                <div class="mt-6 flex flex-wrap gap-2 font-mono text-xs">
-                    {
-                        project.data.tech.map((item) => (
-                            <span class="rounded-full border border-gray-200 bg-white px-3 py-1 text-gray-600">
-                                {item}
-                            </span>
-                        ))
-                    }
-                </div>
-
-                <div class="mt-8 inline-flex items-baseline gap-3 border-l-2 border-brand-lime pl-4">
-                    <span class="text-3xl font-display font-bold">
-                        {project.data.metricValue}
-                    </span>
-                    <span class="font-mono text-xs uppercase tracking-wider text-brand-gray">
-                        {project.data.metricLabel} / {project.data.metricCaption}
-                    </span>
-                </div>
-                {
-                    project.data.url && (
-                        <div class="mt-6 flex flex-wrap gap-3">
-                            <a
-                                href={project.data.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`${project.data.urlLabel ?? t("projectDetail.defaultUrlLabel")} ${t("projectDetail.opensInNewTab")}`}
-                                class="hover-trigger inline-flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 font-medium text-white transition-[background-color,color,transform] duration-300 hover:bg-brand-lime hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
-                            >
-                                {project.data.urlLabel ?? t("projectDetail.defaultUrlLabel")}
-                                <span aria-hidden="true">-></span>
-                            </a>
-                            {
-                                project.data.secondaryUrl && (
-                                    <a
-                                        href={project.data.secondaryUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        aria-label={`${project.data.secondaryUrlLabel ?? t("projectDetail.defaultSecondaryUrlLabel")} ${t("projectDetail.opensInNewTab")}`}
-                                        class="hover-trigger inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-[border-color,background-color,color,transform] duration-300 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
-                                    >
-                                        {project.data.secondaryUrlLabel ?? t("projectDetail.defaultSecondaryUrlLabel")}
-                                        <span aria-hidden="true">-></span>
-                                    </a>
-                                )
-                            }
-                        </div>
-                    )
-                }
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <p class="eyebrow">
+          <a href="/projects/">Selected work</a> / {
+            project.data.category.replace(/^\d+\.\s*/, "")
+          }
+        </p><h1>{project.data.title}</h1><p class="page-description">
+          {project.data.description}
+        </p><ul class="tech-tags" aria-label="Technologies">
+          {project.data.tech.map((item) => <li>{item}</li>)}
+        </ul><div class="project-outcome case-outcome">
+          <strong>{project.data.metricValue}</strong><div>
+            <span>{project.data.metricLabel}</span><span
+              >{project.data.metricCaption.replace(/\s*->\s*/, " → ")}</span>
+          </div>
+        </div>{
+          (project.data.url || project.data.secondaryUrl) && (
+            <div class="case-external-links">
+              {project.data.url && (
+                <a
+                  class="button button-primary"
+                  href={project.data.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.data.urlLabel ?? "Visit project"} (opens in a new tab)`}
+                >
+                  {project.data.urlLabel ?? "Visit project"}{" "}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              )}
+              {project.data.secondaryUrl && (
+                <a
+                  class="text-link"
+                  href={project.data.secondaryUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.data.secondaryUrlLabel ?? "View context"} (opens in a new tab)`}
+                >
+                  {project.data.secondaryUrlLabel ?? "View context"}{" "}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              )}
             </div>
-        </section>
-
-        <section class="mx-auto max-w-5xl px-6 py-16 md:py-20">
-            {
-                carlSections.length > 0 && (
-                    <ol class="space-y-10">
-                        {carlSections.map((section, index) => (
-                            <li class="grid gap-4 md:grid-cols-[8rem_minmax(0,1fr)]">
-                                <p class="font-mono text-xs uppercase tracking-wider text-brand-gray md:pt-1">
-                                    <span class="text-brand-lime">
-                                        0{index + 1}
-                                    </span>{" "}
-                                    {section.label}
-                                </p>
-                                <p class="text-lg leading-relaxed text-gray-700">
-                                    {section.body}
-                                </p>
-                            </li>
-                        ))}
-                    </ol>
-                )
-            }
-
-            {
-                architecture && (
-                    <div class="mt-16">
-                        <h2 class="text-2xl font-display font-bold tracking-tight">
-                            {architecture.title}
-                        </h2>
-                        <p class="mt-2 text-gray-600">
-                            {t("projectDetail.architectureIntro")}
-                        </p>
-                        <div class="mt-6">
-                            <ArchitectureFlow
-                                client:visible
-                                nodes={architecture.nodes}
-                                edges={architecture.edges}
-                                hint={architecture.hint}
-                                lang={lang}
-                            />
+          )
+        }
+      </div>
+    </section>
+    <section class="wrap case-body" aria-label="Case study">
+      {
+        sections.length > 0 && (
+          <ol class="case-story">
+            {sections.map((section, index) => (
+              <li>
+                <h2>
+                  0{index + 1} / {section.label}
+                </h2>
+                <p>{section.body}</p>
+              </li>
+            ))}
+          </ol>
+        )
+      }
+      {
+        architecture && (
+          <section
+            class="case-architecture"
+            aria-labelledby="architecture-title"
+          >
+            <>
+              <h2 id="architecture-title">{architecture.title}</h2>
+              <p>
+                Explore the components, the decisions behind them, and the
+                trade-offs involved.
+              </p>
+              <div>
+                <ArchitectureFlow
+                  client:visible
+                  nodes={architecture.nodes}
+                  edges={architecture.edges}
+                  hint={architecture.hint}
+                  lang="en"
+                />
+              </div>
+              <details class="case-decisions">
+                <>
+                  <summary>Read all architecture decisions</summary>
+                  <dl>
+                    {architecture.nodes
+                      .filter((node) => node.decision)
+                      .map((node) => (
+                        <div>
+                          <dt>{node.label}</dt>
+                          <dd>{node.decision}</dd>
+                          {node.tradeoff && (
+                            <dd>
+                              <strong>Trade-off:</strong> {node.tradeoff}
+                            </dd>
+                          )}
                         </div>
-
-                        <details class="mt-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-                            <summary class="hover-trigger cursor-pointer font-medium focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime">
-                                {t("projectDetail.viewDecisionsText")}
-                            </summary>
-                            <dl class="mt-4 space-y-6">
-                                {architecture.nodes
-                                    .filter((node) => node.decision)
-                                    .map((node) => (
-                                        <div>
-                                            <dt class="font-mono text-xs uppercase tracking-wider text-brand-gray">
-                                                {node.label}
-                                            </dt>
-                                            <dd class="mt-1 text-gray-600">
-                                                {node.decision}
-                                            </dd>
-                                            {node.tradeoff && (
-                                                <dd class="mt-2 text-gray-600">
-                                                    <span class="font-medium text-black">
-                                                        {t("projectDetail.tradeoffLabel")}{" "}
-                                                    </span>
-                                                    {node.tradeoff}
-                                                </dd>
-                                            )}
-                                        </div>
-                                    ))}
-                            </dl>
-                        </details>
-                    </div>
-                )
-            }
-
-            <article class="article-content mt-16 max-w-3xl rounded-2xl border border-gray-100 bg-white p-8 shadow-sm md:p-10">
-                <Content />
-            </article>
-
-            <a
-                href="/projects/"
-                class="hover-trigger mt-8 inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 font-medium transition-[border-color,background-color,color,transform] duration-300 hover:border-brand-lime hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
-            >
-                {t("projectDetail.backToProjects")}
-                <span aria-hidden="true">&lt;-</span>
-            </a>
-        </section>
-    </main>
+                      ))}
+                  </dl>
+                </>
+              </details>
+            </>
+          </section>
+        )
+      }
+      <article class="article-content case-article"><Content /></article><a
+        href="/projects/"
+        class="text-link"
+        ><span aria-hidden="true">←</span> Back to all projects</a
+      >
+    </section><ContactCallout />
+  </main>
 </Layout>

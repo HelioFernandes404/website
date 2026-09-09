@@ -6,7 +6,7 @@ export default function QuickIsland() {
   return (
     <div className="island-panel">
       <p className="island-text">
-        Island ativo no cliente. Clique para testar hidratacao no browser.
+        Interactive counter. Select the button to increment the count.
       </p>
       <button
         type="button"

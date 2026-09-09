@@ -1,7 +1,7 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z } from "astro:content";
 
 const blog = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -13,7 +13,7 @@ const blog = defineCollection({
 });
 
 const projects = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -49,13 +49,13 @@ const projects = defineCollection({
     // project ever ships an empty or invented diagram.
     architecture: z
       .object({
-        title: z.string().default('Arquitetura'),
+        title: z.string().default("Architecture"),
         hint: z.string().optional(),
         nodes: z.array(
           z.object({
             id: z.string(),
             label: z.string(),
-            kind: z.enum(['entry', 'service', 'data', 'external']),
+            kind: z.enum(["entry", "service", "data", "external"]),
             subtitle: z.string().optional(),
             x: z.number(),
             y: z.number(),

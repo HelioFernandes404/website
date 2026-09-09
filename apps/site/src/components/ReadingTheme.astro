@@ -1,0 +1,53 @@
+---
+import { READING_THEME_STORAGE_KEY } from "../utils/blog-reading.js";
+---
+
+<script
+  is:inline
+  define:vars={{
+    readingThemeStorageKey: READING_THEME_STORAGE_KEY,
+    readingThemeColorDark: "#121212",
+    readingThemeColorLight: "#f5f4ef",
+  }}
+>
+  const normalizeReadingThemePreference = (value) => {
+    if (value === "light" || value === "dark" || value === "system") {
+      return value;
+    }
+
+    return "system";
+  };
+
+  const resolveReadingTheme = (preference, systemPrefersDark) => {
+    const normalizedPreference = normalizeReadingThemePreference(preference);
+
+    if (normalizedPreference === "system") {
+      return systemPrefersDark ? "dark" : "light";
+    }
+
+    return normalizedPreference;
+  };
+
+  const root = document.documentElement;
+  const themeColorMeta = document.getElementById("theme-color-meta");
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  let storedPreference = "system";
+
+  try {
+    storedPreference = normalizeReadingThemePreference(
+      window.localStorage.getItem(readingThemeStorageKey),
+    );
+  } catch {
+    storedPreference = "system";
+  }
+
+  const activeTheme = resolveReadingTheme(storedPreference, mediaQuery.matches);
+
+  root.dataset.readingThemePreference = storedPreference;
+  root.dataset.readingThemeActive = activeTheme;
+
+  if (themeColorMeta instanceof HTMLMetaElement) {
+    themeColorMeta.content =
+      activeTheme === "dark" ? readingThemeColorDark : readingThemeColorLight;
+  }
+</script>

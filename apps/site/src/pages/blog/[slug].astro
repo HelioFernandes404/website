@@ -4,11 +4,33 @@ import BlogPostShell from "../../layouts/BlogPostShell.astro";
 import { stripLocalePrefix } from "../../i18n/utils";
 const lang = "en" as const;
 export async function getStaticPaths() {
-    const posts = (await getCollection("blog", ({ id }) => id.startsWith("en/"))).map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "en") })).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
-    return posts.map((post, index) => ({ params: { slug: post.slug }, props: { post, older: posts[index + 1] ?? null, newer: posts[index - 1] ?? null, alternateUrl: `/pt/blog/${post.slug}/` } }));
+  const posts = (await getCollection("blog", ({ id }) => id.startsWith("en/")))
+    .map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "en") }))
+    .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+  return posts.map((post, index) => ({
+    params: { slug: post.slug },
+    props: {
+      post,
+      older: posts[index + 1] ?? null,
+      newer: posts[index - 1] ?? null,
+    },
+  }));
 }
-interface Props { post: CollectionEntry<"blog">; older: CollectionEntry<"blog"> | null; newer: CollectionEntry<"blog"> | null; alternateUrl: string; }
-const { post, older, newer, alternateUrl } = Astro.props as Props;
+interface Props {
+  post: CollectionEntry<"blog">;
+  older: CollectionEntry<"blog"> | null;
+  newer: CollectionEntry<"blog"> | null;
+}
+const { post, older, newer } = Astro.props as Props;
 const { Content, headings } = await post.render();
 ---
-<BlogPostShell post={post} older={older} newer={newer} lang={lang} canonicalUrl={`https://heliosuns404.com/blog/${post.slug}/`} alternateUrl={alternateUrl} blogBaseUrl="/blog/" headings={headings}><Content /></BlogPostShell>
+
+<BlogPostShell
+  post={post}
+  older={older}
+  newer={newer}
+  lang={lang}
+  canonicalUrl={`https://heliosuns404.com/blog/${post.slug}/`}
+  blogBaseUrl="/blog/"
+  headings={headings}><Content /></BlogPostShell
+>

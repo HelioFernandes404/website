@@ -18,13 +18,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      i18n: {
-        defaultLocale: 'en',
-        locales: {
-          pt: 'pt-BR',
-          en: 'en-US',
-        },
-      },
+      filter: (page) => !new URL(page).pathname.startsWith('/pt/') && !new URL(page).pathname.startsWith('/404'),
     }),
     mdx(),
     react(),

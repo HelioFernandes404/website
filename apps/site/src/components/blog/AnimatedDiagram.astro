@@ -74,7 +74,7 @@ interface EdgeGeometry {
 }
 
 const TONE_STROKE: Record<string, string> = {
-  ok: "var(--color-brand-lime, #ccff00)",
+  ok: "var(--diagram-accent, #35685e)",
   danger: "#f87171",
   muted: "var(--diagram-muted, #9ca3af)",
 };
@@ -87,20 +87,42 @@ function anchorPoints(source: ScenarioNode, target: ScenarioNode) {
 
   if (Math.abs(dx) >= Math.abs(dy)) {
     return dx >= 0
-      ? { x1: source.x + NODE_W, y1: sourceCenter.y, x2: target.x, y2: targetCenter.y }
-      : { x1: source.x, y1: sourceCenter.y, x2: target.x + NODE_W, y2: targetCenter.y };
+      ? {
+          x1: source.x + NODE_W,
+          y1: sourceCenter.y,
+          x2: target.x,
+          y2: targetCenter.y,
+        }
+      : {
+          x1: source.x,
+          y1: sourceCenter.y,
+          x2: target.x + NODE_W,
+          y2: targetCenter.y,
+        };
   }
 
   return dy >= 0
-    ? { x1: sourceCenter.x, y1: source.y + NODE_H, x2: targetCenter.x, y2: target.y }
-    : { x1: sourceCenter.x, y1: source.y, x2: targetCenter.x, y2: target.y + NODE_H };
+    ? {
+        x1: sourceCenter.x,
+        y1: source.y + NODE_H,
+        x2: targetCenter.x,
+        y2: target.y,
+      }
+    : {
+        x1: sourceCenter.x,
+        y1: source.y,
+        x2: targetCenter.x,
+        y2: target.y + NODE_H,
+      };
 }
 
 const edgeGeometries: EdgeGeometry[] = scenario.edges.map((edge) => {
   const source = nodeById.get(edge.source);
   const target = nodeById.get(edge.target);
   if (!source || !target) {
-    throw new Error(`AnimatedDiagram: edge ${edge.id} references an unknown node`);
+    throw new Error(
+      `AnimatedDiagram: edge ${edge.id} references an unknown node`,
+    );
   }
 
   const { x1, y1, x2, y2 } = anchorPoints(source, target);
@@ -160,12 +182,20 @@ const canvasAriaLabel = isPortuguese
     <p class="animated-diagram-kicker">
       {isPortuguese ? "Diagrama de arquitetura" : "Architecture diagram"}
     </p>
-    <h2 id={`${scenario.id}-title`} class="animated-diagram-title">{copy.title}</h2>
+    <h2 id={`${scenario.id}-title`} class="animated-diagram-title">
+      {copy.title}
+    </h2>
     <p class="animated-diagram-summary">{copy.summary}</p>
   </header>
 
   <div class="animated-diagram-layout">
-    <div class="animated-diagram-canvas">
+    <div
+      class="animated-diagram-canvas"
+      role="region"
+      tabindex="0"
+      aria-label={canvasAriaLabel}
+      style={`--diagram-min-width: ${Math.max(640, viewBoxWidth * 0.9)}px`}
+    >
       <div class="animated-diagram-badge" aria-hidden="true">
         {isPortuguese ? "Diagrama animado" : "Animated diagram"}
       </div>
@@ -176,89 +206,144 @@ const canvasAriaLabel = isPortuguese
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          {Object.entries(TONE_STROKE).map(([tone, color]) => (
-            <marker
-              id={`${scenario.id}-arrow-${tone}`}
-              viewBox="0 0 10 10"
-              refX="8"
-              refY="5"
-              markerWidth="7"
-              markerHeight="7"
-              orient="auto-start-reverse"
-            >
-              <path d="M 0 0 L 10 5 L 0 10 z" fill={color} />
-            </marker>
-          ))}
+          {
+            Object.entries(TONE_STROKE).map(([tone, color]) => (
+              <marker
+                id={`${scenario.id}-arrow-${tone}`}
+                viewBox="0 0 10 10"
+                refX="8"
+                refY="5"
+                markerWidth="7"
+                markerHeight="7"
+                orient="auto-start-reverse"
+              >
+                <path d="M 0 0 L 10 5 L 0 10 z" fill={color} />
+              </marker>
+            ))
+          }
         </defs>
 
-        {edgeGeometries.map(({ edge, x1, y1, x2, y2, midX, midY, stroke, dash, opacity, moving }) => {
-          const tone = edge.tone ?? "ok";
-          const markerTone = edge.active === false ? "muted" : tone === "danger" ? "danger" : tone === "muted" ? "muted" : "ok";
-          return (
-            <g class="animated-diagram-edge">
-              <path
-                d={`M ${x1} ${y1} L ${x2} ${y2}`}
-                fill="none"
-                stroke={stroke}
-                stroke-width="2"
-                stroke-opacity={opacity}
-                stroke-dasharray={dash === "0" ? undefined : dash}
-                marker-end={`url(#${scenario.id}-arrow-${markerTone})`}
-                class={moving ? "animated-diagram-edge-path animated-diagram-edge-path--flow" : "animated-diagram-edge-path"}
-              />
-              {edge.label && (
-                <g class="animated-diagram-edge-label">
-                  <rect
-                    x={midX - (edge.label.length * 3 + 6)}
-                    y={midY - 10}
-                    width={edge.label.length * 6 + 12}
-                    height="16"
-                    rx="4"
-                    class="animated-diagram-edge-label-bg"
+        {
+          edgeGeometries.map(
+            ({
+              edge,
+              x1,
+              y1,
+              x2,
+              y2,
+              midX,
+              midY,
+              stroke,
+              dash,
+              opacity,
+              moving,
+            }) => {
+              const tone = edge.tone ?? "ok";
+              const markerTone =
+                edge.active === false
+                  ? "muted"
+                  : tone === "danger"
+                    ? "danger"
+                    : tone === "muted"
+                      ? "muted"
+                      : "ok";
+              return (
+                <g class="animated-diagram-edge">
+                  <path
+                    d={`M ${x1} ${y1} L ${x2} ${y2}`}
+                    fill="none"
+                    stroke={stroke}
+                    stroke-width="2"
+                    stroke-opacity={opacity}
+                    stroke-dasharray={dash === "0" ? undefined : dash}
+                    marker-end={`url(#${scenario.id}-arrow-${markerTone})`}
+                    class={
+                      moving
+                        ? "animated-diagram-edge-path animated-diagram-edge-path--flow"
+                        : "animated-diagram-edge-path"
+                    }
                   />
-                  <text x={midX} y={midY + 2} text-anchor="middle" class="animated-diagram-edge-label-text">
-                    {edge.label}
-                  </text>
+                  {edge.label && (
+                    <g class="animated-diagram-edge-label">
+                      <rect
+                        x={midX - (edge.label.length * 3 + 6)}
+                        y={midY - 10}
+                        width={edge.label.length * 6 + 12}
+                        height="16"
+                        rx="4"
+                        class="animated-diagram-edge-label-bg"
+                      />
+                      <text
+                        x={midX}
+                        y={midY + 2}
+                        text-anchor="middle"
+                        class="animated-diagram-edge-label-text"
+                      >
+                        {edge.label}
+                      </text>
+                    </g>
+                  )}
                 </g>
-              )}
-            </g>
-          );
-        })}
+              );
+            },
+          )
+        }
 
-        {scenario.nodes.map((node) => {
-          const nodeCopy = copy.nodes[node.id];
-          return (
-            <g class="animated-diagram-node" data-kind={node.kind}>
-              <rect
-                x={node.x}
-                y={node.y}
-                width={NODE_W}
-                height={NODE_H}
-                rx="12"
-                class="animated-diagram-node-box"
-              />
-              <text x={node.x + 14} y={node.y + 26} class="animated-diagram-node-label">
-                {nodeCopy.label}
-              </text>
-              {nodeCopy.detail && (
-                <text x={node.x + 14} y={node.y + 44} class="animated-diagram-node-detail">
-                  {nodeCopy.detail}
+        {
+          scenario.nodes.map((node) => {
+            const nodeCopy = copy.nodes[node.id];
+            return (
+              <g class="animated-diagram-node" data-kind={node.kind}>
+                <rect
+                  x={node.x}
+                  y={node.y}
+                  width={NODE_W}
+                  height={NODE_H}
+                  rx="12"
+                  class="animated-diagram-node-box"
+                />
+                <text
+                  x={node.x + 14}
+                  y={node.y + 26}
+                  class="animated-diagram-node-label"
+                >
+                  {nodeCopy.label}
                 </text>
-              )}
-            </g>
-          );
-        })}
+                {nodeCopy.detail && (
+                  <text
+                    x={node.x + 14}
+                    y={node.y + 44}
+                    class="animated-diagram-node-detail"
+                  >
+                    {nodeCopy.detail}
+                  </text>
+                )}
+              </g>
+            );
+          })
+        }
       </svg>
     </div>
+    <p class="animated-diagram-mobile-hint">
+      {
+        isPortuguese
+          ? "Deslize horizontalmente para explorar."
+          : "Scroll horizontally to explore the diagram."
+      }
+    </p>
 
     <div class="animated-diagram-notes">
-      {copy.steps.map((step, index) => (
-        <article class="animated-diagram-note">
-          <p class="animated-diagram-note-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</p>
-          <h3 class="animated-diagram-note-title">{step.title}</h3>
-          <p class="animated-diagram-note-body">{step.body}</p>
-        </article>
-      ))}
+      {
+        copy.steps.map((step, index) => (
+          <article class="animated-diagram-note">
+            <p class="animated-diagram-note-index" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </p>
+            <h3 class="animated-diagram-note-title">{step.title}</h3>
+            <p class="animated-diagram-note-body">{step.body}</p>
+          </article>
+        ))
+      }
     </div>
   </div>
 
@@ -318,6 +403,10 @@ const canvasAriaLabel = isPortuguese
       display: block;
     }
 
+    .animated-diagram-mobile-hint {
+      display: none;
+    }
+
     .animated-diagram-badge {
       position: absolute;
       z-index: 2;
@@ -326,7 +415,11 @@ const canvasAriaLabel = isPortuguese
       border: 1px solid var(--diagram-border, #3f3f46);
       border-radius: 999px;
       padding: 7px 11px;
-      background: color-mix(in srgb, var(--diagram-surface, #161616) 88%, transparent);
+      background: color-mix(
+        in srgb,
+        var(--diagram-surface, #161616) 88%,
+        transparent
+      );
       color: var(--diagram-text, #f3f4f6);
       font-family: var(--font-family-mono, monospace);
       font-size: 11px;
@@ -334,7 +427,7 @@ const canvasAriaLabel = isPortuguese
     }
 
     .animated-diagram-node-box {
-      stroke: var(--color-brand-lime, #ccff00);
+      stroke: var(--diagram-accent, #35685e);
       stroke-width: 1;
       fill: var(--diagram-node, #0a0a0a);
     }
@@ -409,7 +502,20 @@ const canvasAriaLabel = isPortuguese
 
     @media (max-width: 720px) {
       .animated-diagram-canvas {
-        height: 280px;
+        height: auto;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+      }
+      .animated-diagram-canvas svg {
+        width: var(--diagram-min-width);
+        max-width: none;
+        height: auto;
+      }
+      .animated-diagram-mobile-hint {
+        display: block;
+        margin: -18px 0 0;
+        font-size: 11px;
+        color: var(--diagram-muted, #5b6669);
       }
     }
   </style>

@@ -14,10 +14,14 @@ const bioParagraphs = profile.bio
   .filter(Boolean);
 
 if (bioParagraphs.length < 2) {
-  bioParagraphs.push("I build practical systems with strong operations and measurable outcomes.");
+  bioParagraphs.push(
+    "I build practical systems with strong operations and measurable outcomes.",
+  );
 }
 
-const mailUrl = profile.links.find((link) => link.url.startsWith("mailto:"))?.url;
+const mailUrl = profile.links.find((link) =>
+  link.url.startsWith("mailto:"),
+)?.url;
 const sameAs = profile.links
   .map((link) => link.url)
   .filter((url) => /^https?:\/\//.test(url));
@@ -65,8 +69,10 @@ const getLinkMeta = (link: ProfileLink) => {
   if (link.url.startsWith("mailto:")) {
     return {
       tag: "Contact",
-      projectDescription: "Direct communication for freelance and collaboration opportunities.",
-      resourceDescription: "Email channel for proposals, consulting and project discussions.",
+      projectDescription:
+        "Get in touch about engineering roles, technical projects, and collaboration.",
+      resourceDescription:
+        "Get in touch about a role, a project, or a reliability challenge.",
     };
   }
 
@@ -89,7 +95,8 @@ const getLinkMeta = (link: ProfileLink) => {
   if (link.primary || /portfolio/i.test(link.label)) {
     return {
       tag: "Project",
-      projectDescription: "Main portfolio with selected projects and service overview.",
+      projectDescription:
+        "Main portfolio with selected projects and service overview.",
       resourceDescription: "Primary destination with detailed project context.",
     };
   }
@@ -102,9 +109,10 @@ const getLinkMeta = (link: ProfileLink) => {
 };
 
 const projectLinks = profile.links.filter(
-  (link) => link.primary || /portfolio|github/i.test(link.label)
+  (link) => link.primary || /portfolio|github/i.test(link.label),
 );
-const projects = projectLinks.length > 0 ? projectLinks : profile.links.slice(0, 2);
+const projects =
+  projectLinks.length > 0 ? projectLinks : profile.links.slice(0, 2);
 const projectIds = new Set(projects.map((link) => link.id));
 const resources = profile.links.filter((link) => !projectIds.has(link.id));
 
@@ -112,7 +120,7 @@ const websiteBlogUrl = getWebsiteBlogUrl();
 ---
 
 <BaseLayout
-  title={`${profile.name} | Software Engineer, DevOps and AI in Production`}
+  title={`${profile.name} | SRE, DevOps & Software Engineering`}
   description={description}
   image={profile.image}
   imageAlt={`${profile.name} profile photo`}
@@ -126,16 +134,20 @@ const websiteBlogUrl = getWebsiteBlogUrl();
         class="profile-portrait"
         src={profile.image}
         alt={`${profile.name} profile photo`}
-        width="256"
-        height="256"
+        width="768"
+        height="960"
         loading="eager"
         decoding="async"
       />
-      <span class="profile-status"><span aria-hidden="true"></span>Available for projects</span>
+      <span class="profile-status"
+        ><span aria-hidden="true"></span>Software → SRE & DevOps</span
+      >
     </div>
 
     <div class="intro-block">
-      <p class="profile-kicker">HELIO / SOFTWARE ENGINEERING</p>
+      <p class="profile-kicker">
+        SOFTWARE THINKING / PRODUCTION RESPONSIBILITY
+      </p>
       <h1>{profile.name}</h1>
       <p class="intro-subtitle">{profile.role}</p>
       {
@@ -144,8 +156,19 @@ const websiteBlogUrl = getWebsiteBlogUrl();
         ))
       }
       <div class="profile-actions">
-        {mailUrl && <a class="profile-action profile-action-primary" href={mailUrl}>Start a conversation <span aria-hidden="true">-&gt;</span></a>}
-        <a class="profile-action" href="https://heliosuns404.com">View portfolio <span aria-hidden="true">-&gt;</span></a>
+        {
+          mailUrl && (
+            <a
+              class="profile-action profile-action-primary"
+              href="https://heliosuns404.com/#contact"
+            >
+              Start a conversation <span aria-hidden="true">-&gt;</span>
+            </a>
+          )
+        }
+        <a class="profile-action" href="https://heliosuns404.com"
+          >View portfolio <span aria-hidden="true">-&gt;</span></a
+        >
       </div>
     </div>
   </section>
@@ -165,7 +188,9 @@ const websiteBlogUrl = getWebsiteBlogUrl();
                 href={link.url}
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
-                aria-label={isExternal ? `${link.label} (opens in a new tab)` : link.label}
+                aria-label={
+                  isExternal ? `${link.label} (opens in a new tab)` : link.label
+                }
               >
                 <span class="entry-top">
                   <span class="entry-title-wrap">
@@ -176,7 +201,9 @@ const websiteBlogUrl = getWebsiteBlogUrl();
                   </span>
                   <span class="entry-actions">
                     <span class="entry-tag">{meta.tag}</span>
-                    <span class="entry-arrow" aria-hidden="true">↗</span>
+                    <span class="entry-arrow" aria-hidden="true">
+                      ↗
+                    </span>
                   </span>
                 </span>
                 <span class="entry-description">{meta.projectDescription}</span>
@@ -188,12 +215,12 @@ const websiteBlogUrl = getWebsiteBlogUrl();
     </ul>
   </section>
 
-  {resources.length > 0 && (
-    <section id="resources" class="content-block">
-      <h2>Resources</h2>
-      <ul class="entry-list">
-        {
-          resources.map((link) => {
+  {
+    resources.length > 0 && (
+      <section id="resources" class="content-block">
+        <h2>Resources</h2>
+        <ul class="entry-list">
+          {resources.map((link) => {
             const isExternal = /^https?:\/\//.test(link.url);
             const meta = getLinkMeta(link);
 
@@ -204,7 +231,11 @@ const websiteBlogUrl = getWebsiteBlogUrl();
                   href={link.url}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
-                  aria-label={isExternal ? `${link.label} (opens in a new tab)` : link.label}
+                  aria-label={
+                    isExternal
+                      ? `${link.label} (opens in a new tab)`
+                      : link.label
+                  }
                 >
                   <span class="entry-top">
                     <span class="entry-title-wrap">
@@ -213,20 +244,24 @@ const websiteBlogUrl = getWebsiteBlogUrl();
                       </span>
                       <span class="entry-title">{link.label}</span>
                     </span>
-                  <span class="entry-actions">
-                    <span class="entry-tag">{meta.tag}</span>
-                    <span class="entry-arrow" aria-hidden="true">↗</span>
+                    <span class="entry-actions">
+                      <span class="entry-tag">{meta.tag}</span>
+                      <span class="entry-arrow" aria-hidden="true">
+                        ↗
+                      </span>
+                    </span>
                   </span>
+                  <span class="entry-description">
+                    {meta.resourceDescription}
                   </span>
-                  <span class="entry-description">{meta.resourceDescription}</span>
                 </a>
               </li>
             );
-          })
-        }
-      </ul>
-    </section>
-  )}
+          })}
+        </ul>
+      </section>
+    )
+  }
 
   <section id="writing" class="content-block">
     <h2>Writing</h2>
@@ -242,8 +277,8 @@ const websiteBlogUrl = getWebsiteBlogUrl();
         </span>
       </span>
       <span class="entry-description">
-        Technical articles now live on the main website, with canonical URLs on
-        heliosuns404.com/blog.
+        Investigations and lessons from working on reliability, observability,
+        and software architecture.
       </span>
       <span class="entry-meta">Read the full archive on the website</span>
     </a>

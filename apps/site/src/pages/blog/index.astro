@@ -1,168 +1,80 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import { useTranslations, stripLocalePrefix, pluralize } from "../../i18n/utils";
-
-const lang = "en" as const;
-const t = useTranslations(lang);
-
-const posts = (await getCollection("blog", ({ id }) => id.startsWith("en/")))
-    .map((post) => ({ ...post, slug: stripLocalePrefix(post.slug, "en") }))
-    .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
-
+import ContactCallout from "../../components/ContactCallout.astro";
+import { stripLocalePrefix } from "../../i18n/utils";
+const posts = (
+  await getCollection("blog", ({ id }) => id.startsWith("en/"))
+).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
-    dateStyle: "long",
-    timeZone: "UTC",
+  dateStyle: "medium",
+  timeZone: "UTC",
 });
-
-const readingTime = (body: string) =>
-    Math.max(1, Math.round(body.trim().split(/\s+/).length / 200));
-
-const [featured, ...rest] = posts;
-
-const title = "Blog | Hélio Fernandes";
-const description =
-    "Posts about DevOps, scalable infrastructure, Kubernetes, CI/CD, and high-performance engineering.";
-const ogImage = "/og-image.webp";
-const canonicalUrl = "https://heliosuns404.com/blog/";
 ---
 
 <Layout
-    title={title}
-    description={description}
-    ogImage={ogImage}
-    canonicalUrl={canonicalUrl}
-    lang={lang}
-    alternateUrl="/pt/blog/"
+  title="Writing on SRE, DevOps & Architecture — Hélio Fernandes"
+  description="Field notes on reliability, observability, software architecture, and delivery. Real investigations, technical decisions, and lessons from production."
+  canonicalUrl="https://heliosuns404.com/blog/"
 >
-    <main class="min-h-screen">
-        <section
-            class="relative overflow-hidden border-b border-gray-100 bg-gray-50/70"
-        >
-            <div
-                class="absolute -right-20 top-1/2 hidden h-80 w-80 -translate-y-1/2 rounded-full bg-brand-lime/10 blur-3xl lg:block"
-            >
-            </div>
-
-            <div class="mx-auto max-w-5xl px-6 py-16 md:py-20">
-                <span
-                    class="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-brand-gray"
-                >
-                    <span class="h-px w-8 bg-brand-lime"></span>
-                    {t("blogList.eyebrow")}
-                </span>
-                <h1
-                    class="mt-4 text-4xl font-display font-bold tracking-tight lg:text-5xl"
-                >
-                    {t("blogList.title")}
-                </h1>
-                <p class="mt-4 max-w-2xl text-lg text-gray-500">
-                    {t("blogList.description")}
-                </p>
-                {
-                    posts.length > 0 && (
-                        <p class="mt-6 font-mono text-xs uppercase tracking-wide text-gray-400">
-                            {posts.length}{" "}
-                            {pluralize(posts.length, lang, "blogList.countOne", "blogList.countOther")}
-                        </p>
-                    )
-                }
-            </div>
-        </section>
-
-        <section class="mx-auto max-w-5xl px-6 py-16 md:py-20">
-            {
-                posts.length === 0 ? (
-                    <p class="rounded-xl border border-gray-200 bg-white p-6 text-gray-600 shadow-sm">
-                        {t("blogList.empty")}
-                    </p>
-                ) : (
-                    <div class="space-y-12">
-                        <a
-                            href={`/blog/${featured.slug}/`}
-                            class="blog-featured-card hover-trigger group relative flex flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white p-8 pt-16 shadow-sm transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-brand-lime hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime md:p-10"
-                        >
-                            <span class="absolute right-6 top-6 rounded-full bg-brand-lime px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wide text-brand-black">
-                                {t("blogList.featuredBadge")}
-                            </span>
-                            <div class="flex flex-wrap items-center gap-3 font-mono text-xs uppercase tracking-wide text-gray-500">
-                                <time datetime={featured.data.pubDate.toISOString()}>
-                                    {dateFormatter.format(featured.data.pubDate)}
-                                </time>
-                                <span class="rounded-full border border-brand-lime bg-brand-lime/10 px-2 py-1 text-[11px] text-gray-700">
-                                    {featured.data.category}
-                                </span>
-                                <span aria-hidden="true">•</span>
-                                <span>{readingTime(featured.body)} {t("blogList.minRead")}</span>
-                            </div>
-                            <h2 class="mt-4 max-w-3xl text-3xl font-display font-bold tracking-tight transition-colors group-hover:text-black group-focus-within:text-black lg:text-4xl">
-                                {featured.data.title}
-                            </h2>
-                            <p class="mt-4 max-w-2xl text-lg text-gray-600">
-                                {featured.data.lead ?? featured.data.description}
-                            </p>
-                            <span class="mt-8 inline-flex items-center gap-2 font-medium text-brand-black">
-                                {t("blogList.readArticle")}
-                                <span
-                                    aria-hidden="true"
-                                    class="transition-transform duration-300 group-hover:translate-x-1 group-focus-within:translate-x-1"
-                                >
-                                    -&gt;
-                                </span>
-                            </span>
-                        </a>
-
-                        {rest.length > 0 && (
-                            <ul class="grid gap-6 md:grid-cols-2">
-                                {rest.map((post) => (
-                                    <li class="h-full">
-                                        <article class="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-brand-lime hover:shadow-xl focus-within:-translate-y-1 focus-within:border-brand-lime focus-within:shadow-xl">
-                                            <div class="flex flex-wrap items-center gap-3 font-mono text-xs uppercase tracking-wide text-gray-500">
-                                                <time datetime={post.data.pubDate.toISOString()}>
-                                                    {dateFormatter.format(post.data.pubDate)}
-                                                </time>
-                                                <span class="rounded-full border border-gray-200 px-2 py-1 text-[11px] text-gray-600">
-                                                    {post.data.category}
-                                                </span>
-                                            </div>
-                                            <h2 class="mt-3 text-xl font-semibold tracking-tight">
-                                                <a
-                                                    class="hover-trigger transition-colors group-hover:text-black group-focus-within:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-lime"
-                                                    href={`/blog/${post.slug}/`}
-                                                >
-                                                    <span class="absolute inset-0" aria-hidden="true" />
-                                                    {post.data.title}
-                                                </a>
-                                            </h2>
-                                            <p class="mt-3 line-clamp-3 text-gray-600">
-                                                {post.data.description}
-                                            </p>
-                                            {post.data.tags.length > 0 && (
-                                                <ul class="mt-4 flex flex-wrap gap-2">
-                                                    {post.data.tags.slice(0, 3).map((tag) => (
-                                                        <li class="rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600">
-                                                            {tag}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                            <div class="mt-auto flex items-center justify-between pt-6 font-mono text-xs uppercase tracking-wide text-gray-400">
-                                                <span>{readingTime(post.body)} {t("blogList.minRead")}</span>
-                                                <span
-                                                    aria-hidden="true"
-                                                    class="text-brand-black transition-transform duration-300 group-hover:translate-x-1 group-focus-within:translate-x-1"
-                                                >
-                                                    -&gt;
-                                                </span>
-                                            </div>
-                                        </article>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                )
-            }
-        </section>
-    </main>
+  <main>
+    <section class="page-hero">
+      <div class="wrap">
+        <p class="eyebrow"><a href="/">Home</a> / Field notes</p><h1>
+          Lessons from<br />building and operating.
+        </h1><p class="page-description">
+          Investigations, architecture decisions, and practical notes from
+          working with real systems. Written to make the reasoning useful to
+          someone else.
+        </p>
+      </div>
+    </section><section class="wrap blog-archive" aria-label="Articles">
+      <div class="writing-list">
+        {
+          posts.map((post) => (
+            <article>
+              <a href={`/blog/${stripLocalePrefix(post.slug, "en")}/`}>
+                <>
+                  <div class="writing-meta">
+                    <>
+                      <span>{post.data.category}</span>
+                      <time datetime={post.data.pubDate.toISOString()}>
+                        {dateFormatter.format(post.data.pubDate)}
+                      </time>
+                      <span>
+                        {Math.max(
+                          1,
+                          Math.round(
+                            post.body.trim().split(/\s+/).length / 200,
+                          ),
+                        )}{" "}
+                        min read
+                      </span>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      <h2>{post.data.title}</h2>
+                      <p>{post.data.description}</p>
+                      <ul class="tech-tags" aria-label="Topics">
+                        {post.data.tags.map((tag) => (
+                          <li>{tag}</li>
+                        ))}
+                      </ul>
+                    </>
+                  </div>
+                  <span class="circle-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </section><ContactCallout
+      title="Have a related problem to work through?"
+      description="I'd be glad to hear about the system you're building or the challenge you're investigating."
+    />
+  </main>
 </Layout>

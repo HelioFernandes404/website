@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+* Editable SRE/DevOps professional profile, reusable project/contact components, a validated contact form with optional direct delivery, an English social card, and a custom 404 page.
+* Portfolio audit, content provenance, screenshots, contact setup notes, and ADR-0010 for the English contact experience.
+
 * Monorepo workspace structure with `apps/site`, `apps/hub`, and `apps/tools`.
 * Root `pnpm` workspace files: `package.json`, `pnpm-workspace.yaml`, and unified `pnpm-lock.yaml`.
 * ADR documenting the monorepo migration decision at `docs/adrs/0001-adopt-pnpm-monorepo-for-three-astro-sites.md`.
@@ -24,6 +27,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 * Optional primary and secondary CTA labels for `apps/site` project entries in `apps/site/src/content/config.ts`.
 
 ### Changed
+
+* Redesigned the portfolio, project pages, and writing archive around software engineering experience and current SRE/DevOps work; aligned the link hub and preserved interactive article features.
+* Redirected legacy Portuguese pages to English equivalents while retaining source content and existing URL compatibility.
+* Reused local fonts and the optimized portrait in the hub; improved diagram readability on mobile.
 
 * Imported project histories into app folders using `git subtree`.
 * Aligned Astro site URLs for deployed domains:

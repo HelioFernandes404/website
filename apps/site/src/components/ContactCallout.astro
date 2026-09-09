@@ -1,0 +1,17 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "Working on a similar challenge?",
+  description = "Tell me about your system, your team, and what you want to improve.",
+} = Astro.props;
+---
+
+<aside class="contact-callout wrap" aria-label="Get in touch">
+  <div><h2>{title}</h2><p>{description}</p></div>
+  <a href="/#contact" class="button button-primary"
+    >Let's talk <span aria-hidden="true">↗</span></a
+  >
+</aside>

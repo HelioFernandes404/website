@@ -5,10 +5,10 @@ export default {
     extend: {
       colors: {
         brand: {
-          black: "#0a0a0a",
+          black: "#18313e",
           dark: "#121212",
-          gray: "#888888",
-          lime: "#ccff00",
+          gray: "#5b6669",
+          lime: "#90b8a1",
         },
         neutral: {
           white: "#ffffff",
@@ -37,8 +37,8 @@ export default {
         overlay: {
           black05: "rgba(0, 0, 0, 0.05)",
           black30: "rgba(0, 0, 0, 0.3)",
-          brand15: "rgba(204, 255, 0, 0.15)",
-          brand60: "rgba(204, 255, 0, 0.6)",
+          brand15: "rgba(144, 184, 161, 0.15)",
+          brand60: "rgba(144, 184, 161, 0.6)",
           ink20: "rgba(10, 10, 10, 0.2)",
           white00: "rgba(255, 255, 255, 0)",
         },

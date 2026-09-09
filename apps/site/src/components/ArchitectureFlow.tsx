@@ -45,27 +45,37 @@ interface Props {
   lang?: FlowLanguage;
 }
 
-const LIME = "#ccff00";
+const ACCENT = "#b1d0b8";
 
 const KIND_STYLE: Record<ArchKind, { border: string; badge: string }> = {
-  entry: { border: LIME, badge: LIME },
+  entry: { border: ACCENT, badge: ACCENT },
   service: { border: "#374151", badge: "#9ca3af" },
   data: { border: "#4b5563", badge: "#9ca3af" },
-  external: { border: "#6b7280", badge: "#6b7280" },
+  external: { border: "#a6b4bd", badge: "#a6b4bd" },
 };
 
 const FLOW_COPY = {
   en: {
-    kinds: { entry: "entry", service: "service", data: "data", external: "external" },
+    kinds: {
+      entry: "entry",
+      service: "service",
+      data: "data",
+      external: "external",
+    },
     mobileHint: "Drag to explore the diagram.",
     defaultHint: "Click a component to see the decision behind it.",
     decision: "Decision",
     tradeoff: "Trade-off",
-    reading: "// reading",
-    viewDecision: "// view decision",
+    reading: "Selected",
+    viewDecision: "View decision",
   },
   pt: {
-    kinds: { entry: "entrada", service: "serviço", data: "dados", external: "externo" },
+    kinds: {
+      entry: "entrada",
+      service: "serviço",
+      data: "dados",
+      external: "externo",
+    },
     mobileHint: "Arraste para explorar o diagrama.",
     defaultHint: "Clique em um componente para ver a decisão por trás dele.",
     decision: "Decisão",
@@ -100,7 +110,11 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
       role={interactive ? "button" : undefined}
       tabIndex={interactive ? 0 : undefined}
       aria-pressed={interactive ? data.isSelected : undefined}
-      aria-label={interactive ? `${data.label}: ${copy.viewDecision.replace("// ", "")}` : data.label}
+      aria-label={
+        interactive
+          ? `${data.label}: ${copy.viewDecision.replace("// ", "")}`
+          : data.label
+      }
       onClick={interactive ? () => data.onPick(data.id) : undefined}
       onKeyDown={
         interactive
@@ -115,10 +129,10 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
       style={{
         minWidth: 176,
         borderRadius: 12,
-        border: `1px solid ${data.isSelected ? LIME : style.border}`,
+        border: `1px solid ${data.isSelected ? ACCENT : style.border}`,
         background: data.isSelected ? "#161b22" : "#0a0a0a",
         boxShadow: data.isSelected
-          ? `0 0 0 3px rgba(204,255,0,0.25), 0 8px 24px rgba(0,0,0,0.5)`
+          ? `0 0 0 3px rgba(177,208,184,0.25), 0 8px 24px rgba(0,0,0,0.5)`
           : "0 1px 2px rgba(0,0,0,0.4)",
         padding: "12px 14px",
         cursor: interactive ? "pointer" : "default",
@@ -127,7 +141,11 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
           "border-color 200ms, box-shadow 200ms, background-color 200ms, opacity 200ms",
       }}
     >
-      <Handle type="target" position={Position.Left} style={{ background: "#4b5563" }} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ background: "#4b5563" }}
+      />
 
       <div
         style={{
@@ -140,11 +158,20 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
       >
         {copy.kinds[data.kind]}
       </div>
-      <div style={{ marginTop: 4, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>
+      <div
+        style={{
+          marginTop: 4,
+          fontWeight: 600,
+          fontSize: 14,
+          color: "#ffffff",
+        }}
+      >
         {data.label}
       </div>
       {data.subtitle && (
-        <div style={{ marginTop: 2, fontSize: 12, color: "#9ca3af" }}>{data.subtitle}</div>
+        <div style={{ marginTop: 2, fontSize: 12, color: "#9ca3af" }}>
+          {data.subtitle}
+        </div>
       )}
       {interactive && (
         <div
@@ -152,21 +179,30 @@ function ArchNode({ data }: NodeProps<ArchFlowNode>) {
             marginTop: 8,
             fontFamily: "JetBrains Mono, monospace",
             fontSize: 10,
-            color: data.isSelected ? LIME : "#6b7280",
+            color: data.isSelected ? ACCENT : "#a6b4bd",
           }}
         >
           {data.isSelected ? copy.reading : copy.viewDecision}
         </div>
       )}
 
-      <Handle type="source" position={Position.Right} style={{ background: "#4b5563" }} />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{ background: "#4b5563" }}
+      />
     </div>
   );
 }
 
 const nodeTypes = { arch: ArchNode };
 
-export default function ArchitectureFlow({ nodes, edges, hint, lang = "en" }: Props) {
+export default function ArchitectureFlow({
+  nodes,
+  edges,
+  hint,
+  lang = "en",
+}: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const copy = FLOW_COPY[lang];
 
@@ -208,7 +244,8 @@ export default function ArchitectureFlow({ nodes, edges, hint, lang = "en" }: Pr
     () =>
       edges.map((edge) => {
         const touchesSelection =
-          Boolean(selectedId) && (edge.from === selectedId || edge.to === selectedId);
+          Boolean(selectedId) &&
+          (edge.from === selectedId || edge.to === selectedId);
         const dimmed = Boolean(selectedId) && !touchesSelection;
 
         return {
@@ -218,13 +255,13 @@ export default function ArchitectureFlow({ nodes, edges, hint, lang = "en" }: Pr
           label: edge.label,
           animated: edge.async || touchesSelection,
           style: {
-            stroke: touchesSelection ? LIME : "#4b5563",
+            stroke: touchesSelection ? ACCENT : "#4b5563",
             strokeWidth: touchesSelection ? 2 : 1.5,
             opacity: dimmed ? 0.2 : 1,
             transition: "stroke 200ms, opacity 200ms",
           },
           labelStyle: {
-            fill: touchesSelection ? LIME : "#9ca3af",
+            fill: touchesSelection ? ACCENT : "#9ca3af",
             fontSize: 11,
             fontFamily: "JetBrains Mono, monospace",
             opacity: dimmed ? 0.2 : 1,
@@ -238,12 +275,18 @@ export default function ArchitectureFlow({ nodes, edges, hint, lang = "en" }: Pr
   );
 
   const selected = nodes.find((node) => node.id === selectedId) ?? null;
-  const usedKinds = KIND_ORDER.filter((kind) => nodes.some((node) => node.kind === kind));
+  const usedKinds = KIND_ORDER.filter((kind) =>
+    nodes.some((node) => node.kind === kind),
+  );
 
   return (
     <div
       role="group"
-      aria-label={lang === "pt" ? "Diagrama de arquitetura interativo" : "Interactive architecture diagram"}
+      aria-label={
+        lang === "pt"
+          ? "Diagrama de arquitetura interativo"
+          : "Interactive architecture diagram"
+      }
     >
       <div
         style={{ height: 460 }}
@@ -265,7 +308,12 @@ export default function ArchitectureFlow({ nodes, edges, hint, lang = "en" }: Pr
           preventScrolling={false}
           panOnScroll={false}
         >
-          <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#262626" />
+          <Background
+            variant={BackgroundVariant.Dots}
+            gap={20}
+            size={1}
+            color="#262626"
+          />
           <Controls showInteractive={false} />
         </ReactFlow>
       </div>
@@ -283,13 +331,19 @@ export default function ArchitectureFlow({ nodes, edges, hint, lang = "en" }: Pr
             <span
               aria-hidden="true"
               className="inline-block h-2.5 w-2.5 rounded-sm border"
-              style={{ borderColor: KIND_STYLE[kind].border, background: "#0a0a0a" }}
+              style={{
+                borderColor: KIND_STYLE[kind].border,
+                background: "#0a0a0a",
+              }}
             />
             {copy.kinds[kind]}
           </span>
         ))}
         <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden="true" className="inline-block w-5 border-t border-dashed border-gray-500" />
+          <span
+            aria-hidden="true"
+            className="inline-block w-5 border-t border-dashed border-gray-500"
+          />
           {lang === "pt" ? "assíncrono" : "async"}
         </span>
       </div>
@@ -313,9 +367,7 @@ export default function ArchitectureFlow({ nodes, edges, hint, lang = "en" }: Pr
             )}
           </>
         ) : (
-          <p className="text-gray-500">
-            {hint ?? copy.defaultHint}
-          </p>
+          <p className="text-gray-500">{hint ?? copy.defaultHint}</p>
         )}
       </div>
     </div>

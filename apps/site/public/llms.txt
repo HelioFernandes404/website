@@ -1,10 +1,14 @@
-# Helio Fernandes
+# Hélio Fernandes
 
-> Software engineer focused on infrastructure, backend systems, and practical automation.
+> SRE and DevOps engineer with a software engineering background, working across reliable infrastructure, observability, and automated delivery.
 
 ## Website
 
-- [Homepage](https://heliosuns404.com/)
-- [Projects](https://heliosuns404.com/projects/)
-- [Blog](https://heliosuns404.com/blog/)
-- [Portuguese homepage](https://heliosuns404.com/pt/)
+- [Homepage and contact](https://heliosuns404.com/)
+- [Projects and case studies](https://heliosuns404.com/projects/)
+- [Technical writing](https://heliosuns404.com/blog/)
+- [Contact](https://heliosuns404.com/#contact)
+- [LinkedIn](https://www.linkedin.com/in/heliofernandes/)
+- [GitHub](https://github.com/HelioFernandes404)
+
+Legacy Portuguese routes redirect to the corresponding English page.

@@ -1,119 +1,129 @@
 ---
 import { htmlLang, type Lang } from "../i18n/ui";
+import { profile } from "../data/profile";
 
 interface Props {
-    title: string;
-    description: string;
-    ogImage?: string;
-    canonicalUrl?: string;
-    lang?: Lang;
-    alternateUrl?: string;
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  lang?: Lang;
+  alternateUrl?: string;
 }
 
 const {
-    title,
-    description,
-    ogImage = "/og-image.webp",
-    canonicalUrl,
-    lang = "en",
-    alternateUrl,
+  title,
+  description,
+  ogImage = "/og-portfolio.png",
+  canonicalUrl,
+  lang = "en",
+  alternateUrl,
 }: Props = Astro.props;
 
 const canonicalHref = canonicalUrl
-    ? new URL(canonicalUrl, Astro.url).href
-    : Astro.url.href;
-const ogImageHref = new URL(ogImage, Astro.url).href;
+  ? new URL(canonicalUrl, Astro.url).href
+  : new URL(Astro.url.pathname, Astro.site ?? "https://heliosuns404.com").href;
+const ogImageHref = new URL(ogImage, Astro.site ?? "https://heliosuns404.com")
+  .href;
 
 const alternateLang: Lang = lang === "en" ? "pt" : "en";
 const alternateHref = alternateUrl
-    ? new URL(alternateUrl, Astro.url).href
-    : undefined;
+  ? new URL(alternateUrl, Astro.url).href
+  : undefined;
 const defaultLangHref = lang === "en" ? canonicalHref : alternateHref;
 
 const ogLocaleMap: Record<Lang, string> = { pt: "pt_BR", en: "en_US" };
 
-const normalizedPathname = Astro.url.pathname
+const normalizedPathname =
+  Astro.url.pathname
     .replace(/^\/pt\//, "/")
     .replace(/^\/pt$/, "/")
     .replace(/\/+$/, "") || "/";
 const isHomeRoute = normalizedPathname === "/";
 const isBlogRoute =
-    normalizedPathname === "/blog" || normalizedPathname.startsWith("/blog/");
+  normalizedPathname === "/blog" || normalizedPathname.startsWith("/blog/");
 const isProjectRoute =
-    normalizedPathname === "/projetos" ||
-    normalizedPathname.startsWith("/projetos/") ||
-    normalizedPathname === "/projects" ||
-    normalizedPathname.startsWith("/projects/");
+  normalizedPathname === "/projetos" ||
+  normalizedPathname.startsWith("/projetos/") ||
+  normalizedPathname === "/projects" ||
+  normalizedPathname.startsWith("/projects/");
 
-const ogType = isBlogRoute ? "article" : "website";
+const isDetail = normalizedPathname.split("/").filter(Boolean).length > 1;
+const ogType = isBlogRoute && isDetail ? "article" : "website";
 
 let schema: Record<string, unknown> | null = null;
 
 if (isHomeRoute) {
-    schema = {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        name: "Hélio Fernandes",
-        url: "https://heliosuns404.com",
-        image: ogImageHref,
-        jobTitle: "Software Engineer",
-        description,
-        sameAs: [
-            "https://www.linkedin.com/in/heliofernandes/",
-            "https://github.com/HelioFernandes404",
-            "https://www.instagram.com/heliosuns404/",
-        ],
-        knowsAbout: [
-            "DevOps",
-            "Kubernetes",
-            "AWS",
-            "Azure",
-            "Terraform",
-            "CI/CD",
-            "Python",
-            "Node.js",
-            "Infrastructure as Code",
-        ],
-        worksFor: {
-            "@type": "Organization",
-            name: "Freelance",
-        },
-    };
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Hélio Fernandes",
+    url: "https://heliosuns404.com",
+    image: ogImageHref,
+    jobTitle: profile.role,
+    description,
+    sameAs: [
+      "https://www.linkedin.com/in/heliofernandes/",
+      "https://github.com/HelioFernandes404",
+      "https://www.instagram.com/heliosuns404/",
+    ],
+    knowsAbout: [
+      "DevOps",
+      "Kubernetes",
+      "AWS",
+      "Azure",
+      "Terraform",
+      "CI/CD",
+      "Python",
+      "Node.js",
+      "Infrastructure as Code",
+    ],
+    email: profile.email,
+  };
+} else if ((isBlogRoute || isProjectRoute) && !isDetail) {
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: title,
+    description,
+    url: canonicalHref,
+  };
 } else if (isBlogRoute) {
-    schema = {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        headline: title,
-        description,
-        image: ogImageHref,
-        mainEntityOfPage: canonicalHref,
-        author: {
-            "@type": "Person",
-            name: "Hélio Fernandes",
-        },
-        publisher: {
-            "@type": "Organization",
-            name: "Hélio Fernandes",
-        },
-    };
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    image: ogImageHref,
+    mainEntityOfPage: canonicalHref,
+    author: {
+      "@type": "Person",
+      name: "Hélio Fernandes",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Hélio Fernandes",
+    },
+  };
 } else if (isProjectRoute) {
-    schema = {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        name: title,
-        description,
-        url: canonicalHref,
-        image: ogImageHref,
-        applicationCategory: "DeveloperApplication",
-        operatingSystem: "Web",
-        creator: {
-            "@type": "Person",
-            name: "Hélio Fernandes",
-        },
-    };
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: title,
+    description,
+    url: canonicalHref,
+    image: ogImageHref,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Web",
+    creator: {
+      "@type": "Person",
+      name: "Hélio Fernandes",
+    },
+  };
 }
 ---
 
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta property="og:type" content={ogType} />
@@ -123,17 +133,37 @@ if (isHomeRoute) {
 <meta property="og:image" content={ogImageHref} />
 <meta property="og:image:alt" content={title} />
 <meta property="og:locale" content={ogLocaleMap[lang]} />
-{alternateHref && <meta property="og:locale:alternate" content={ogLocaleMap[alternateLang]} />}
+{
+  alternateHref && (
+    <meta property="og:locale:alternate" content={ogLocaleMap[alternateLang]} />
+  )
+}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageHref} />
 <link rel="canonical" href={canonicalHref} />
 <link rel="alternate" hreflang={htmlLang[lang]} href={canonicalHref} />
-{alternateHref && <link rel="alternate" hreflang={htmlLang[alternateLang]} href={alternateHref} />}
-{defaultLangHref && <link rel="alternate" hreflang="x-default" href={defaultLangHref} />}
 {
-    schema && (
-        <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
-    )
+  alternateHref && (
+    <link
+      rel="alternate"
+      hreflang={htmlLang[alternateLang]}
+      href={alternateHref}
+    />
+  )
+}
+{
+  defaultLangHref && (
+    <link rel="alternate" hreflang="x-default" href={defaultLangHref} />
+  )
+}
+{
+  schema && (
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(schema)}
+    />
+  )
 }
