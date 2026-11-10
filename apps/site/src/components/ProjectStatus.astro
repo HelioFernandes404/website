@@ -1,0 +1,167 @@
+---
+import { useTranslations } from "../i18n/utils";
+import type { Lang } from "../i18n/ui";
+
+interface Props {
+  endpoint: string;
+  lang?: Lang;
+  apps: string[];
+  slo?: number;
+}
+const { endpoint, lang = "en", apps, slo = 99.5 } = Astro.props;
+const t = useTranslations(lang);
+const strings = {
+  up: t("projectStatus.up"),
+  down: t("projectStatus.down"),
+  unknown: t("projectStatus.unknown"),
+  noData: t("projectStatus.noData"),
+  updated: t("projectStatus.updated"),
+  unavailable: t("projectStatus.unavailable"),
+};
+const base = endpoint.replace(/\/+$/, "");
+---
+
+<section
+  class="project-status"
+  aria-labelledby="project-status-title"
+  data-project-status
+  data-up-url={`${base}/up`}
+  data-avail-url={`${base}/availability_30d`}
+  data-lang={lang === "pt" ? "pt-BR" : "en-US"}
+  data-strings={JSON.stringify(strings)}
+>
+  <h2 id="project-status-title">{t("projectStatus.title")}</h2>
+  <p class="project-status-intro">{t("projectStatus.intro")}</p>
+  <ul class="project-status-list" aria-live="polite">
+    {
+      apps.map((app) => (
+        <li data-app={app}>
+          <span class="project-status-name">{app}</span>
+          <span class="project-status-now" data-now>
+            <span class="project-status-dot" aria-hidden="true" />
+            <span data-now-text>{t("projectStatus.loading")}</span>
+          </span>
+          <span class="project-status-avail">
+            <strong data-avail>-</strong>
+            <span>
+              {t("projectStatus.last30d")} · {t("projectStatus.target")} {slo.toFixed(1)}%
+            </span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="project-status-meta">
+    <span data-updated></span>
+    <span data-error hidden>{t("projectStatus.unavailable")}</span>
+  </p>
+  <p class="project-status-meta">{t("projectStatus.sloNote")}</p>
+</section>
+
+<script>
+  type Sample = { app: string; value: number; ts: number };
+
+  function parse(json: unknown): Sample[] {
+    const j = json as {
+      status?: string;
+      data?: { resultType?: string; result?: unknown };
+    };
+    if (
+      !j ||
+      j.status !== "success" ||
+      j.data?.resultType !== "vector" ||
+      !Array.isArray(j.data.result)
+    ) {
+      throw new Error("bad shape");
+    }
+    const out: Sample[] = [];
+    for (const item of j.data.result as Array<{
+      metric?: { app?: string };
+      value?: [number, string];
+    }>) {
+      const app = item?.metric?.app;
+      const ts = Number(item?.value?.[0]);
+      const value = Number(item?.value?.[1]);
+      if (typeof app !== "string" || !Number.isFinite(value) || !Number.isFinite(ts)) {
+        throw new Error("bad shape");
+      }
+      out.push({ app, value, ts });
+    }
+    return out;
+  }
+
+  async function getJson(url: string): Promise<unknown> {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 5000);
+    try {
+      const res = await fetch(url, {
+        signal: ctrl.signal,
+        headers: { accept: "application/json" },
+      });
+      if (!res.ok) throw new Error("http");
+      return await res.json();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function init(root: HTMLElement) {
+    const strings = JSON.parse(root.dataset.strings ?? "{}");
+    const locale = root.dataset.lang ?? "en-US";
+    const fail = () => {
+      root.querySelectorAll("[data-now-text]").forEach((el) => (el.textContent = "-"));
+      root.classList.add("is-unavailable");
+      root.querySelector<HTMLElement>("[data-error]")!.hidden = false;
+      root.querySelector<HTMLElement>("[data-updated]")!.hidden = true;
+    };
+    try {
+      const [up, avail] = await Promise.all([
+        getJson(root.dataset.upUrl!),
+        getJson(root.dataset.availUrl!),
+      ]);
+      const upS = parse(up);
+      const avS = parse(avail);
+      let latest = 0;
+      root.querySelectorAll<HTMLElement>("[data-app]").forEach((row) => {
+        const app = row.dataset.app!;
+        const u = upS.find((s) => s.app === app);
+        const a = avS.find((s) => s.app === app);
+        const dot = row.querySelector<HTMLElement>(".project-status-dot")!;
+        const now = row.querySelector<HTMLElement>("[data-now-text]")!;
+        if (u) {
+          const ok = u.value >= 1;
+          now.textContent = ok ? strings.up : strings.down;
+          dot.dataset.state = ok ? "up" : "down";
+          latest = Math.max(latest, u.ts);
+        } else {
+          now.textContent = strings.unknown;
+          dot.dataset.state = "unknown";
+        }
+        const av = row.querySelector<HTMLElement>("[data-avail]")!;
+        if (a && a.value >= 0 && a.value <= 1) {
+          av.textContent = new Intl.NumberFormat(locale, {
+            style: "percent",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }).format(a.value);
+          latest = Math.max(latest, a.ts);
+        } else {
+          av.textContent = strings.noData;
+        }
+      });
+      const updated = root.querySelector<HTMLElement>("[data-updated]")!;
+      if (latest > 0) {
+        updated.textContent = `${strings.updated} ${new Date(latest * 1000).toLocaleString(locale, {
+          dateStyle: "medium",
+          timeStyle: "short",
+        })}`;
+      }
+    } catch {
+      fail();
+    }
+  }
+
+  document
+    .querySelectorAll<HTMLElement>("[data-project-status]")
+    .forEach((el) => void init(el));
+</script>

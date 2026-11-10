@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import ArchitectureFlow from "../../components/ArchitectureFlow";
+import ProjectStatus from "../../components/ProjectStatus.astro";
 import ContactCallout from "../../components/ContactCallout.astro";
 import { stripLocalePrefix } from "../../i18n/utils";
 export async function getStaticPaths() {
@@ -141,6 +142,15 @@ const sections = carl
               </details>
             </>
           </section>
+        )
+      }
+      {
+        project.data.statusEndpoint && (
+          <ProjectStatus
+            endpoint={project.data.statusEndpoint}
+            lang="en"
+            apps={["scout", "estudiomadame", "english-notes"]}
+          />
         )
       }
       <article class="article-content case-article"><Content /></article><a

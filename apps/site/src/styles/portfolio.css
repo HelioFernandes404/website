@@ -1693,3 +1693,83 @@ html[data-reading-theme-active="dark"]
   > span {
   color: var(--muted);
 }
+
+/* Live status widget (project pages with `statusEndpoint`) */
+.project-status {
+  margin-top: 56px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.project-status h2 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+.project-status-intro,
+.project-status-meta {
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin: 6px 0 0;
+}
+.project-status-list {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.project-status-list li {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(90px, auto) minmax(0, 2fr);
+  gap: 8px 20px;
+  align-items: center;
+  padding-block: 12px;
+  border-top: 1px solid var(--line);
+}
+.project-status-name {
+  font-family: var(--font-family-mono, monospace);
+  color: var(--ink);
+}
+.project-status-now {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+.project-status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+.project-status-dot[data-state="up"] {
+  background: var(--accent);
+}
+.project-status-dot[data-state="down"] {
+  background: #b3261e;
+}
+.project-status-avail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.project-status-avail strong {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.project-status.is-unavailable .project-status-list {
+  display: none;
+}
+@media (max-width: 640px) {
+  .project-status {
+    padding: 18px;
+  }
+  .project-status-list li {
+    grid-template-columns: 1fr auto;
+  }
+  .project-status-avail {
+    grid-column: 1 / -1;
+  }
+}
