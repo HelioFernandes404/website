@@ -13,3 +13,8 @@
 /projetos    /projects/    301
 /projetos/   /projects/    301
 /projetos/*  /projects/:splat  301
+
+/my-cluster    /projects/my-cluster/    301
+/my-cluster/   /projects/my-cluster/    301
+/pt/my-cluster    /projects/my-cluster/    301
+/pt/my-cluster/   /projects/my-cluster/    301

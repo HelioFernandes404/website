@@ -5,7 +5,7 @@ tech:
   - "Node.js / TypeScript"
   - "AWS"
   - "Stripe"
-order: 1
+order: 2
 category: "01. Fintech"
 metricLabel: "DEPLOY TIME"
 metricValue: "-80%"

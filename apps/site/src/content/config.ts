@@ -34,6 +34,10 @@ const projects = defineCollection({
     imageAlt: z.string(),
     comingSoon: z.boolean().default(false),
 
+    // Base URL of a JSON status API (`<base>/up`, `<base>/availability_30d`).
+    // When set, the project page renders a live status widget.
+    statusEndpoint: z.string().url().optional(),
+
     // Case study told as Context / Action / Result / Learning. Optional: a
     // project without a written-up story renders as plain markdown instead.
     carl: z
