@@ -133,4 +133,4 @@ architecture:
       async: true
 ---
 
-Uma plataforma GitOps self-hosted que roda 3 apps num cluster Kubernetes de nó único, com o Flux CD reconciliando tudo a partir de um repositório. O status ao vivo abaixo vem do próprio cluster.
+Uma plataforma GitOps self-hosted que roda 3 apps num cluster Kubernetes de nó único, com o Flux CD reconciliando tudo a partir de um repositório. O status ao vivo acima vem do próprio cluster.

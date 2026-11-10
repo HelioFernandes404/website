@@ -133,4 +133,4 @@ architecture:
       async: true
 ---
 
-A self-hosted GitOps platform that runs 3 apps on a single-node Kubernetes cluster, with Flux CD reconciling everything from one repository. The live status below comes from the cluster itself.
+A self-hosted GitOps platform that runs 3 apps on a single-node Kubernetes cluster, with Flux CD reconciling everything from one repository. The live status above comes from the cluster itself.
