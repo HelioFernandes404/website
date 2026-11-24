@@ -4,6 +4,11 @@ All notable changes in this project are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Redesigned the site with an Efferd-style visual system (neutral palette, Geist / Geist Mono, framed hairline layout) via `src/styles/efferd.css`; see root `docs/adrs/0011-adopt-efferd-style-visual-system-and-case-study-homepage.md`.
+- Rewrote the homepage around two end-to-end case studies, shorter results, about, testimonials, writing, experience and contact, with copy in `src/data/home.ts`.
+- Simplified the shared header and footer.
+
 ### Added
 - Added a blog reading toolbar on article pages with `light`, `dark`, and `system` preferences.
 - Added article sharing with progressive enhancement: native share, clipboard copy, and prompt fallback.

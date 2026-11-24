@@ -2,6 +2,7 @@
 import SEOHead from "../components/SEOHead.astro";
 import "../styles/global.css";
 import "../styles/portfolio.css";
+import "../styles/efferd.css";
 import ReadingTheme from "../components/ReadingTheme.astro";
 import { profile } from "../data/profile";
 import type { Lang } from "../i18n/ui";
@@ -25,9 +26,9 @@ const lang = "en";
 const pathname = Astro.url.pathname;
 const navLinks = [
   { href: "/projects/", label: "Work" },
-  { href: "/#services", label: "Expertise" },
   { href: "/#about", label: "About" },
   { href: "/blog/", label: "Writing" },
+  { href: "/#experience", label: "Experience" },
 ];
 ---
 
@@ -41,13 +42,13 @@ const navLinks = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta id="theme-color-meta" name="theme-color" content="#f5f4ef" />
+    <meta id="theme-color-meta" name="theme-color" content="#ffffff" />
     {readingModeEnabled && <ReadingTheme />}
     <link
       rel="preload"
       as="font"
       type="font/woff2"
-      href="/fonts/space-grotesk-latin.woff2"
+      href="/fonts/geist-latin.woff2"
       crossorigin
     />
     <SEOHead
@@ -62,11 +63,17 @@ const navLinks = [
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header id="main-header" class="site-header portfolio-header">
       <div class="wrap header-inner">
-        <a class="brand" href="/" aria-label="Hélio Fernandes — home"
-          ><span class="brand-mark" aria-hidden="true">hf<span>.</span></span
-          ><span class="brand-name"
-            >Hélio Fernandes<span>SRE & DevOps Engineer</span></span
-          ></a
+        <a class="brand ef-brand" href="/" aria-label="Hélio Fernandes — home"
+          ><svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="m4 17 6-6-6-6"></path><path d="M12 19h8"></path></svg
+          ><span>helio<span>.fernandes</span></span></a
         >
         <nav class="desktop-nav" aria-label="Primary navigation">
           {
@@ -83,8 +90,8 @@ const navLinks = [
           }
         </nav>
         <div class="header-actions">
-          <a href="/#contact" class="button button-primary header-contact"
-            >Let's talk <span aria-hidden="true">↗</span></a
+          <a href="/#contact" class="ef-btn ef-btn-primary ef-btn-sm header-contact"
+            >Contact</a
           ><button
             id="mobile-menu-button"
             class="menu-toggle"
@@ -112,24 +119,31 @@ const navLinks = [
       </nav>
     </header>
     <div id="main-content" tabindex="-1"><slot /></div>
-    <footer class="portfolio-footer site-footer">
-      <div class="wrap footer-top">
-        <a class="brand" href="/"
-          ><span class="brand-mark" aria-hidden="true">hf<span>.</span></span
-          ><span>Hélio Fernandes</span></a
-        ><p>Software thinking. Production responsibility.</p><a
-          class="text-link"
-          href="/#contact">Get in touch <span aria-hidden="true">↗</span></a>
-      </div>
-      <div class="wrap footer-bottom">
-        <p>© {new Date().getFullYear()} Hélio Fernandes</p><nav
-          aria-label="Social and profile links"
+    <footer class="portfolio-footer site-footer ef-footer">
+      <div class="ef-frame ef-footer-inner">
+        <a class="brand ef-brand" href="/" aria-label="Hélio Fernandes — home"
+          ><svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="m4 17 6-6-6-6"></path><path d="M12 19h8"></path></svg
+          ><span>helio<span>.fernandes</span></span></a
         >
-          <a href={profile.linkedin}>LinkedIn ↗</a><a href={profile.github}
-            >GitHub ↗</a
-          ><a href={profile.hub}>Link hub ↗</a>
-        </nav><a href="#main-content" class="back-to-top"
-          >Back to top <span aria-hidden="true">↑</span></a>
+        <nav aria-label="Social and profile links">
+          <a href={`mailto:${profile.email}`}>Email</a><a href={profile.linkedin}
+            >LinkedIn ↗</a
+          ><a href={profile.github}>GitHub ↗</a><a href={profile.hub}
+            >Link hub ↗</a
+          >
+        </nav>
+        <p>© {new Date().getFullYear()} Hélio Fernandes</p>
+        <a href="#main-content" class="back-to-top"
+          >Back to top <span aria-hidden="true">↑</span></a
+        >
       </div>
     </footer>
     <script>

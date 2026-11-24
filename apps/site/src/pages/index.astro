@@ -1,23 +1,17 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import ProjectCard from "../components/ProjectCard.astro";
 import ContactForm from "../components/ContactForm.astro";
+import { profile, testimonials } from "../data/profile";
 import {
-  profile,
-  expertise,
-  experience,
-  skills,
-  testimonials,
-} from "../data/profile";
+  hero,
+  caseStudies,
+  wins,
+  about,
+  jobs,
+  toolbox,
+} from "../data/home";
 import { stripLocalePrefix } from "../i18n/utils";
-const projects = (
-  await getCollection("projects", ({ id }) => id.startsWith("en/"))
-).sort((a, b) => {
-  if (a.slug.endsWith("systemframe")) return -1;
-  if (b.slug.endsWith("systemframe")) return 1;
-  return a.data.order - b.data.order;
-});
 const posts = (
   await getCollection("blog", ({ id }) => id.startsWith("en/"))
 ).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
@@ -26,280 +20,184 @@ const date = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   timeZone: "UTC",
 });
+const initials = (name: string) =>
+  name
+    .split(" ")
+    .map((part) => part[0])
+    .join("");
 ---
 
 <Layout
-  title="Hélio Fernandes — SRE, DevOps & Software Engineering"
+  title="Hélio Fernandes — Platform, DevOps & SRE Engineer"
   description={profile.description}
   canonicalUrl="https://heliosuns404.com/"
 >
-  <main>
-    <section class="hero wrap" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow hero-eyebrow">
-          <span class="status-dot" aria-hidden="true"></span>Software thinking.
-          Production responsibility.
-        </p>
-        <h1 id="hero-title">Good software.<br /><em>Reliable systems.</em></h1>
-        <p class="hero-intro">
-          I'm Hélio, an <strong>SRE & DevOps engineer</strong> with a foundation in
-          software engineering. I connect code, infrastructure, and operations to
-          help teams build and run dependable systems.
-        </p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#contact"
-            >Let's talk about your challenge <span aria-hidden="true">↗</span
-            ></a
-          ><a class="text-link" href="#projects"
-            >Explore my work <span aria-hidden="true">↓</span></a>
+  <main class="ef-home">
+    <section class="ef-hero" aria-labelledby="hero-title">
+      <div class="ef-frame ef-hero-grid">
+        <div class="ef-hero-copy">
+          <p class="ef-badge">
+            <span class="status-dot" aria-hidden="true"></span>{hero.badge}
+          </p>
+          <div class="ef-hero-name">
+            <p>{profile.name}</p>
+            <p>{hero.role}</p>
+          </div>
+          <h1 id="hero-title">{hero.headline}</h1>
+          <p class="ef-hero-intro">{hero.intro}</p>
+          <div class="ef-actions">
+            <a class="ef-btn ef-btn-primary" href="#work"
+              >Read the case studies <span aria-hidden="true">↓</span></a
+            ><a class="ef-btn" href="#contact"
+              >Get in touch <span aria-hidden="true">↗</span></a
+            >
+          </div>
         </div>
-        <div class="hero-socials">
-          <a href={profile.linkedin}
-            >LinkedIn <span aria-hidden="true">↗</span></a
-          ><a href={profile.github}>GitHub <span aria-hidden="true">↗</span></a
-          ><span>From code to production</span>
-        </div>
+        <figure class="ef-photo ef-hero-photo">
+          <span class="ef-plus ef-plus-tl" aria-hidden="true"></span>
+          <span class="ef-plus ef-plus-tr" aria-hidden="true"></span>
+          <span class="ef-plus ef-plus-bl" aria-hidden="true"></span>
+          <span class="ef-plus ef-plus-br" aria-hidden="true"></span>
+          <div class="ef-photo-inner">
+            <img
+              src="/eu-portrait.webp"
+              alt="Portrait of Hélio Fernandes"
+              width="768"
+              height="960"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+          <figcaption>
+            <span>{profile.name}</span><span class="ef-hide-sm"
+              >Petrolina · BR</span
+            >
+          </figcaption>
+        </figure>
       </div>
-      <figure class="hero-portrait">
-        <div class="portrait-image">
-          <img
-            src="/eu-portrait.webp"
-            alt="Hélio Fernandes, SRE and DevOps engineer"
-            width="768"
-            height="960"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </div>
-        <figcaption>
-          <span>Hélio Fernandes</span><span>Development → Operations</span>
-        </figcaption>
-        <span class="portrait-note" aria-hidden="true"
-          >Built to work.<br />Ready to evolve.</span
-        >
-      </figure>
+      <dl class="ef-frame ef-stats">
+        {
+          hero.stats.map((stat) => (
+            <div>
+              <dt>{stat.label}</dt>
+              <dd>{stat.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </section>
 
-    <section class="proof-band" aria-label="Results from selected case studies">
-      <div class="wrap proof-grid">
-        <p class="proof-intro">
-          Engineering in practice.<br /><span>Results with context.</span>
-        </p><a href="/projects/dai-tec-ai/"
-          ><strong>80<span>%</span></strong><span
-            >less deployment time<small>Dai Tec AI · 40 → 8 minutes ↗</small
-            ></span
-          ></a
-        ><a href="/projects/systemframe/"
-          ><strong>60<span>%</span></strong><span
-            >less time to recover<small>SystemFrame · 50 → 20 minutes ↗</small
-            ></span
-          ></a
-        ><a href="/projects/systemframe/"
-          ><strong>12<span>+</span></strong><span
-            >clients on one platform<small>SystemFrame · 390+ endpoints ↗</small
-            ></span
-          ></a>
-      </div>
-    </section>
-
-    <section id="projects" class="section wrap" aria-labelledby="work-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">01 / Selected work</p><h2 id="work-title">
-            Real systems.<br /><em>Considered decisions.</em>
-          </h2>
-        </div><div class="section-heading-aside">
-          <p>
-            The problem, the engineering decisions, and what changed in
-            production.
-          </p><a class="text-link" href="/projects/"
-            >All projects <span aria-hidden="true">↗</span></a>
-        </div>
-      </div>
-      <div class="projects-grid">
-        {projects.map((project) => <ProjectCard project={project} />)}
-      </div>
-    </section>
-
-    <section
-      id="services"
-      class="expertise-section section"
-      aria-labelledby="expertise-title"
-    >
-      <div class="wrap">
-        <div class="section-heading">
+    <section id="work" class="ef-section" aria-labelledby="work-title">
+      <div class="ef-frame">
+        <div class="ef-heading">
           <div>
-            <p class="eyebrow">02 / How I can help</p><h2 id="expertise-title">
-              From application code.<br /><em>To production.</em>
-            </h2>
-          </div><p class="section-heading-aside">
-            Software, delivery, and reliability are connected. My experience
-            spans all three.
-          </p>
+            <p class="ef-kicker">Case studies</p>
+            <h2 id="work-title">Decisions, trade-offs and results</h2>
+            <p>
+              Two projects explained end to end: the problem, what I considered,
+              what I chose, and what happened.
+            </p>
+          </div>
+          <a class="text-link" href="/projects/"
+            >All projects <span aria-hidden="true">↗</span></a
+          >
         </div>
-        <div class="expertise-grid">
-          {
-            expertise.map((item, index) => (
-              <article>
-                <>
-                  <span class="expertise-number" aria-hidden="true">
-                    0{index + 1}
-                  </span>
-                  <p class="eyebrow">{item.label}</p>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                  <p class="expertise-evidence">{item.evidence}</p>
-                </>
-              </article>
-            ))
-          }
-        </div>
-        <a class="text-link" href="#contact"
-          >Tell me where your team needs support <span aria-hidden="true"
-            >↗</span
-          ></a
-        >
-      </div>
-    </section>
-
-    <section
-      id="about"
-      class="section wrap about-section"
-      aria-labelledby="about-title"
-    >
-      <div class="about-intro">
-        <p class="eyebrow">03 / Background & experience</p><h2 id="about-title">
-          A software foundation.<br /><em>A reliability mindset.</em>
-        </h2><p>
-          I started in software engineering, building services, integrations,
-          and the delivery pipelines behind them. My work grew into SRE and
-          DevOps: understanding how those systems behave, fail, and recover in
-          production.
-        </p><p>
-          That foundation stays with me. I approach infrastructure with a
-          developer's understanding of the application, and development with an
-          operator's understanding of what happens after deployment.
-        </p><a class="text-link" href={profile.linkedin}
-          >More about my experience on LinkedIn <span aria-hidden="true">↗</span
-          ></a>
-      </div>
-      <div class="experience">
-        <p class="eyebrow">Experience through projects</p><ol>
-          {
-            experience.map((item) => (
-              <li>
-                <a class="experience-project" href={item.href}>
-                  {item.project} <span aria-hidden="true">↗</span>
-                </a>
-                {item.employer && (
-                  <p>
-                    {item.jobTitle}
-                    {item.jobTitle && " · "}
-                    {item.employer}
-                  </p>
-                )}
-                <p>{item.description}</p>
-              </li>
-            ))
-          }
-        </ol>
-      </div>
-    </section>
-
-    <section class="skills-section" aria-labelledby="skills-title">
-      <div class="wrap">
-        <div class="skills-heading">
-          <p class="eyebrow">The tools behind the work</p><h2 id="skills-title">
-            A practical toolkit.
-          </h2><p>
-            Technologies used across my development and infrastructure work.
-          </p>
-        </div><div class="skills-grid">
-          {
-            skills.map((group) => (
-              <div>
-                <>
-                  <h3>{group.title}</h3>
-                  <ul>
-                    {group.items.map((item) => (
-                      <li>{item}</li>
+        {
+          caseStudies.map((item, index) => (
+            <article class="ef-case" aria-labelledby={`case-${item.id}`}>
+              <header>
+                <p class="ef-meta">
+                  {String(index + 1).padStart(2, "0")} · {item.kicker}
+                </p>
+                <h3 id={`case-${item.id}`}>{item.title}</h3>
+                <p>{item.summary}</p>
+              </header>
+              <dl class="ef-case-metrics">
+                {item.metrics.map((metric) => (
+                  <div>
+                    <dt>{metric.label}</dt>
+                    <dd>{metric.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div class="ef-case-body">
+                <div>
+                  <h4 class="ef-kicker ef-kicker-muted">How it went</h4>
+                  <ol class="ef-steps">
+                    {item.steps.map((step) => (
+                      <li>
+                        <p>{step.title}</p>
+                        <p>{step.body}</p>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                <aside>
+                  {item.after && (
+                    <div>
+                      <h4 class="ef-kicker ef-kicker-muted">
+                        {item.after.title}
+                      </h4>
+                      <ul class="ef-after">
+                        {item.after.items.map((text) => (
+                          <li>{text}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <div class="ef-lesson">
+                    <h4 class="ef-kicker ef-kicker-muted">
+                      {item.lesson.title}
+                    </h4>
+                    <p>{item.lesson.body}</p>
+                  </div>
+                  <ul class="tech-tags" aria-label="Technologies">
+                    {item.stack.map((tech) => (
+                      <li>{tech}</li>
                     ))}
                   </ul>
-                </>
+                  {item.href && (
+                    <a class="text-link" href={item.href}>
+                      Read the full case study <span aria-hidden="true">→</span>
+                    </a>
+                  )}
+                </aside>
               </div>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
-    <section
-      id="testimonials"
-      class="section wrap"
-      aria-labelledby="testimonials-title"
-    >
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">04 / Working together</p><h2
-            id="testimonials-title"
-          >
-            From the people<br /><em>I've worked with.</em>
-          </h2>
-        </div>
-      </div><div class="testimonials-grid">
-        {
-          testimonials.map((item) => (
-            <figure>
-              <>
-                <blockquote>“{item.text}”</blockquote>
-                <figcaption>
-                  <>
-                    <strong>{item.author}</strong>
-                    <span>{item.role}</span>
-                  </>
-                </figcaption>
-              </>
-            </figure>
+            </article>
           ))
         }
       </div>
     </section>
 
-    <section class="writing-section section" aria-labelledby="writing-title">
-      <div class="wrap">
-        <div class="section-heading">
+    <section class="ef-section" aria-labelledby="wins-title">
+      <div class="ef-frame">
+        <div class="ef-heading">
           <div>
-            <p class="eyebrow">05 / Field notes</p><h2 id="writing-title">
-              What production<br /><em>has taught me.</em>
-            </h2>
-          </div><a class="text-link" href="/blog/"
-            >All writing <span aria-hidden="true">↗</span></a>
-        </div><div class="writing-list">
+            <p class="ef-kicker">More work</p>
+            <h2 id="wins-title">Smaller stories, same approach</h2>
+          </div>
+        </div>
+        <div class="ef-cells ef-cells-2">
           {
-            posts.map((post) => (
-              <article>
-                <a href={`/blog/${stripLocalePrefix(post.slug, "en")}/`}>
-                  <>
-                    <div class="writing-meta">
-                      <>
-                        <span>{post.data.category}</span>
-                        <time datetime={post.data.pubDate.toISOString()}>
-                          {date.format(post.data.pubDate)}
-                        </time>
-                      </>
-                    </div>
-                    <div>
-                      <>
-                        <h3>{post.data.title}</h3>
-                        <p>{post.data.description}</p>
-                      </>
-                    </div>
-                    <span class="circle-arrow" aria-hidden="true">
-                      ↗
-                    </span>
-                  </>
-                </a>
+            wins.map((win) => (
+              <article class="ef-cell">
+                <p class="ef-meta">{win.tag}</p>
+                <h3>
+                  {win.href ? (
+                    <a href={win.href}>
+                      {win.title} <span aria-hidden="true">↗</span>
+                    </a>
+                  ) : (
+                    win.title
+                  )}
+                </h3>
+                <p>{win.body}</p>
+                <ul class="tech-tags" aria-label="Technologies">
+                  {win.stack.map((tech) => (
+                    <li>{tech}</li>
+                  ))}
+                </ul>
               </article>
             ))
           }
@@ -307,26 +205,179 @@ const date = new Intl.DateTimeFormat("en-US", {
       </div>
     </section>
 
-    <section
-      id="contact"
-      class="section wrap contact-section"
-      aria-labelledby="contact-title"
-    >
-      <div class="contact-copy">
-        <p class="eyebrow">06 / Start a conversation</p><h2 id="contact-title">
-          What are you<br /><em>working on?</em>
-        </h2><p>
-          A system that needs to be more reliable, a delivery process to
-          improve, or a role where software and operations meet. I'd like to
-          hear about it.
-        </p><a class="contact-email" href={`mailto:${profile.email}`}
-          >{profile.email} <span aria-hidden="true">↗</span></a
-        ><div class="contact-socials">
-          <a class="text-link" href={profile.linkedin}>LinkedIn ↗</a><a
-            class="text-link"
-            href={profile.github}>GitHub ↗</a>
+    <section id="about" class="ef-section" aria-labelledby="about-title">
+      <div class="ef-frame ef-about">
+        <div>
+          <p class="ef-kicker">About</p>
+          <h2 id="about-title">{about.title}</h2>
+          {about.paragraphs.map((text) => <p>{text}</p>)}
+          <a class="text-link" href={profile.linkedin}
+            >More on LinkedIn <span aria-hidden="true">↗</span></a
+          >
         </div>
-      </div><ContactForm />
+        <figure class="ef-photo">
+          <span class="ef-plus ef-plus-tl" aria-hidden="true"></span>
+          <span class="ef-plus ef-plus-br" aria-hidden="true"></span>
+          <div class="ef-photo-inner">
+            <img
+              src="/eu.webp"
+              alt={about.photoAlt}
+              width="1920"
+              height="1080"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <figcaption><span>{about.caption}</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section
+      id="testimonials"
+      class="ef-section"
+      aria-labelledby="testimonials-title"
+    >
+      <div class="ef-frame">
+        <div class="ef-heading">
+          <div>
+            <p class="ef-kicker">Working together</p>
+            <h2 id="testimonials-title">From the people I've worked with</h2>
+          </div>
+        </div>
+        <div class="ef-cells ef-cells-3">
+          {
+            testimonials.map((item) => (
+              <figure class="ef-cell ef-quote">
+                <span class="ef-quote-mark" aria-hidden="true">
+                  “
+                </span>
+                <blockquote>{item.text}</blockquote>
+                <figcaption>
+                  <span class="ef-avatar" aria-hidden="true">
+                    {initials(item.author)}
+                  </span>
+                  <span>
+                    <strong>{item.author}</strong>
+                    <span>{item.role}</span>
+                  </span>
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section id="writing" class="ef-section" aria-labelledby="writing-title">
+      <div class="ef-frame">
+        <div class="ef-heading">
+          <div>
+            <p class="ef-kicker">Writing</p>
+            <h2 id="writing-title">What production has taught me</h2>
+            <p>
+              Long-form notes from real incidents and migrations. No client
+              data.
+            </p>
+          </div>
+          <a class="text-link" href="/blog/"
+            >All articles <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <ul class="ef-rows">
+          {
+            posts.map((post) => (
+              <li>
+                <a
+                  class="ef-post"
+                  href={`/blog/${stripLocalePrefix(post.slug, "en")}/`}
+                >
+                  <span class="ef-meta">
+                    <span>{post.data.category}</span>
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {date.format(post.data.pubDate)}
+                    </time>
+                  </span>
+                  <span>
+                    <span class="ef-post-title">{post.data.title}</span>
+                    <span class="ef-post-body">{post.data.description}</span>
+                  </span>
+                  <span class="ef-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section
+      id="experience"
+      class="ef-section"
+      aria-labelledby="experience-title"
+    >
+      <div class="ef-frame">
+        <div class="ef-heading">
+          <div>
+            <p class="ef-kicker">Experience</p>
+            <h2 id="experience-title">Where I've worked</h2>
+          </div>
+        </div>
+        <ol class="ef-rows">
+          {
+            jobs.map((job) => (
+              <li class="ef-job">
+                <p class="ef-meta">{job.period}</p>
+                <div>
+                  <h3>
+                    {job.href ? (
+                      <a href={job.href}>{job.company}</a>
+                    ) : (
+                      job.company
+                    )}{" "}
+                    <span>· {job.role}</span>
+                  </h3>
+                  <p>{job.context}</p>
+                  {job.note && <p class="ef-small">{job.note}</p>}
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+        <div class="ef-toolbox">
+          <h3 class="ef-kicker ef-kicker-muted">Toolbox</h3>
+          <ul class="tech-tags" aria-label="Toolbox">
+            {toolbox.map((tool) => <li>{tool}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="ef-section" aria-labelledby="contact-title">
+      <div class="ef-frame contact-section">
+        <div class="contact-copy">
+          <p class="ef-kicker">Contact</p>
+          <h2 id="contact-title">Let's talk about your platform</h2>
+          <p>
+            I'm looking for platform engineering and SRE roles, remote. A system
+            that needs to be more reliable or a delivery process to improve:
+            I'd like to hear about it.
+          </p>
+          <a class="contact-email" href={`mailto:${profile.email}`}
+            >{profile.email} <span aria-hidden="true">↗</span></a
+          >
+          <div class="contact-socials">
+            <a class="text-link" href={profile.linkedin}>LinkedIn ↗</a><a
+              class="text-link"
+              href={profile.github}>GitHub ↗</a
+            >
+          </div>
+          <p class="ef-meta">Petrolina, Brazil · remote</p>
+        </div>
+        <ContactForm />
+      </div>
     </section>
   </main>
 </Layout>

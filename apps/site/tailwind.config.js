@@ -5,10 +5,10 @@ export default {
     extend: {
       colors: {
         brand: {
-          black: "#18313e",
+          black: "#0a0a0a",
           dark: "#121212",
-          gray: "#5b6669",
-          lime: "#90b8a1",
+          gray: "#737373",
+          lime: "#10b981",
         },
         neutral: {
           white: "#ffffff",
@@ -37,16 +37,16 @@ export default {
         overlay: {
           black05: "rgba(0, 0, 0, 0.05)",
           black30: "rgba(0, 0, 0, 0.3)",
-          brand15: "rgba(144, 184, 161, 0.15)",
-          brand60: "rgba(144, 184, 161, 0.6)",
+          brand15: "rgba(16, 185, 129, 0.15)",
+          brand60: "rgba(16, 185, 129, 0.6)",
           ink20: "rgba(10, 10, 10, 0.2)",
           white00: "rgba(255, 255, 255, 0)",
         },
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        display: ["Space Grotesk", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        sans: ["Geist", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Geist", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["Geist Mono", "ui-monospace", "monospace"],
       },
       animation: {
         float: "float 6s ease-in-out infinite",
