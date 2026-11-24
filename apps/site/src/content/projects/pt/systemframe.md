@@ -1,6 +1,6 @@
 ---
 title: "SystemFrame"
-description: "Plataforma de observabilidade multi-tenant para 12+ clientes e 390+ endpoints, com deploy GitOps e pipeline de alertas integrado a GLPI e ServiceNow."
+description: "Plataforma de observabilidade multi-tenant para 12+ clientes e 570+ endpoints, com deploy GitOps e pipeline de alertas integrado a GLPI e ServiceNow."
 tech:
   - "K3s / Helm"
   - "ArgoCD"
@@ -14,9 +14,9 @@ image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=70&w=640&aut
 imageAlt: "Projeto SystemFrame focado em infraestrutura DevOps com Kubernetes"
 carl:
   context: "A plataforma monitora infraestrutura heterogênea de 12+ clientes: equipamentos Aruba e Meraki, mais Zabbix e GLPI já instalados no parque de cada um. Não havia telemetria consolidada -- cada cliente era uma ilha, e diagnosticar um incidente podia consumir um dia inteiro. Alerta chegava ao time, mas não virava ticket sozinho."
-  action: "Assumi a camada de plataforma com K3s, Helm, ArgoCD e Ansible, sustentando deploy contínuo GitOps. Escrevi 5 exporters customizados para Aruba, Meraki, Zabbix e GLPI, consolidando 390+ endpoints em um formato único. Sobre isso montei o pipeline de alertas ligando Alertmanager a GLPI e ServiceNow, operando 296 regras, e ferramentas de análise sobre as APIs de Prometheus e VictoriaMetrics distribuídas em 2 zonas de disponibilidade."
-  result: "MTTR caiu de 50 para 20 minutos (-60%), e o tempo de diagnóstico de incidente saiu de 1 dia para 2 horas. O deploy GitOps acumulou mais de 3.500 execuções de CI/CD, com média de cerca de 8 deploys por dia útil."
-  learning: "Exporter customizado é dívida de manutenção: cada um vira código próprio que acompanha mudança de firmware e de API do fornecedor. Valeu porque telemetria em formato único foi o que tornou as 296 regras possíveis -- sem isso cada cliente teria seu próprio conjunto de alertas. E alerta que não vira ticket automaticamente não reduz MTTR: o ganho veio da integração com GLPI e ServiceNow, não de detectar mais rápido."
+  action: "Assumi a camada de plataforma com K3s, Helm, ArgoCD e Ansible, sustentando deploy contínuo GitOps. Escrevi 5 exporters Prometheus em Python para Aruba, Aruba Central, Meraki, Zabbix e GLPI, consolidando 570+ endpoints em um formato único sobre um VictoriaMetrics replicado em 2 zonas de disponibilidade (~877 mil séries ativas, ~60 mil amostras/s). Sobre isso automatizei o pipeline de alertas do Alertmanager para GLPI e ServiceNow, com 340+ regras, cada uma com runbook, e integrei playbooks de self-healing no AWX para o N1 resolver sozinho os casos comuns."
+  result: "MTTR caiu de 50 para 20 minutos (-60%) e as escalações para o time de 20 para 5 por semana. O GitOps chegou a 2.275 deploys desde março de 2025 em 90 servidores, cerca de 8 por dia útil nos últimos três meses. Uma ferramenta de diagnóstico com IA, só leitura, construída sobre as mesmas APIs está em validação, rodando em paralelo ao fluxo normal."
+  learning: "Exporter customizado é dívida de manutenção: cada um vira código próprio que acompanha mudança de firmware e de API do fornecedor. Valeu porque telemetria em formato único foi o que tornou as 340+ regras possíveis -- sem isso cada cliente teria seu próprio conjunto de alertas. E alerta que não vira ticket automaticamente não reduz MTTR: o ganho veio da integração com GLPI e ServiceNow, não de detectar mais rápido."
 architecture:
   title: "Arquitetura"
   hint: "Clique em um componente para ver a decisão tomada ali e o que ela custou."
@@ -30,11 +30,11 @@ architecture:
     - id: "exporters"
       label: "5 exporters customizados"
       kind: "service"
-      subtitle: "390+ endpoints"
+      subtitle: "570+ endpoints"
       x: 280
       y: 60
       decision: "Escrever exporters próprios para cada fonte, em vez de adotar um agente único de mercado ou aceitar os formatos nativos."
-      tradeoff: "Cada exporter é código que precisa acompanhar mudança de firmware e de API do fornecedor. Foi o que permitiu telemetria em formato único entre parques heterogêneos -- e sem isso as 296 regras não existiriam."
+      tradeoff: "Cada exporter é código que precisa acompanhar mudança de firmware e de API do fornecedor. Foi o que permitiu telemetria em formato único entre parques heterogêneos -- e sem isso as 340+ regras não existiriam."
     - id: "tsdb"
       label: "Prometheus / VictoriaMetrics"
       kind: "data"
@@ -46,10 +46,10 @@ architecture:
     - id: "alertmanager"
       label: "Alertmanager"
       kind: "service"
-      subtitle: "296 regras"
+      subtitle: "340+ regras"
       x: 880
       y: -40
-      decision: "Concentrar as 296 regras no Alertmanager e tratar deduplicação ali, antes de qualquer integração externa."
+      decision: "Concentrar as 340+ regras no Alertmanager, cada uma com runbook, e deduplicar antes de qualquer integração externa."
       tradeoff: "As regras viram um artefato grande e centralizado, que exige disciplina para não virar bolo. Evita que cada integração reimplemente sua própria lógica de silenciamento."
     - id: "glpi"
       label: "GLPI"
@@ -62,13 +62,13 @@ architecture:
       x: 1180
       y: 20
     - id: "analise"
-      label: "Ferramentas de análise"
+      label: "Diagnóstico com IA (em validação)"
       kind: "service"
-      subtitle: "diagnóstico 1 dia -> 2h"
+      subtitle: "só leitura"
       x: 880
       y: 180
-      decision: "Construir ferramentas de consulta sobre as APIs de Prometheus e VictoriaMetrics em vez de depender só de dashboard visual."
-      tradeoff: "Mais código interno para manter, fora do caminho do produto. Encurtou o diagnóstico de incidente de um dia para duas horas, porque investigar deixou de depender de montar painel na hora."
+      decision: "Dar a um modelo de IA acesso só leitura a métricas, alertas, logs e traces para correlacionar e sugerir causa provável e runbook ao N1/N2."
+      tradeoff: "Mais código interno para manter, e a sugestão ainda precisa de um humano para agir. Está em validação, rodando em paralelo ao fluxo normal, então ainda não há resultado de produção para citar."
     - id: "argocd"
       label: "ArgoCD"
       kind: "service"

@@ -1,6 +1,6 @@
 ---
 title: "SystemFrame"
-description: "Multi-tenant observability platform for 12+ clients and 390+ endpoints, with GitOps deploy and an alert pipeline integrated with GLPI and ServiceNow."
+description: "Multi-tenant observability platform for 12+ clients and 570+ endpoints, with GitOps deploy and an alert pipeline integrated with GLPI and ServiceNow."
 tech:
   - "K3s / Helm"
   - "ArgoCD"
@@ -14,9 +14,9 @@ image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=70&w=640&aut
 imageAlt: "SystemFrame project focused on DevOps infrastructure with Kubernetes"
 carl:
   context: "The platform monitors heterogeneous infrastructure across 12+ clients: Aruba and Meraki equipment, plus Zabbix and GLPI already installed in each client's fleet. There was no consolidated telemetry -- each client was an island, and diagnosing an incident could take a whole day. Alerts reached the team but didn't turn into a ticket on their own."
-  action: "I took ownership of the platform layer with K3s, Helm, ArgoCD, and Ansible, sustaining continuous GitOps deployment. I wrote 5 custom exporters for Aruba, Meraki, Zabbix, and GLPI, consolidating 390+ endpoints into a single format. On top of that I built the alert pipeline connecting Alertmanager to GLPI and ServiceNow, running 296 rules, plus analysis tools built on the Prometheus and VictoriaMetrics APIs distributed across 2 availability zones."
-  result: "MTTR dropped from 50 to 20 minutes (-60%), and incident diagnosis time went from 1 day to 2 hours. The GitOps deploy pipeline accumulated more than 3,500 CI/CD runs, averaging around 8 deploys per business day."
-  learning: "A custom exporter is maintenance debt: each one becomes proprietary code that has to track vendor firmware and API changes. It was worth it because unified-format telemetry was what made the 296 rules possible -- without it, each client would need its own set of alerts. And an alert that doesn't automatically become a ticket doesn't reduce MTTR: the gain came from the GLPI and ServiceNow integration, not from detecting issues faster."
+  action: "I took ownership of the platform layer with K3s, Helm, ArgoCD, and Ansible, sustaining continuous GitOps deployment. I wrote 5 custom Prometheus exporters in Python for Aruba, Aruba Central, Meraki, Zabbix, and GLPI, consolidating 570+ endpoints into a single format on a VictoriaMetrics setup replicated across 2 availability zones (~877k active series, ~60k samples/s). On top of that I automated the alert pipeline from Alertmanager to GLPI and ServiceNow, running 340+ rules, each with a runbook, and integrated AWX self-healing playbooks so the NOC could resolve common cases on its own."
+  result: "MTTR dropped from 50 to 20 minutes (-60%) and escalations to the team from 20 to 5 a week. GitOps delivery reached 2,275 deploys since March 2025 across 90 servers, around 8 per business day in the last three months. A read-only AI diagnosis tool built on the same APIs is in validation, running in parallel with the normal flow."
+  learning: "A custom exporter is maintenance debt: each one becomes proprietary code that has to track vendor firmware and API changes. It was worth it because unified-format telemetry was what made the 340+ rules possible -- without it, each client would need its own set of alerts. And an alert that doesn't automatically become a ticket doesn't reduce MTTR: the gain came from the GLPI and ServiceNow integration, not from detecting issues faster."
 architecture:
   title: "Architecture"
   hint: "Click a component to see the decision made there and what it cost."
@@ -30,11 +30,11 @@ architecture:
     - id: "exporters"
       label: "5 custom exporters"
       kind: "service"
-      subtitle: "390+ endpoints"
+      subtitle: "570+ endpoints"
       x: 280
       y: 60
       decision: "Write proprietary exporters for each source, instead of adopting a single off-the-shelf agent or accepting the native formats."
-      tradeoff: "Each exporter is code that has to track vendor firmware and API changes. It was what enabled unified-format telemetry across heterogeneous fleets -- and without it, the 296 rules wouldn't exist."
+      tradeoff: "Each exporter is code that has to track vendor firmware and API changes. It was what enabled unified-format telemetry across heterogeneous fleets -- and without it, the 340+ rules wouldn't exist."
     - id: "tsdb"
       label: "Prometheus / VictoriaMetrics"
       kind: "data"
@@ -46,10 +46,10 @@ architecture:
     - id: "alertmanager"
       label: "Alertmanager"
       kind: "service"
-      subtitle: "296 rules"
+      subtitle: "340+ rules"
       x: 880
       y: -40
-      decision: "Concentrate the 296 rules in Alertmanager and handle deduplication there, before any external integration."
+      decision: "Concentrate the 340+ rules in Alertmanager, each with a runbook, and deduplicate before any external integration."
       tradeoff: "The rules become a large, centralized artifact that requires discipline to keep from turning into a mess. It prevents each integration from reimplementing its own silencing logic."
     - id: "glpi"
       label: "GLPI"
@@ -62,13 +62,13 @@ architecture:
       x: 1180
       y: 20
     - id: "analise"
-      label: "Analysis tools"
+      label: "AI diagnosis (in validation)"
       kind: "service"
-      subtitle: "diagnosis 1 day -> 2h"
+      subtitle: "read-only"
       x: 880
       y: 180
-      decision: "Build query tools on top of the Prometheus and VictoriaMetrics APIs instead of relying solely on visual dashboards."
-      tradeoff: "More internal code to maintain, outside the product's core path. It cut incident diagnosis time from a day to two hours, because investigating no longer depended on building a dashboard on the fly."
+      decision: "Give an AI model read-only access to metrics, alerts, logs and traces so it can correlate them and suggest a likely cause and runbook to L1/L2."
+      tradeoff: "More internal code to maintain, and suggestions still need a human to act. It is in validation, running in parallel with the normal flow, so there is no production result to report yet."
     - id: "argocd"
       label: "ArgoCD"
       kind: "service"
